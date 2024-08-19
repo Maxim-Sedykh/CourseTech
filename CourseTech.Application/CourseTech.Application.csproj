@@ -11,6 +11,8 @@
     <Folder Include="Resources\" />
     <Folder Include="Services\" />
     <Folder Include="Validations\FluentValidations\" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Commands\" />
   </ItemGroup>
 
   <ItemGroup>
