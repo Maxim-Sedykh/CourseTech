@@ -53,9 +53,4 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
             throw new ArgumentNullException(nameof(entity), "Entity is null");
         }
     }
-
-    public async Task<TEntity> GetOne<T>(T id)
-    {
-        return await _dbContext.Set<TEntity>().FindAsync(id);
-    }
 }

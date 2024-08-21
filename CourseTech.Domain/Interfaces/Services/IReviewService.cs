@@ -34,6 +34,6 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<ReviewDto>> GetUserReviews(Guid userId);
+        Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Enum;
 
-public enum TaskType
+public enum QuestionType
 {
     Test = 0,
     Open = 1,

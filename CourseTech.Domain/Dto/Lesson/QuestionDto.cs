@@ -21,7 +21,7 @@ namespace CourseTech.Domain.Dto.Lesson
 
         public string DisplayQuestion { get; set; }
 
-        public TaskType QuestionType { get; set; }
+        public QuestionType QuestionType { get; set; }
 
         public List<TestVariant> VariantsOfAnswer { get; set; }
 

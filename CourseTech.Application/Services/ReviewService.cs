@@ -1,170 +1,128 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SQLServerCourse.DAL.Interfaces;
-using SQLServerCourse.DAL.Repositories;
-using SQLServerCourse.Domain.Entity;
-using SQLServerCourse.Domain.Entitys_for_lesson;
-using SQLServerCourse.Domain.Enum;
-using SQLServerCourse.Domain.Responce;
-using SQLServerCourse.Domain.ViewModels.PersonalProfile;
-using SQLServerCourse.Domain.ViewModels.Review;
-using SQLServerCourse.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using CourseTech.Application.Resources;
+using CourseTech.DAL.Repositories;
+using CourseTech.Domain.Dto.Review;
+using CourseTech.Domain.Entities;
+using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Services;
+using CourseTech.Domain.Result;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CourseTech.Application.Services
 {
-    public class ReviewService : IReviewService
+    public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewService
     {
-        private readonly IBaseRepository<Review> _reviewRepository;
-        private readonly IBaseRepository<UserProfile> _userProfileRepository;
-
-        public ReviewService(IBaseRepository<Review> reviewRepository, IBaseRepository<UserProfile> userProfileRepository)
+        public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
         {
-            _reviewRepository = reviewRepository;
-            _userProfileRepository = userProfileRepository;
-        }
+            var user = await unitOfWork.Users.GetAll()
+                .Include(x => x.UserProfile)
+                .FirstOrDefaultAsync(x => x.Id == userId);
 
-        public async Task<IBaseResponse<bool>> CreateReview(CreateReviewViewModel model, string userLogin)
-        {
-            try
+            if (user is null)
             {
-                var profile = await _userProfileRepository.GetAll().FirstOrDefaultAsync(x => x.User.Login == userLogin);
-                if (profile == null)
+                return new BaseResult()
                 {
-                    return new BaseResponse<bool>
+                    ErrorCode = (int)ErrorCodes.UserNotFound,
+                    ErrorMessage = ErrorMessage.UserNotFound
+                };
+            }
+
+            using (var transaction = await unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    var review = new Review()
                     {
-                        Description = "Пользователь не найден",
-                        StatusCode = StatusCode.UserNotFound
+                        UserId = user.Id,
+                        ReviewText = dto.ReviewText
                     };
+
+                    user.UserProfile.CountOfReviews++;
+
+                    await unitOfWork.Reviews.CreateAsync(review);
+                    unitOfWork.Users.Update(user);
+
+                    await unitOfWork.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
                 }
-
-                var review = new Review()
+                catch (Exception)
                 {
-                    UserId = profile.Id,
-                    ReviewText = model.ReviewText,
-                    ReviewTime = DateTime.Now,
-                };
-
-                profile.IsReviewLeft = true;
-
-                await _reviewRepository.Create(review);
-                await _userProfileRepository.Update(profile);
-
-
-                return new BaseResponse<bool>()
-                {
-                    StatusCode = StatusCode.OK,
-                    Description = "Отзыв успешно создан."
-                };
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponse<bool>()
-                {
-                    Description = $"Внутренняя ошибка: {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError,
-                };
-            }
-        }
-
-        public async Task<IBaseResponse<Review>> DeleteReview(long id)
-        {
-            try
-            {
-                var review = await _reviewRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == id);
-                if (review == null)
-                {
-                    return new BaseResponse<Review>()
-                    {
-                        StatusCode = StatusCode.ReviewNotFound,
-                        Description = "Отзыв не найден"
-                    };
+                    await transaction.RollbackAsync();
                 }
-
-                await _reviewRepository.Delete(review);
-
-                return new BaseResponse<Review>()
-                {
-                    Data = review,
-                    Description = "Отзыв удалён!",
-                    StatusCode = StatusCode.OK
-                };
             }
-            catch (Exception ex)
-            {
-                return new BaseResponse<Review>()
-                {
-                    StatusCode = StatusCode.InternalServerError,
-                    Description = $"Внутренняя ошибка: {ex.Message}"
-                };
-            }
+
+            return new BaseResult();
         }
 
-        public async Task<IBaseResponse<List<ReviewViewModel>>> GetReviews()
+        public async Task<BaseResult> DeleteReview(long reviewId)
         {
-            try
-            {
-                var reviews = await _reviewRepository.GetAll()
-                    .Include(x => x.User)
-                    .Select(x => new ReviewViewModel()
-                    {
-                        Id = x.Id,
-                        UserId = x.UserId,
-                        Login = x.User.Login,
-                        Text = x.ReviewText,
-                        ReviewDateTime = x.ReviewTime,
-                    }).ToListAsync();
+            var review = await unitOfWork.Reviews.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == reviewId);
 
-                return new BaseResponse<List<ReviewViewModel>>()
-                {
-                    Data = reviews,
-                    StatusCode = StatusCode.OK
-                };
-            }
-            catch (Exception ex)
+            if (review is null)
             {
-                return new BaseResponse<List<ReviewViewModel>>()
+                return new BaseResult()
                 {
-                    Description = $"Внутренняя ошибка: {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError,
+                    ErrorCode = (int)ErrorCodes.ReviewNotFound,
+                    ErrorMessage = ErrorMessage.ReviewNotFound
                 };
             }
+
+            unitOfWork.Reviews.Remove(review);
+
+            await unitOfWork.SaveChangesAsync();
+
+            return new BaseResult();
         }
 
-        public async Task<IBaseResponse<List<ReviewViewModel>>> GetUserReviews(long id)
+        public async Task<CollectionResult<ReviewDto>> GetReviewsAsync()
         {
-            try
-            {
-                var userReviews = await _reviewRepository.GetAll()
-                    .Include(x => x.User)
-                    .Select(x => new ReviewViewModel()
-                    {
-                        Id = x.Id,
-                        UserId = x.UserId,
-                        Login = x.User.Login,
-                        Text = x.ReviewText,
-                        ReviewDateTime = x.ReviewTime,
-                    }).Where(x => x.UserId == id).ToListAsync();
+            var reviews = await unitOfWork.Reviews.GetAll()
+                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .ToArrayAsync();
 
-                return new BaseResponse<List<ReviewViewModel>>()
-                {
-                    Data = userReviews,
-                    StatusCode = StatusCode.OK
-                };
-            }
-            catch (Exception ex)
+            if (reviews is null)
             {
-                return new BaseResponse<List<ReviewViewModel>>()
+                return new CollectionResult<ReviewDto>()
                 {
-                    Description = $"Внутренняя ошибка: {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError,
+                    ErrorCode = (int)ErrorCodes.ReviewsNotFound,
+                    ErrorMessage = ErrorMessage.ReviewsNotFound
                 };
             }
+
+            return new CollectionResult<ReviewDto>
+            {
+                Data = reviews,
+                Count = reviews.Length
+            };
+        }
+
+        public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
+        {
+            var reviews = await unitOfWork.Reviews.GetAll()
+                    .Where(x => x.UserId == userId)
+                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .ToArrayAsync();
+
+            if (reviews is null)
+            {
+                return new CollectionResult<ReviewDto>()
+                {
+                    ErrorCode = (int)ErrorCodes.ReviewsNotFound,
+                    ErrorMessage = ErrorMessage.ReviewsNotFound
+                };
+            }
+
+            return new CollectionResult<ReviewDto>
+            {
+                Data = reviews,
+                Count = reviews.Length
+            };
         }
     }
 }

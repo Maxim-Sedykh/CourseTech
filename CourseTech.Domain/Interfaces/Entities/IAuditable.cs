@@ -1,4 +1,4 @@
-﻿namespace CourseTech.Domain.Interfaces;
+﻿namespace CourseTech.Domain.Interfaces.Entities;
 
 public interface IAuditable
 {

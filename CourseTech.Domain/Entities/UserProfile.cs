@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Interfaces;
+﻿using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;
 
@@ -22,7 +22,7 @@ public class UserProfile : IEntityId<long>, IAuditable
 
     public bool IsEditAble { get; set; }
 
-    public bool IsReviewLeft { get; set; }
+    public byte CountOfReviews { get; set; }
 
     public Guid UserId { get; set; }
 

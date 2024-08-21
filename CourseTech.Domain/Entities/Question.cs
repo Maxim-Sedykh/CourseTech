@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces;
+using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;
 
@@ -13,7 +13,7 @@ public class Question : IEntityId<int>, IAuditable
 
     public int Number { get; set; }
 
-    public TaskType Type { get; set; }
+    public QuestionType Type { get; set; }
 
     public string DisplayQuestion { get; set; }
 

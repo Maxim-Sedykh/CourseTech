@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Interfaces;
+﻿using CourseTech.Domain.Interfaces.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

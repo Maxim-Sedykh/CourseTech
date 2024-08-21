@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces;
+using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;
 

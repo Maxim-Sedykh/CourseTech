@@ -1,5 +1,6 @@
 ﻿using CourseTech.Domain.Result;
 using System.Net;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Api.Middlewares;
 

@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Lesson
 {
+    /// <summary>
+    /// DTO для передачи данных об уроке
+    /// Без разметки для лекции
+    /// </summary>
     public class LessonDto
     {
         public int Id { get; set; }

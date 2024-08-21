@@ -10,6 +10,9 @@ using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribut
 
 namespace CourseTech.Domain.Dto.Auth
 {
+    /// <summary>
+    /// DTO для регистрации пользователя
+    /// </summary>
     public class RegisterUserDto
     {
         [Required(ErrorMessage = "Введите логин")]

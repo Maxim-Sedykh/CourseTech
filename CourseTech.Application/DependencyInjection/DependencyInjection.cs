@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CourseTech.Application.Mapping;
+using CourseTech.Application.Services;
+using CourseTech.Domain.Interfaces.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseTech.Application.DependencyInjection;
 
@@ -18,25 +21,26 @@ public static class DependencyInjection
 
     private static void InitServices(this IServiceCollection services)
     {
-        //services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICourseResultService, CourseResultService>();
+        services.AddScoped<ILessonRecordService, LessonRecordService>();
+        services.AddScoped<ILessonService, LessonService>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IUserProfileService, UserProfileService>();
+        services.AddScoped<IUserService, UserService>();
     }
 
     private static void InitAutoMapper(this IServiceCollection services)
     {
-        //var validatorsTypes = new List<Type>()
-        //{
-        //    typeof(ProductMapping),
-        //    typeof(RoleMapping),
-        //    typeof(UserMapping),
-        //    typeof(BasketMapping),
-        //    typeof(PaymentMapping),
-        //    typeof(OrderMapping)
-        //};
+        var validatorsTypes = new List<Type>()
+        {
+            typeof(ReviewMapping)
+        };
 
-        //foreach (var validatorType in validatorsTypes)
-        //{
-        //    services.AddAutoMapper(validatorType);
-        //}
+        foreach (var validatorType in validatorsTypes)
+        {
+            services.AddAutoMapper(validatorType);
+        }
     }
 
     public static void InitFluentValidators(this IServiceCollection services)

@@ -1,6 +1,8 @@
-﻿namespace CourseTech.Domain.Interfaces.Repositories;
+﻿using CourseTech.Domain.Interfaces.Databases;
 
-public interface IBaseRepository<TEntity>
+namespace CourseTech.Domain.Interfaces.Repositories;
+
+public interface IBaseRepository<TEntity> : IStateSaveChanges
 {
     IQueryable<TEntity> GetAll();
 
@@ -9,6 +11,4 @@ public interface IBaseRepository<TEntity>
     TEntity Update(TEntity entity);
 
     void Remove(TEntity entity);
-
-    Task<TEntity> GetOne<T>(T id);
 }

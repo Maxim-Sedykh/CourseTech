@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Lesson
 {
+    /// <summary>
+    /// DTO для передачи имени урока
+    /// </summary>
     public class LessonNameDto
     {
         public string LessonName { get; set; }

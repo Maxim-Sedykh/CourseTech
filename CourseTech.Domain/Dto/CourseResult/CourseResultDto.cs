@@ -1,5 +1,8 @@
 ﻿namespace CourseTech.Domain.Dto.FinalResult
 {
+    /// <summary>
+    /// DTO для показа результата прохождения курса
+    /// </summary>
     public class CourseResultDto
     {
         public long Id { get; set; }
