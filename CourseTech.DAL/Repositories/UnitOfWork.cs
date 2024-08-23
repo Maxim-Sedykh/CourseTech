@@ -13,6 +13,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<Review> Reviews { get; set; }
 
+    public IBaseRepository<UserProfile> UserProfiles { get; set; }
+
     public UnitOfWork(CourseDbContext context, IBaseRepository<User> users, IBaseRepository<Review> reviews)
     {
         _context = context;

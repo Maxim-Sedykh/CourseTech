@@ -141,4 +141,7 @@
   <data name="UserNotFound" xml:space="preserve">
     <value>Пользователь не найден</value>
   </data>
+  <data name="UserProfileNotFound" xml:space="preserve">
+    <value>Профиль пользователя не найден</value>
+  </data>
 </root>

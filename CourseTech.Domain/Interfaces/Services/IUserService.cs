@@ -27,7 +27,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<UpdateUserDto>> GetUserAsync(Guid userId);
+        Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId);
 
         /// <summary>
         /// Обновление данных пользователя
@@ -35,12 +35,5 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <param name="dto"></param>
         /// <returns></returns>
         Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto);
-
-        /// <summary>
-        /// Создание пользователя
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        Task<BaseResult> CreateUserAsync(CreateUserDto dto);
     }
 }

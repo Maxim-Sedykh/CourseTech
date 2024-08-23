@@ -1,22 +1,45 @@
-﻿using CourseTech.Domain.Dto.UserProfile;
+﻿using AutoMapper;
+using CourseTech.Application.Resources;
+using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Entities;
+using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace CourseTech.Application.Services
 {
-    public class UserProfileService : IUserProfileService
+    public class UserProfileService(IBaseRepository<UserProfile> userProfileRepository, IMapper mapper) : IUserProfileService
     {
-        //Primary Constructor
-        public Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
+        public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var profileDto = await userProfileRepository.GetAll()
+                        .Select(x => mapper.Map<UserProfileDto>(x))
+                        .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (profileDto is null)
+            {
+                return BaseResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            }
+
+            return BaseResult<UserProfileDto>.Success(profileDto);
         }
 
-        public Task<BaseResult<UserProfileDto>> UpdateUserProfileAsync(UserProfileDto dto)
+        public async Task<BaseResult> UpdateUserProfileAsync(UserProfileDto dto)
         {
-            throw new NotImplementedException();
+            var profile = await userProfileRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (profile is null)
+            {
+                BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            }
+
+            userProfileRepository.Update(profile);
+            await userProfileRepository.SaveChangesAsync();
+
+            return BaseResult.Success();
         }
     }
 }

@@ -1,19 +1,22 @@
 ﻿using CourseTech.Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.DAL.Repositories;
 
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
     private readonly CourseDbContext _dbContext;
+    private readonly DbSet<TEntity> _table = null;
 
     public BaseRepository(CourseDbContext dbContext)
     {
         _dbContext = dbContext;
+        _table = _dbContext.Set<TEntity>();
     }
 
     public IQueryable<TEntity> GetAll()
     {
-        return _dbContext.Set<TEntity>().AsQueryable();
+        return _table.AsQueryable();
     }
 
     public async Task<int> SaveChangesAsync()
@@ -25,7 +28,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         ValidateEntityOnNull(entity);
 
-        await _dbContext.AddAsync(entity);
+        await _table.AddAsync(entity);
 
         return entity;
     }
@@ -34,14 +37,14 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         ValidateEntityOnNull(entity);
 
-        _dbContext.Remove(entity);
+        _table.Remove(entity);
     }
 
     public TEntity Update(TEntity entity)
     {
         ValidateEntityOnNull(entity);
 
-        _dbContext.Update(entity);
+        _table.Update(entity);
 
         return entity;
     }

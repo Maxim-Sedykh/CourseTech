@@ -1,4 +1,5 @@
 ﻿using CourseTech.Domain.Interfaces.Databases;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Domain.Interfaces.Repositories;
 

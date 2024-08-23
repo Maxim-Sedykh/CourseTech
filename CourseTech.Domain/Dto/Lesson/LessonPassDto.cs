@@ -1,12 +1,4 @@
-﻿using SQLServerCourse.Domain.Entity;
-using SQLServerCourse.Domain.Enum;
-using SQLServerCourse.Domain.Helpers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Enum;
 
 namespace CourseTech.Domain.Dto.Lesson
 {

@@ -10,5 +10,11 @@ public interface IUnitOfWork : IStateSaveChanges
 
     public IBaseRepository<User> Users { get; set; }
 
+    public IBaseRepository<UserProfile> UserProfiles { get; set; }
+
     public IBaseRepository<Review> Reviews { get; set; }
+
+    public IBaseRepository<Lesson> Lessons { get; set; }
+
+    public IBaseRepository<LessonRecord> LessonRecords { get; set; }
 }

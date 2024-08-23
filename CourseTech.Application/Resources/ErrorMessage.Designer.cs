@@ -131,5 +131,14 @@ namespace CourseTech.Application.Resources {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Профиль пользователя не найден.
+        /// </summary>
+        internal static string UserProfileNotFound {
+            get {
+                return ResourceManager.GetString("UserProfileNotFound", resourceCulture);
+            }
+        }
     }
 }

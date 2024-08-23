@@ -2,5 +2,17 @@
 
 public class CollectionResult<T> : BaseResult<IEnumerable<T>>
 {
-    public int Count { get; set; }
+    private CollectionResult(IEnumerable<T> data, Error error = null)
+        : base(data, error)
+    {
+        Count = data?.Count() ?? 0;
+    }
+
+    public int Count { get; }
+
+    public static new CollectionResult<T> Success(IEnumerable<T> data) =>
+        new CollectionResult<T>(data);
+
+    public static new CollectionResult<T> Failure(int errorCode, string errorMessage) =>
+        new CollectionResult<T>(Enumerable.Empty<T>(), new Error(errorMessage, errorCode));
 }

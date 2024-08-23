@@ -11,6 +11,6 @@ namespace CourseTech.Domain.Dto.FinalResult
     /// </summary>
     public class UserAnalysDto
     {
-        public string UserAnalys { get; set; }
+        public string Analys { get; set; }
     }
 }

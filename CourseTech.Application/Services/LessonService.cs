@@ -1,11 +1,13 @@
-﻿using CourseTech.Domain.Dto.Lesson;
+﻿using CourseTech.DAL.Repositories;
+using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonService : ILessonService
+    public class LessonService(IUnitOfWork unitOfWork) : ILessonService
     {
         public Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {

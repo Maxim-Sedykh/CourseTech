@@ -5,7 +5,7 @@
     /// </summary>
     public class CourseResultDto
     {
-        public long Id { get; set; }
+        public Guid UserId { get; set; }
 
         public string Login { get; set; }
 

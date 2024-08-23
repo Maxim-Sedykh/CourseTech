@@ -18,8 +18,9 @@ namespace CourseTech.Domain.Dto.UserProfile
 
         public string Surname { get; set; }
 
-        [Range(0, 130, ErrorMessage = "Диапазон возраста должен быть от 0 до 130")]
         public int Age { get; set; }
+
+        public Guid UserId { get; set; }
 
         public float CurrentGrade { get; set; }
 

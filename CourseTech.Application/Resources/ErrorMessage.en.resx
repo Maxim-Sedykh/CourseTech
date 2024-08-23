@@ -141,4 +141,7 @@
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>
   </data>
+  <data name="UserProfileNotFound" xml:space="preserve">
+    <value>User profile not found</value>
+  </data>
 </root>

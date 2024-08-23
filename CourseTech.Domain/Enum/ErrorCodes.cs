@@ -9,17 +9,19 @@ namespace CourseTech.Domain.Enum;
 public enum ErrorCodes
 {
     UserNotFound = 0,
-    UserAlreadyExists = 1,
-    UserAnalysNotFound = 2,
+    UserAlreadyExists = 2,
+    UserAnalysNotFound = 3,
 
-    LessonNotFound = 10,
+    UserProfileNotFound = 10,
 
-    LessonRecordsNotFound = 20,
+    LessonNotFound = 20,
 
-    TasksDataNotFound = 30,
+    LessonRecordsNotFound = 30,
 
-    ReviewNotFound = 40,
-    ReviewsNotFound = 41,
+    TasksDataNotFound = 40,
+
+    ReviewNotFound = 50,
+    ReviewsNotFound = 51,
 
     InternalServerError = 500
 }
