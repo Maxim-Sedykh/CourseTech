@@ -10,8 +10,8 @@ namespace CourseTech.Domain.Dto.UserProfile
     {
         public string LessonName { get; set; }
 
-        public float LessonMark { get; set; }
+        public float Mark { get; set; }
 
-        public DateTime DateOfReceiving { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

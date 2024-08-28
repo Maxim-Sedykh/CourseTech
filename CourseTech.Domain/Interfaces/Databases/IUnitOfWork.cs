@@ -8,13 +8,25 @@ public interface IUnitOfWork : IStateSaveChanges
 {
     Task<IDbContextTransaction> BeginTransactionAsync();
 
-    public IBaseRepository<User> Users { get; set; }
+    IBaseRepository<User> Users { get; set; }
 
-    public IBaseRepository<UserProfile> UserProfiles { get; set; }
+    IBaseRepository<Role> Roles { get; set; }
 
-    public IBaseRepository<Review> Reviews { get; set; }
+    IBaseRepository<UserToken> UserTokens { get; set; }
 
-    public IBaseRepository<Lesson> Lessons { get; set; }
+    IBaseRepository<UserProfile> UserProfiles { get; set; }
 
-    public IBaseRepository<LessonRecord> LessonRecords { get; set; }
+    IBaseRepository<Review> Reviews { get; set; }
+
+    IBaseRepository<Lesson> Lessons { get; set; }
+
+    IBaseRepository<UserRole> UserRoles { get; set; }
+
+    IBaseRepository<Question> Questions { get; set; }
+
+    IBaseRepository<TestVariant> TestVariants { get; set; }
+
+    IBaseRepository<LessonRecord> LessonRecords { get; set; }
+
+    IBaseRepository<QueryWord> QueryWords { get; set; }
 }

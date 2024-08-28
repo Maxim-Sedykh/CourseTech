@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Constants.AnalysConstants;
 using CourseTech.Domain.Dto.FinalResult;
+using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Repositories;
@@ -10,12 +12,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
-    public class CourseResultService(IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<LessonRecord> lessonRecordRepository, IMapper mapper) : ICourseResultService
+    public class CourseResultService(IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<LessonRecord> lessonRecordRepository,
+        IBaseRepository<Lesson> lessonRepository, IMapper mapper) : ICourseResultService
     {
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
             var profile = await userProfileRepository.GetAll()
-                    .Include(x => x.User)
                     .FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (profile is null)
@@ -23,9 +25,28 @@ namespace CourseTech.Application.Services
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            var analys = await CreateAnalys(profile);
+            var usersLessonRecords = await lessonRecordRepository.GetAll()
+                .Include(x => x.Lesson)
+                .Where(x => x.UserId == profile.UserId)
+                .Select(x => mapper.Map<LessonRecordDto>(x))
+                .OrderBy(x => x.CreatedAt)
+                .ToListAsync();
 
-            profile.Analys = analys.UserAnalys;
+            if (!usersLessonRecords.Any())
+            {
+                return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
+            }
+
+            var lessons = await lessonRepository.GetAll().ToListAsync();
+
+            if (!lessons.Any())
+            {
+                return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
+            }
+
+            var analys = CreateAnalys(profile.CurrentGrade, usersLessonRecords, lessons.Count);
+
+            profile.Analys = analys.Analys;
             profile.IsExamCompleted = true;
 
             userProfileRepository.Update(profile);
@@ -36,7 +57,7 @@ namespace CourseTech.Application.Services
             return BaseResult<CourseResultDto>.Success(courseResult);
         }
 
-        //To Do Check on null here
+        //To Do Test it on user null
         public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
             var userAnalysDto = await userProfileRepository.GetAll()
@@ -46,43 +67,47 @@ namespace CourseTech.Application.Services
 
             if (userAnalysDto is null)
             {
-                return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);//UserAnalysNotFound
+                return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
             return BaseResult<UserAnalysDto>.Success(userAnalysDto);
         }
 
-        private async Task<UserAnalysDto> CreateAnalys(UserProfile profile) // Создание анализа прохождения курса
+        private UserAnalysDto CreateAnalys(float usersCurrentGrade, List<LessonRecordDto> userLessonRecords, int lessonsCount)
         {
-            var analys = new UserAnalysDto { UserAnalys = "Извините, данные вашего анализа были утеряны." };
+            var analys = new UserAnalysDto { Analys = AnalysConstants.UndefinedOverall };
+            var examLessonRecord = userLessonRecords.LastOrDefault();
 
-            string firstPartOfAnalys = profile.CurrentGrade switch
-            {
-                > 60 and <= 75 => "Данный курс вы прошли удовлетворительно. ",
-                > 75 and <= 90 => "Вы очень хорошо прошли курс! ",
-                > 90 => "У вас отличный результат! Так держать!!! ",
-                _ => "Вы прошли этот тест неудовлетворительно. Но не сдавайтесь! " +
-                        "Вы всегда рано или поздно достигните успеха, если будете стараться!!! "
-            };
-
-            if (_lessonRecordRepository.GetAll().Where(x => x.UserId == profile.Id).Count() != supposedLessonRecordsCount)
+            if (userLessonRecords.Count != lessonsCount || examLessonRecord == null)
             {
                 return analys;
             }
-            var usersLessonRecords = await _lessonRecordRepository.GetAll().Include(x => x.Lesson).Where(x => x.UserId == profile.Id).ToListAsync();
-            var examLessonRecord = usersLessonRecords.Where(x => x.Lesson.Name == "Экзамен");
-            var commonLessonRecords = usersLessonRecords.Except(examLessonRecord);
 
-            var maxMarkLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).First();
-            var minMarkLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).Last();
+            string firstPartOfAnalys = usersCurrentGrade switch
+            {
+                > 90 => AnalysConstants.ExcellentOverall,
+                > 75 => AnalysConstants.GoodOverall,
+                > 60 => AnalysConstants.SatisfactoryOverall,
+                _ => AnalysConstants.UnsatisfactoryOverall
+            };
 
-            string secondPartOfAnalys = $"Ваша средняя оценка по обычным занятиям {commonLessonRecords.Sum(x => x.Mark) / commonLessonRecords.Count()} " +
-                 $"из 15 возможных. Вы набрали максимальное количество баллов по уроку {maxMarkLessonRecord.Lesson.Name} - {maxMarkLessonRecord.Mark} баллов." +
-                 $" Минимальное по уроку {minMarkLessonRecord.Lesson.Name} - {minMarkLessonRecord.Mark} баллов," +
-                 $" вы набрали {examLessonRecord.First().Mark} баллов по экзамену из 40б. " +
-                 $"За одно тестовое задание можно было получить 1.5 балла, за открытое 3.5.";
+            var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Count - 1).ToList();
 
-            return new UserAnalysViewModel { UserAnalys = firstPartOfAnalys + secondPartOfAnalys };
+            if (commonLessonRecords.Count > 0)
+            {
+                var averageMark = commonLessonRecords.Average(x => x.Mark);
+                var maxMarkCommonLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).First();
+
+                string secondPartOfAnalys = string.Format(AnalysConstants.LessonsAnalys,
+                    averageMark,
+                    maxMarkCommonLessonRecord.LessonName,
+                    maxMarkCommonLessonRecord.Mark,
+                    examLessonRecord.Mark);
+
+                analys.Analys = $"{firstPartOfAnalys} - {secondPartOfAnalys}";
+            }
+
+            return analys;
         }
     }
 }

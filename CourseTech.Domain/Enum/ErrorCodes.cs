@@ -15,6 +15,7 @@ public enum ErrorCodes
     UserProfileNotFound = 10,
 
     LessonNotFound = 20,
+    LessonsNotFound = 21,
 
     LessonRecordsNotFound = 30,
 
@@ -22,6 +23,14 @@ public enum ErrorCodes
 
     ReviewNotFound = 50,
     ReviewsNotFound = 51,
+
+    InvalidClientRequest = 61,
+    PasswordIsWrong = 62,
+    PasswordNotEqualsPasswordConfirm = 63,
+
+    RoleNotFound = 71,
+
+    QuestionsNotFound = 80,
 
     InternalServerError = 500
 }

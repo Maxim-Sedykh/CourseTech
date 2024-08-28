@@ -70,6 +70,24 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инвалидный запрос клиента.
+        /// </summary>
+        internal static string InvalidClientRequest {
+            get {
+                return ResourceManager.GetString("InvalidClientRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Инвалидный токен.
+        /// </summary>
+        internal static string InvalidToken {
+            get {
+                return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Урок не найден.
         /// </summary>
         internal static string LessonNotFound {
@@ -84,6 +102,33 @@ namespace CourseTech.Application.Resources {
         internal static string LessonRecordsNotFound {
             get {
                 return ResourceManager.GetString("LessonRecordsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Уроки не найдены.
+        /// </summary>
+        internal static string LessonsNotFound {
+            get {
+                return ResourceManager.GetString("LessonsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неверный пароль.
+        /// </summary>
+        internal static string PasswordIsWrong {
+            get {
+                return ResourceManager.GetString("PasswordIsWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароли не совпадают.
+        /// </summary>
+        internal static string PasswordNotEqualsPasswordConfirm {
+            get {
+                return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
             }
         }
         
@@ -115,6 +160,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Роль не найдена.
+        /// </summary>
+        internal static string RoleNotFound {
+            get {
+                return ResourceManager.GetString("RoleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Пользователь уже существует.
         /// </summary>
         internal static string UserAlreadyExists {
@@ -138,6 +192,15 @@ namespace CourseTech.Application.Resources {
         internal static string UserProfileNotFound {
             get {
                 return ResourceManager.GetString("UserProfileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Роли пользователя не найдены.
+        /// </summary>
+        internal static string UserRolesNotFound {
+            get {
+                return ResourceManager.GetString("UserRolesNotFound", resourceCulture);
             }
         }
     }

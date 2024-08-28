@@ -1,4 +1,6 @@
 ﻿using CourseTech.Domain.Dto.Auth;
+using CourseTech.Domain.Dto.Token;
+using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Result;
 using System.Security.Claims;
 
@@ -14,21 +16,13 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult> Register(RegisterUserDto dto);
+        Task<BaseResult<UserDto>> Register(RegisterUserDto dto);
 
         /// <summary>
         /// Авторизация пользователя
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult> Login(LoginUserDto dto);
-
-        /// <summary>
-        /// Смена пароля пользователя
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<BaseResult> ChangePassword(ChangePasswordDto dto, Guid userId);
+        Task<BaseResult<TokenDto>> Login(LoginUserDto dto);
     }
 }

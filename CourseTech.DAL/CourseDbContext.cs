@@ -8,10 +8,7 @@ namespace CourseTech.DAL;
 
 public class CourseDbContext : DbContext
 {
-    public CourseDbContext(DbContextOptions<CourseDbContext> options) : base(options)
-    {
-        Database.EnsureCreated();
-    }
+    public CourseDbContext(DbContextOptions<CourseDbContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

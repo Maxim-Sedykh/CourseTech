@@ -120,11 +120,26 @@
   <data name="InternalServerError" xml:space="preserve">
     <value>Internal server error</value>
   </data>
+  <data name="InvalidClientRequest" xml:space="preserve">
+    <value>Invalid client request</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Invalid token</value>
+  </data>
   <data name="LessonNotFound" xml:space="preserve">
     <value>Lesson not found</value>
   </data>
   <data name="LessonRecordsNotFound" xml:space="preserve">
     <value>Lesson records not found</value>
+  </data>
+  <data name="LessonsNotFound" xml:space="preserve">
+    <value>Lessons not found</value>
+  </data>
+  <data name="PasswordIsWrong" xml:space="preserve">
+    <value>Password is wrong</value>
+  </data>
+  <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
+    <value>Password not equals password confirm</value>
   </data>
   <data name="QuestionsNotFound" xml:space="preserve">
     <value>Questions not found</value>
@@ -135,6 +150,9 @@
   <data name="ReviewsNotFound" xml:space="preserve">
     <value>Reviews not found</value>
   </data>
+  <data name="RoleNotFound" xml:space="preserve">
+    <value>Role not found</value>
+  </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>User already exists</value>
   </data>
@@ -143,5 +161,8 @@
   </data>
   <data name="UserProfileNotFound" xml:space="preserve">
     <value>User profile not found</value>
+  </data>
+  <data name="UserRolesNotFound" xml:space="preserve">
+    <value>User roles not found</value>
   </data>
 </root>

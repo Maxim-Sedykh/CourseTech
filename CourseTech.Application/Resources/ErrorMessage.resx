@@ -120,11 +120,26 @@
   <data name="InternalServerError" xml:space="preserve">
     <value>Внутренняя ошибка сервера</value>
   </data>
+  <data name="InvalidClientRequest" xml:space="preserve">
+    <value>Инвалидный запрос клиента</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Инвалидный токен</value>
+  </data>
   <data name="LessonNotFound" xml:space="preserve">
     <value>Урок не найден</value>
   </data>
   <data name="LessonRecordsNotFound" xml:space="preserve">
     <value>Записи о прохождении уроков не найдены</value>
+  </data>
+  <data name="LessonsNotFound" xml:space="preserve">
+    <value>Уроки не найдены</value>
+  </data>
+  <data name="PasswordIsWrong" xml:space="preserve">
+    <value>Неверный пароль</value>
+  </data>
+  <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
+    <value>Пароли не совпадают</value>
   </data>
   <data name="QuestionsNotFound" xml:space="preserve">
     <value>Вопросы не найдены</value>
@@ -135,6 +150,9 @@
   <data name="ReviewsNotFound" xml:space="preserve">
     <value>Отзывы не найдены</value>
   </data>
+  <data name="RoleNotFound" xml:space="preserve">
+    <value>Роль не найдена</value>
+  </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Пользователь уже существует</value>
   </data>
@@ -143,5 +161,8 @@
   </data>
   <data name="UserProfileNotFound" xml:space="preserve">
     <value>Профиль пользователя не найден</value>
+  </data>
+  <data name="UserRolesNotFound" xml:space="preserve">
+    <value>Роли пользователя не найдены</value>
   </data>
 </root>

@@ -15,6 +15,22 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<UserProfile> UserProfiles { get; set; }
 
+    public IBaseRepository<Role> Roles { get; set; }
+
+    public IBaseRepository<UserToken> UserTokens { get; set; }
+
+    public IBaseRepository<Lesson> Lessons { get; set; }
+
+    public IBaseRepository<UserRole> UserRoles { get; set; }
+
+    public IBaseRepository<LessonRecord> LessonRecords { get; set; }
+
+    public IBaseRepository<Question> Questions { get; set; }
+
+    public IBaseRepository<TestVariant> TestVariants { get; set; }
+
+    public IBaseRepository<QueryWord> QueryWords { get; set; }
+
     public UnitOfWork(CourseDbContext context, IBaseRepository<User> users, IBaseRepository<Review> reviews)
     {
         _context = context;
