@@ -129,6 +129,9 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>Урок не найден</value>
   </data>
+  <data name="LessonQuestionsNotFound" xml:space="preserve">
+    <value>Вопросы урока не найдены</value>
+  </data>
   <data name="LessonRecordsNotFound" xml:space="preserve">
     <value>Записи о прохождении уроков не найдены</value>
   </data>

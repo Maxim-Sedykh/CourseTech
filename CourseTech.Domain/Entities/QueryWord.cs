@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Interfaces.Entities;
+﻿using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
+using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;
 
@@ -14,7 +15,7 @@ public class QueryWord : IEntityId<long>, IAuditable
 
     public int QuestionId { get; set; }
 
-    public Question Question { get; set; }
+    public PracticalQuestion PracticalQuestion { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

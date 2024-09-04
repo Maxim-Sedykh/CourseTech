@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Dto.Lesson
+namespace CourseTech.Domain.Dto.Lesson.LessonInfo
 {
     /// <summary>
     /// DTO для передачи имени урока

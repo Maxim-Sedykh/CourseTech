@@ -1,5 +1,8 @@
-﻿using CourseTech.Domain.Dto.Lesson;
+﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Practice;
+using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services
@@ -21,7 +24,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="lessonId"></param>
         /// <returns></returns>
-        Task<BaseResult<LessonPassDto>> GetLessonQuestionsAsync(int lessonId);
+        Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
 
         /// <summary>
         /// Завершение прохождения тестирования
@@ -29,7 +32,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <param name="dto"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<LessonPassDto>> PassLessonAsync(LessonPassDto dto, Guid userId);
+        Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonAsync(PracticeUserAnswersDto dto, Guid userId);
 
         /// <summary>
         /// Обновление урока с разметкой лекции

@@ -97,6 +97,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вопросы урока не найдены.
+        /// </summary>
+        internal static string LessonQuestionsNotFound {
+            get {
+                return ResourceManager.GetString("LessonQuestionsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Записи о прохождении уроков не найдены.
         /// </summary>
         internal static string LessonRecordsNotFound {

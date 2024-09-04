@@ -37,14 +37,14 @@ namespace CourseTech.Application.Services
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
             }
 
-            var lessons = await lessonRepository.GetAll().ToListAsync();
+            var lessonsCount = await lessonRepository.GetAll().CountAsync();
 
-            if (!lessons.Any())
+            if (lessonsCount == 0)
             {
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 
-            var analys = CreateAnalys(profile.CurrentGrade, usersLessonRecords, lessons.Count);
+            var analys = CreateAnalys(profile.CurrentGrade, usersLessonRecords, lessonsCount);
 
             profile.Analys = analys.Analys;
             profile.IsExamCompleted = true;

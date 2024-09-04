@@ -1,15 +1,27 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
-using CourseTech.Domain.Dto.Lesson;
+using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Practice;
+using CourseTech.Domain.Dto.Lesson.Test;
+using CourseTech.Domain.Dto.Question.Get;
+using CourseTech.Domain.Dto.Question.Pass;
+using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.QuestionEntities;
+using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Helpers;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using QuickGraph;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using static Azure.Core.HttpHeader;
 
 namespace CourseTech.Application.Services
 {
@@ -52,20 +64,19 @@ namespace CourseTech.Application.Services
                 return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            var lessonNames = await unitOfWork.Lessons.GetAll()
+            var lessons = await unitOfWork.Lessons.GetAll()
                 .Select(x => mapper.Map<LessonDto>(x))
                 .ToListAsync();
 
-            if (lessonNames is null)
+            if (lessons is null)
             {
                 return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 
             return BaseResult<UserLessonsDto>.Success(new UserLessonsDto()
             {
-                LessonNames = lessonNames,
+                LessonNames = lessons,
                 LessonsCompleted = profile.LessonsCompleted
-
             });
         }
 
@@ -85,169 +96,204 @@ namespace CourseTech.Application.Services
             return BaseResult<LessonLectureDto>.Success(dto);
         }
 
-        public async Task<BaseResult<LessonPassDto>> PassLessonAsync(LessonPassDto dto, Guid userId)
-        {
-            var profile = await unitOfWork.UserProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
-            if (profile == null)
-            {
-                return BaseResult<LessonPassDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
-            }
-
-            Tuple<float, List<bool>> tasksEvaluations = CheckTasks(dto); //Проверка ответов пользователя
-            if (dto.LessonId > profile.LessonsCompleted)
-            {
-                profile.CurrentGrade = +tasksEvaluations.Item1;
-                profile.LessonsCompleted++;
-
-                unitOfWork.UserProfiles.Update(profile);
-
-                await unitOfWork.SaveChangesAsync();
-
-                await unitOfWork.LessonRecords.CreateAsync(new LessonRecord
-                {
-                    LessonId = dto.LessonId,
-                    UserId = profile.UserId,
-                    Mark = tasksEvaluations.Item1
-                });
-            }
-
-            for (int i = 0; i < dto.Questions.Count; i++)
-            {
-                dto.Questions[i].AnswerCorrectness = tasksEvaluations.Item2[i];
-            }
-
-            return BaseResult<LessonPassDto>.Success(dto);
-        }
-
-        public async Task<BaseResult<LessonPassDto>> GetLessonQuestionsAsync(int lessonId)
+        public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
             var lesson = await unitOfWork.Lessons.GetAll().FirstOrDefaultAsync(x => x.Id == lessonId);
             if (lesson is null)
             {
-                return BaseResult<LessonPassDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
-            var lessonPassDto = GetLessonQuestions(lesson);
+            // To Do 3 разных репозитория юзаем, не уверен что тут так надо делать
+            var lessonQuestions = await unitOfWork.OpenQuestions.GetAll()  // To Do посмотреть какой запрос здесь формируется, если что -- переписать запрос
+                .Where(q => q.LessonId == lessonId)
+                .Select(x => mapper.Map<OpenQuestionDto>(x)).Cast<IQuestionDto>()
+                .Union(unitOfWork.PracticalQuestions.GetAll()
+                .Where(q => q.LessonId == lessonId)
+                .Select(x => mapper.Map<PracticalQuestionDto>(x)))
+                .Union(unitOfWork.TestQuestions.GetAll()
+                .Where(q => q.LessonId == lessonId)
+                .Select(x => mapper.Map<TestQuestionDto>(x))).ToListAsync();
 
-            if (lessonPassDto is null)
+            if (!lessonQuestions.Any())
             {
-                return BaseResult<LessonPassDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
             }
 
-            return BaseResult<LessonPassDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
+            return BaseResult<LessonPracticeDto>.Success(new LessonPracticeDto()
+            {
+                LessonId = lesson.Id,
+                LessonType = lesson.LessonType,
+                Questions = lessonQuestions
+            });
         }
 
-        private LessonPassDto GetLessonQuestions(Lesson currentLesson)
+        #region Pass Lesson 
+
+        public async Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonAsync(PracticeUserAnswersDto dto, Guid userId)
         {
-            var lessonQuestions = unitOfWork.Questions.GetAll().Where(question => question.LessonId == currentLesson.Id).ToList();
-            var lessonTestVariants = unitOfWork.Questions.GetAll().Where(question => question.LessonId == currentLesson.Id && question.Type == QuestionType.Test)
-                                                    .Join(unitOfWork.TestVariants.GetAll(), question => question.Id, testVariant => testVariant.QuestionId, (question, testVariant) => testVariant)
-                                                    .ToList();
-            var questionViewModels = new List<QuestionDto>();
-            for (int i = 0; i < lessonQuestions.Count; i++)
+            var profile = await unitOfWork.UserProfiles.GetAll()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (profile == null)
             {
-                if (i > 0 && lessonQuestions[i - 1].Number == lessonQuestions[i].Number)
+                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            }
+
+            var lesson = await unitOfWork.Lessons.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == dto.LessonId);
+
+            if (lesson == null)
+            {
+                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+            }
+
+            var questions = await unitOfWork.Questions.GetAll()
+                    .Include(q => q.Lesson)
+                    .Where(q => q.LessonId == lesson.Id)
+                    .OrderBy(x => x.Number)
+                    .ToListAsync();
+
+            if (!questions.Any() || questions.Count != dto.UserAnswerDtos.Count)
+            {
+                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.LessonQuestionsNotFound,
+                    ErrorMessage.LessonQuestionsNotFound);
+            }
+
+            var correctAnswers = CheckUserAnswers(dto.UserAnswerDtos, questions, out float userGrade);
+
+            return BaseResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
+            {
+                LessonId = lesson.Id,
+                QuestionCorrectAnswers = correctAnswers
+            });
+        }
+
+        //To Do сделать так, чтобы пользователю после практики показывалось количество баллов за ответ
+        //To Do оптимизировать код
+        private List<ICorrectAnswerDto> CheckUserAnswers(List<IUserAnswerDto> userAnswers, List<Question> lessonQuestions, out float userGrade)
+        {
+            var correctAnswers = new List<ICorrectAnswerDto>();
+
+            userGrade = 0;
+
+            if (userAnswers.Count != lessonQuestions.Count)
+            {
+                return new List<ICorrectAnswerDto>();
+            }
+
+            for (int i = 0; i < userAnswers.Count && i < lessonQuestions.Count; i++)
+            {
+                //Если вопрос тестовый
+                if (lessonQuestions[i] is TestQuestion && userAnswers[i] is TestQuestionUserAnswerDto testUserAnswer)
                 {
-                    questionViewModels.Last().InnerAnswers.Add(lessonQuestions[i].Answer);
-                    continue;
-                }
-                else
-                {
-                    questionViewModels.Add(new QuestionDto
+                    var correctTestVariant = unitOfWork.TestVariants.GetAll()
+                        .FirstOrDefault(x => x.QuestionId == lessonQuestions[i].Id && x.IsRight);
+
+                    var testQuestionCorrectAnswerDto = new TestQuestionCorrectAnswerDto()
                     {
                         Id = lessonQuestions[i].Id,
-                        Number = lessonQuestions[i].Number,
-                        DisplayQuestion = lessonQuestions[i].DisplayQuestion,
-                        QuestionType = lessonQuestions[i].Type,
-                        VariantsOfAnswer = lessonQuestions[i].Type == QuestionType.Test ? (from testVariant in lessonTestVariants
-                                                                                           where testVariant.QuestionId == lessonQuestions[i].Id
-                                                                                           select testVariant).ToList() : null,
-                        InnerAnswers = new List<string> { lessonQuestions[i].Answer },
-                        RightPageAnswer = (lessonQuestions[i].Type == QuestionType.Open) || (lessonQuestions[i].Type == QuestionType.Practical) ? lessonQuestions[i].Answer : (from testVariant in lessonTestVariants
-                                                                                                                                                                               where testVariant.QuestionId == lessonQuestions[i].Id
-                                                                                                                                                                               where testVariant.IsRight
-                                                                                                                                                                               select testVariant.Content).First(),
-                    });
-                }
-            }
-            return new LessonPassDto
-            {
-                LessonId = currentLesson.Id,
-                Questions = questionViewModels,
-                LessonType = currentLesson.LessonType
-            };
-        }
+                        CorrectAnswer = correctTestVariant.Content,
+                    };
 
-        private Tuple<float, List<bool>> CheckTasks(LessonPassDto model) // Проверка заданий тестового и открытого типа
-        {
-            float grade = 0;
-            List<bool> tasksCorrectness = new List<bool>();
-
-            foreach (var question in model.Questions)
-            {
-                bool isAnswerCorrect = false;
-                foreach (var answer in question.InnerAnswers)
-                {
-                    if (question.QuestionType == QuestionType.Practical)
+                    if (testUserAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber)
                     {
-                        var remarks = new List<string>();
-                        try
-                        {
-                            var userResult = SqlHelper.ExecuteQuery(question.UserAnswer);
-                            var rightResult = SqlHelper.ExecuteQuery(question.InnerAnswers.First());
+                        userGrade++;
 
-                            DataTableComparer comparer = new DataTableComparer();
-                            int result = comparer.Compare(userResult, rightResult);
-
-                            if (result == 0)
-                            {
-                                isAnswerCorrect = true;
-                                grade = +5.75f;
-                                tasksCorrectness.Add(true);
-                            }
-                            else
-                            {
-                                ParseAnswer(question.UserAnswer.ToLower(), question.Id, out grade, out remarks);
-                                question.Remarks = remarks;
-                            }
-                            if (userResult != null)
-                            {
-                                question.QueryResult = userResult;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            if (question.UserAnswer != null)
-                            {
-                                ParseAnswer(question.UserAnswer.ToLower(), question.Id, out grade, out remarks);
-                                question.Remarks = remarks;
-                            }
-                        }
+                        testQuestionCorrectAnswerDto.AnswerCorrectness = true;
                     }
                     else
                     {
-                        if (answer == question.UserAnswer)
+                        testQuestionCorrectAnswerDto.AnswerCorrectness = false;
+                    }
+
+                    correctAnswers.Add(testQuestionCorrectAnswerDto);
+                }
+                //Если вопрос открытый
+                else if (lessonQuestions[i] is OpenQuestion && userAnswers[i] is OpenQuestionUserAnswerDto openQuestionUserAnswerDto)
+                {
+                    var correctAnswersOnOpenQuestions = unitOfWork.OpenQuestionAnswerVariants.GetAll()
+                        .Where(x => x.QuestionId == lessonQuestions[i].Id).ToList();
+
+                    var openQuestionCorrectAnswerDto = new OpenQuestionCorrectAnswerDto()
+                    {
+                        Id = lessonQuestions[i].Id,
+                        CorrectAnswer = correctAnswersOnOpenQuestions.FirstOrDefault().OpenQuestionCorrectAnswer
+                    };
+
+                    if (correctAnswersOnOpenQuestions.Any(x => x.OpenQuestionCorrectAnswer == openQuestionUserAnswerDto.UserAnswer))
+                    {
+                        userGrade = userGrade + 2;
+
+                        openQuestionCorrectAnswerDto.AnswerCorrectness = true;
+                    }
+                    else
+                    {
+                        openQuestionCorrectAnswerDto.AnswerCorrectness = false;
+                    }
+
+                    correctAnswers.Add(openQuestionCorrectAnswerDto);
+                } 
+                else if (lessonQuestions[i] is PracticalQuestion practicalQuestion && userAnswers[i] is PracticalQuestionUserAnswerDto practicalQuestionUserAnswerDto)
+                {
+
+                    var practicalQuestionCorrectAnswerDto = new PracticalQuestionCorrectAnswerDto()
+                    {
+                        Id = lessonQuestions[i].Id,
+                        CorrectAnswer = practicalQuestion.RightQueryCode
+                    };
+
+                    var remarks = new List<string>();
+                    try
+                    {
+                        var userResult = SqlHelper.ExecuteQuery(practicalQuestionUserAnswerDto.UserCodeAnswer);
+                        var rightResult = SqlHelper.ExecuteQuery(practicalQuestion.RightQueryCode);
+
+                        DataTableComparer comparer = new DataTableComparer();
+                        int result = comparer.Compare(userResult, rightResult);
+
+                        if (result == 0)
                         {
-                            isAnswerCorrect = true;
-                            tasksCorrectness.Add(true);
-                            if (question.QuestionType == QuestionType.Test)
+                            practicalQuestionCorrectAnswerDto.AnswerCorrectness = true;
+
+                            userGrade = userGrade + 5.75f;
+
+                            if (userResult != null)
                             {
-                                grade += 1f;
+                                practicalQuestionCorrectAnswerDto.QueryResult = userResult;
                             }
-                            else
-                            {
-                                grade += 2f;
-                            }
-                            break;
+
+                            correctAnswers.Add(practicalQuestionCorrectAnswerDto);
+                        }
+                        else
+                        {
+                            ParseAnswer(practicalQuestionUserAnswerDto.UserCodeAnswer.ToLower(), practicalQuestion.Id, out float practicalQuestionGrade, out remarks);
+
+                            practicalQuestionCorrectAnswerDto.AnswerCorrectness = false;
+                            practicalQuestionCorrectAnswerDto.Remarks = remarks;
+
+                            userGrade = userGrade + practicalQuestionGrade;
+
+                            correctAnswers.Add(practicalQuestionCorrectAnswerDto);
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+                        if (practicalQuestionUserAnswerDto.UserCodeAnswer != null)
+                        {
+                            ParseAnswer(practicalQuestionUserAnswerDto.UserCodeAnswer.ToLower(), practicalQuestion.Id, out float practicalQuestionGrade, out remarks);
+
+                            practicalQuestionCorrectAnswerDto.AnswerCorrectness = false;
+                            practicalQuestionCorrectAnswerDto.Remarks = remarks;
+
+                            correctAnswers.Add(practicalQuestionCorrectAnswerDto);
                         }
                     }
                 }
-                if (!isAnswerCorrect)
-                {
-                    tasksCorrectness.Add(false);
-                }
             }
-            return new Tuple<float, List<bool>>(grade, tasksCorrectness);
+
+            return correctAnswers;
         }
 
         public void ParseAnswer(string sqlQuery, int questionId, out float grade, out List<string> remarks)
@@ -326,6 +372,8 @@ namespace CourseTech.Application.Services
             }
             return graph;
         }
+
+        #endregion
 
     }
 }

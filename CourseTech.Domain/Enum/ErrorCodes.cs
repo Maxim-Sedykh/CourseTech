@@ -32,5 +32,7 @@ public enum ErrorCodes
 
     QuestionsNotFound = 80,
 
+    LessonQuestionsNotFound = 91,
+
     InternalServerError = 500
 }

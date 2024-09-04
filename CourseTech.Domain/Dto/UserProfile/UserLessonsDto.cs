@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Dto.Lesson;
+﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;

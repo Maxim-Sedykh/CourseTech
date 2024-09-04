@@ -129,6 +129,9 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>Lesson not found</value>
   </data>
+  <data name="LessonQuestionsNotFound" xml:space="preserve">
+    <value>Lesson questions not found</value>
+  </data>
   <data name="LessonRecordsNotFound" xml:space="preserve">
     <value>Lesson records not found</value>
   </data>
