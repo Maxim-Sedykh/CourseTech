@@ -20,21 +20,6 @@ namespace CourseTech.Domain.Interfaces.Services
         Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId);
 
         /// <summary>
-        /// Получение информации про урок с вопросами для тестирования по идентификатору урока
-        /// </summary>
-        /// <param name="lessonId"></param>
-        /// <returns></returns>
-        Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
-
-        /// <summary>
-        /// Завершение прохождения тестирования
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonAsync(PracticeUserAnswersDto dto, Guid userId);
-
-        /// <summary>
         /// Обновление урока с разметкой лекции
         /// </summary>
         /// <param name="dto"></param>

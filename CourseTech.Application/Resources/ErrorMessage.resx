@@ -129,6 +129,9 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>Урок не найден</value>
   </data>
+  <data name="LessonOpenQuestionsNotFound" xml:space="preserve">
+    <value>Открытые вопросы урока не найдены</value>
+  </data>
   <data name="LessonQuestionsNotFound" xml:space="preserve">
     <value>Вопросы урока не найдены</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="LessonsNotFound" xml:space="preserve">
     <value>Уроки не найдены</value>
+  </data>
+  <data name="LessonTestQuestionsNotFound" xml:space="preserve">
+    <value>Тестовые вопросы урока не найдены</value>
+  </data>
+  <data name="OpenQuestionsAnswerVariantsNotFound" xml:space="preserve">
+    <value>Правильные варианты ответов для открытых вопросов урока не найдены</value>
   </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Неверный пароль</value>
@@ -155,6 +164,9 @@
   </data>
   <data name="RoleNotFound" xml:space="preserve">
     <value>Роль не найдена</value>
+  </data>
+  <data name="TestQuestionsCorrectVariantsNotFound" xml:space="preserve">
+    <value>Правильные варианты ответов для тестовых вопросов урока не найдены</value>
   </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Пользователь уже существует</value>

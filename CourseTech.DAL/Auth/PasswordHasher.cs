@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Interfaces.Auth;
+﻿using CourseTech.Domain.Interfaces.Helpers;
 using System.Security.Cryptography;
 
 namespace CourseTech.DAL.Auth

@@ -5,7 +5,7 @@ namespace CourseTech.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FinalResultController : ControllerBase
+    public class CourseResultController : ControllerBase
     {
     }
 }

@@ -17,17 +17,7 @@ namespace CourseTech.Domain.Helpers
         {
             var connectionString = "ConnectionStringToAnotherDatabase";
             DataTable table = new DataTable();
-            List<string> prohibitedWords = new List<string> { "lessonrecords", "users", "lessons",
-                "reviews", "questions", "testvariants", "userprofiles" };
-            sqlQuery = Regex.Replace(sqlQuery, @"\s+", " ").ToLower();
 
-            foreach (var word in prohibitedWords)
-            {
-                if (sqlQuery.Contains(word))
-                {
-                    return table;
-                }
-            }
             if (!sqlQuery.Contains("select"))
             {
                 return table;

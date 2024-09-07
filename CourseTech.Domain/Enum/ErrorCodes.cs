@@ -33,6 +33,11 @@ public enum ErrorCodes
     QuestionsNotFound = 80,
 
     LessonQuestionsNotFound = 91,
+    LessonTestQuestionsNotFound = 92,
+    LessonOpenQuestionsNotFound = 93,
+
+    TestQuestionsCorrectVariantsNotFound = 100,
+    OpenQuestionsAnswerVariantsNotFound = 101,
 
     InternalServerError = 500
 }

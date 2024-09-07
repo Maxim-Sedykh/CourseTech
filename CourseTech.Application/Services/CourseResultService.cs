@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
-using CourseTech.Domain.Constants.AnalysConstants;
+using CourseTech.Domain.Constants;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;

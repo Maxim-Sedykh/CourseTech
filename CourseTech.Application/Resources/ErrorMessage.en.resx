@@ -129,6 +129,9 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>Lesson not found</value>
   </data>
+  <data name="LessonOpenQuestionsNotFound" xml:space="preserve">
+    <value>Open questions of lesson not found</value>
+  </data>
   <data name="LessonQuestionsNotFound" xml:space="preserve">
     <value>Lesson questions not found</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="LessonsNotFound" xml:space="preserve">
     <value>Lessons not found</value>
+  </data>
+  <data name="LessonTestQuestionsNotFound" xml:space="preserve">
+    <value>Test questions of lesson not found</value>
+  </data>
+  <data name="OpenQuestionsAnswerVariantsNotFound" xml:space="preserve">
+    <value>Correct variants of answers for open questions of lesson not found</value>
   </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Password is wrong</value>
@@ -155,6 +164,9 @@
   </data>
   <data name="RoleNotFound" xml:space="preserve">
     <value>Role not found</value>
+  </data>
+  <data name="TestQuestionsCorrectVariantsNotFound" xml:space="preserve">
+    <value>Correct variants of answers for test questions of lesson not found</value>
   </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>User already exists</value>

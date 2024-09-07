@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Constants.AnalysConstants
+namespace CourseTech.Domain.Constants
 {
     public static class AnalysConstants
     {

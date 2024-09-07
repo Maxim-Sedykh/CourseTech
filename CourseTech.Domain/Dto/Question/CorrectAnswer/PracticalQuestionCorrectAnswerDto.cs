@@ -14,6 +14,8 @@ namespace CourseTech.Domain.Dto.Question.Pass
 
         public string CorrectAnswer { get; set; }
 
+        public float QuestionUserGrade { get; set; }
+
         public DataTable QueryResult { get; set; }
 
         public List<string> Remarks { get; set; }

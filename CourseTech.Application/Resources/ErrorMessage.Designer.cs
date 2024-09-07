@@ -97,6 +97,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Открытые вопросы урока не найдены.
+        /// </summary>
+        internal static string LessonOpenQuestionsNotFound {
+            get {
+                return ResourceManager.GetString("LessonOpenQuestionsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Вопросы урока не найдены.
         /// </summary>
         internal static string LessonQuestionsNotFound {
@@ -120,6 +129,24 @@ namespace CourseTech.Application.Resources {
         internal static string LessonsNotFound {
             get {
                 return ResourceManager.GetString("LessonsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тестовые вопросы урока не найдены.
+        /// </summary>
+        internal static string LessonTestQuestionsNotFound {
+            get {
+                return ResourceManager.GetString("LessonTestQuestionsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Правильные варианты ответов для открытых вопросов урока не найдены.
+        /// </summary>
+        internal static string OpenQuestionsAnswerVariantsNotFound {
+            get {
+                return ResourceManager.GetString("OpenQuestionsAnswerVariantsNotFound", resourceCulture);
             }
         }
         
@@ -174,6 +201,15 @@ namespace CourseTech.Application.Resources {
         internal static string RoleNotFound {
             get {
                 return ResourceManager.GetString("RoleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Правильные варианты ответов для тестовых вопросов урока не найдены.
+        /// </summary>
+        internal static string TestQuestionsCorrectVariantsNotFound {
+            get {
+                return ResourceManager.GetString("TestQuestionsCorrectVariantsNotFound", resourceCulture);
             }
         }
         

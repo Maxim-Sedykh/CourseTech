@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Interfaces.Auth
+namespace CourseTech.Domain.Interfaces.Helpers
 {
     public interface IPasswordHasher
     {

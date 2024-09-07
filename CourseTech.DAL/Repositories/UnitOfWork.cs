@@ -41,6 +41,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<OpenQuestionAnswerVariant> OpenQuestionAnswerVariants { get; set; }
 
+    public IBaseRepository<Keyword> Keywords { get; set; }
+
     public UnitOfWork(CourseDbContext context, IBaseRepository<User> users, IBaseRepository<Review> reviews)
     {
         _context = context;

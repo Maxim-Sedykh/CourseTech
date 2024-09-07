@@ -2,7 +2,7 @@
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces.Auth;
+using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using System;
