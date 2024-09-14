@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Dto.TestVariant;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using System;
@@ -17,6 +18,6 @@ namespace CourseTech.Domain.Dto.Question.Get
 
         public string DisplayQuestion { get; set; }
 
-        public List<TestVariant> TestVariants { get; set; }
+        public List<TestVariantDto> TestVariants { get; set; }
     }
 }

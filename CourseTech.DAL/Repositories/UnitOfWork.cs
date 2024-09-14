@@ -39,7 +39,7 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<PracticalQuestion> PracticalQuestions { get; set; }
 
-    public IBaseRepository<OpenQuestionAnswerVariant> OpenQuestionAnswerVariants { get; set; }
+    public IBaseRepository<OpenQuestionAnswer> OpenQuestionAnswers { get; set; }
 
     public IBaseRepository<Keyword> Keywords { get; set; }
 

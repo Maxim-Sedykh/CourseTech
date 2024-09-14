@@ -38,7 +38,7 @@ public interface IUnitOfWork : IStateSaveChanges
 
     IBaseRepository<Question> Questions { get; set; }
 
-    IBaseRepository<OpenQuestionAnswerVariant> OpenQuestionAnswerVariants { get; set; }
+    IBaseRepository<OpenQuestionAnswer> OpenQuestionAnswers { get; set; }
 
     IBaseRepository<Keyword> Keywords { get; set; }
 }

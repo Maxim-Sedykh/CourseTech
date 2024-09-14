@@ -1,17 +1,12 @@
 ﻿using CourseTech.Domain.Constants;
 using CourseTech.Domain.Interfaces.Graph;
 using QuickGraph;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.DAL.Graph
 {
-    public class QueryGraphAnalyzer: IQueryGraphAnalyzer
+    public class QueryGraphAnalyzer : IQueryGraphAnalyzer
     {
-        // To Do этот код никак вроде больше нельзя оптимизировать, графы здесь плохо используются, нужно улучшить алгоритм с графом
+        // To Do графы здесь плохо используются, нужно улучшить алгоритм с графом
         public void CalculateUserQueryScore(string sqlQuery, List<string> questionKeywords, out float grade, out List<string> remarks)
         {
             grade = 0;

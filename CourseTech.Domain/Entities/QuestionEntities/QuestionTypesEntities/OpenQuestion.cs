@@ -10,6 +10,6 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
     {
         public string Notation { get; set; }
 
-        public List<OpenQuestionAnswerVariant> AnswerVariants {  get; set; }
+        public List<OpenQuestionAnswer> AnswerVariants {  get; set; }
     }
 }

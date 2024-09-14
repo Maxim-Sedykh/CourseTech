@@ -79,6 +79,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инвалидный тип урока.
+        /// </summary>
+        internal static string InvalidLessonType {
+            get {
+                return ResourceManager.GetString("InvalidLessonType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инвалидный токен.
         /// </summary>
         internal static string InvalidToken {

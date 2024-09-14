@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Interfaces.Dtos.Question
 {
-    public interface ICheckQuestionDto
-    {
-        public int Id { get; set; }
-    }
+    public interface ICheckQuestionDto { }
 }

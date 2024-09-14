@@ -1,27 +1,13 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
-using CourseTech.Domain.Dto.Lesson.Practice;
-using CourseTech.Domain.Dto.Lesson.Test;
-using CourseTech.Domain.Dto.Question;
-using CourseTech.Domain.Dto.Question.Get;
-using CourseTech.Domain.Dto.Question.Pass;
-using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Helpers;
-using CourseTech.Domain.Interfaces.Databases;
-using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Parameters;
 using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
-using QuickGraph;
-using System.Net.WebSockets;
 
 namespace CourseTech.Application.Services
 {

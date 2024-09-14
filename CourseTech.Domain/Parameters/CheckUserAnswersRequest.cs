@@ -1,5 +1,7 @@
-﻿using CourseTech.Domain.Dto.Keyword;
-using CourseTech.Domain.Dto.Question;
+﻿using Azure;
+using CourseTech.Domain.Dto.Keyword;
+using CourseTech.Domain.Dto.OpenQuestionAnswer;
+using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities;
@@ -18,10 +20,23 @@ namespace CourseTech.Domain.Parameters
 
         public List<TestVariantDto> CorrectTestsVariants { get; set; }
 
-        public List<OpenQuestionAnswerVariant> OpenQuestionsAnswerVariants { get; set; }
+        public List<OpenQuestionAnswerDto> OpenQuestionsAnswerVariants { get; set; }
 
-        public List<CheckPracticalQuestionDto> CheckPracticalQuestionDtos { get; set; }
+        public List<PracticalQuestionCheckingDto> CheckPracticalQuestionDtos { get; set; }
 
         public List<KeywordDto> PracticalQuestionsKeywords { get; set; }
+
+        public void Deconstruct(out List<IUserAnswerDto> userAnswers,
+                           out List<TestVariantDto> correctTestsVariants,
+                           out List<OpenQuestionAnswerDto> openQuestionsAnswerVariants,
+                           out List<PracticalQuestionCheckingDto> checkPracticalQuestionDtos,
+                           out List<KeywordDto> practicalQuestionsKeywords)
+        {
+            userAnswers = UserAnswers;
+            correctTestsVariants = CorrectTestsVariants;
+            openQuestionsAnswerVariants = OpenQuestionsAnswerVariants;
+            checkPracticalQuestionDtos = CheckPracticalQuestionDtos;
+            practicalQuestionsKeywords = PracticalQuestionsKeywords;
+        }
     }
 }

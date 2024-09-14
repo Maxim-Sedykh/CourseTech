@@ -123,6 +123,9 @@
   <data name="InvalidClientRequest" xml:space="preserve">
     <value>Инвалидный запрос клиента</value>
   </data>
+  <data name="InvalidLessonType" xml:space="preserve">
+    <value>Инвалидный тип урока</value>
+  </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Инвалидный токен</value>
   </data>

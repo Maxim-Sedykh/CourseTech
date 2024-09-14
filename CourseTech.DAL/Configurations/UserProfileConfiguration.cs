@@ -27,13 +27,14 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             CreatedAt = DateTime.UtcNow,
         });
 
+        builder.ToTable(x => x.HasCheckConstraint("CK_Age", "Age BETWEEN 18 AND 65"));
+
         builder.Property(up => up.Id).ValueGeneratedOnAdd();
 
         builder.Property(up => up.Name).HasMaxLength(50).IsRequired(false);
         builder.Property(up => up.Surname).HasMaxLength(50).IsRequired(false);
 
         builder.Property(x => x.IsEditAble).HasDefaultValue(true);
-        builder.Property(x => x.IsReviewLeft).HasDefaultValue(false);
         builder.Property(x => x.IsExamCompleted).HasDefaultValue(false);
 
         builder.Property(x => x.Analys).IsRequired(false).HasMaxLength(100);

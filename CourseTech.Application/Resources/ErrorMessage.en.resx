@@ -123,6 +123,9 @@
   <data name="InvalidClientRequest" xml:space="preserve">
     <value>Invalid client request</value>
   </data>
+  <data name="InvalidLessonType" xml:space="preserve">
+    <value>Invalid lesson type</value>
+  </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Invalid token</value>
   </data>

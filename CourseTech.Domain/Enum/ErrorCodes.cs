@@ -35,6 +35,7 @@ public enum ErrorCodes
     LessonQuestionsNotFound = 91,
     LessonTestQuestionsNotFound = 92,
     LessonOpenQuestionsNotFound = 93,
+    InvalidLessonType = 94,
 
     TestQuestionsCorrectVariantsNotFound = 100,
     OpenQuestionsAnswerVariantsNotFound = 101,
