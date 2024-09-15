@@ -11,6 +11,6 @@ namespace CourseTech.Domain.Dto.Lesson.LessonInfo
     /// </summary>
     public class LessonNameDto
     {
-        public string LessonName { get; set; }
+        public string Name { get; set; }
     }
 }

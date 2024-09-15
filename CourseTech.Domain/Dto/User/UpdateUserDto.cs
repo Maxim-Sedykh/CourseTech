@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CourseTech.Domain.Dto.Role;
+using System.ComponentModel.DataAnnotations;
 
 namespace CourseTech.Domain.Dto.User
 {
@@ -8,14 +9,12 @@ namespace CourseTech.Domain.Dto.User
 
         public string Login { get; set; }
 
-        public Role Role { get; set; }
+        public List<string> Roles { get; set; }
 
         public string Name { get; set; }
 
         public string Surname { get; set; }
 
         public bool IsEditAble { get; set; }
-
-        public Dictionary<int, string> UserRoles { get; set; }
     }
 }

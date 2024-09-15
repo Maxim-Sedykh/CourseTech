@@ -13,12 +13,11 @@ namespace CourseTech.Application.Mapping
     {
         public ReviewMapping()
         {
-            CreateMap<Review, ReviewDto>().ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.User.Login, opt => opt.MapFrom(src => src.Login))
-                .ForMember(dest => dest.ReviewText, opt => opt.MapFrom(src => src.Text))
-                .ForMember(dest => dest.CreatedAt.ToLongDateString(), opt => opt.MapFrom(src => src.CreatedAt));
+            // To Do .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToLongDateString())) лишнее?
+            CreateMap<Review, ReviewDto>()
+                .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.User.Login))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToLongDateString()))
+                .ReverseMap();
         }
     }
 }

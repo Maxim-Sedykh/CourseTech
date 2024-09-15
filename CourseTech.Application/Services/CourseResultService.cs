@@ -62,7 +62,7 @@ namespace CourseTech.Application.Services
         {
             var userAnalysDto = await userProfileRepository.GetAll()
                 .Where(x => x.UserId == userId)
-                .Select(x => new UserAnalysDto() { Analys = x.Analys })
+                .Select(x => mapper.Map<UserAnalysDto>(x))
                 .FirstOrDefaultAsync();
 
             if (userAnalysDto is null)

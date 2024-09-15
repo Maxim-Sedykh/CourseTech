@@ -16,7 +16,7 @@ namespace CourseTech.Domain.Dto.Review
 
         public string Login { get; set; }
 
-        public string Text { get; set; }
+        public string ReviewText { get; set; }
 
         public string CreatedAt { get; set; }
     }

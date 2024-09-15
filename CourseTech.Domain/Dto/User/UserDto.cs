@@ -13,11 +13,9 @@ namespace CourseTech.Domain.Dto.User
 
         public string Login { get; set; }
 
-        public Role Role { get; set; }
+        public List<string> Roles { get; set; }
 
         public bool IsExamCompleted { get; set; }
-
-        public bool IsReviewLeft { get; set; }
 
         public bool IsEditAble { get; set; }
     }

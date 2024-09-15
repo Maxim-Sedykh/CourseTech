@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Entities.QuestionEntities
+namespace CourseTech.Domain.Entities
 {
     public class OpenQuestionAnswer : IEntityId<long>, IAuditable
     {

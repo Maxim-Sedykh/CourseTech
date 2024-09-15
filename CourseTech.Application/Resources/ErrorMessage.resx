@@ -165,14 +165,23 @@
   <data name="ReviewsNotFound" xml:space="preserve">
     <value>Отзывы не найдены</value>
   </data>
+  <data name="RoleAlreadyExist" xml:space="preserve">
+    <value>Роль уже существует</value>
+  </data>
   <data name="RoleNotFound" xml:space="preserve">
     <value>Роль не найдена</value>
+  </data>
+  <data name="RolesNotFound" xml:space="preserve">
+    <value>Роли не найдены</value>
   </data>
   <data name="TestQuestionsCorrectVariantsNotFound" xml:space="preserve">
     <value>Правильные варианты ответов для тестовых вопросов урока не найдены</value>
   </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Пользователь уже существует</value>
+  </data>
+  <data name="UserAlreadyExistThisRole" xml:space="preserve">
+    <value>У пользователя уже есть такая роль</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>Пользователь не найден</value>

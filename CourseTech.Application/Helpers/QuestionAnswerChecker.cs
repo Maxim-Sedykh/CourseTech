@@ -24,23 +24,25 @@ namespace CourseTech.Application.Helpers
                 var userAnswer = userAnswers[i];
                 var checkQuestionDto = checkQuestionDtos[i];
 
-                ICorrectAnswerDto correctAnswer;
-
-                switch (userAnswer)
+                if (userAnswer.QuestionId != checkQuestionDto.QuestionId)
                 {
-                    case TestQuestionUserAnswerDto testUserAnswer:
-                        correctAnswer = CheckTestQuestionAnswer(testUserAnswer, (checkQuestionDto as TestQuestionCheckingDto).CorrectVariant, ref userGrade);
-                        break;
-                    case OpenQuestionUserAnswerDto openQuestionUserAnswerDto:
-                        correctAnswer = CheckOpenQuestionAnswer(openQuestionUserAnswerDto, (checkQuestionDto as OpenQuestionCheckingDto).OpenQuestionsAnswers, ref userGrade);
-                        break;
-                    case PracticalQuestionUserAnswerDto practicalQuestionUserAnswerDto:
-                        correctAnswer = CheckPracticalQuestionAnswer(practicalQuestionUserAnswerDto, checkQuestionDto as PracticalQuestionCheckingDto, out float questionGrade);
-                        userGrade += questionGrade;
-                        break;
-                    default:
-                        return new List<ICorrectAnswerDto>();
+                    return new List<ICorrectAnswerDto>();
                 }
+
+                ICorrectAnswerDto correctAnswer = userAnswer switch
+                {
+
+                    TestQuestionUserAnswerDto testUserAnswer =>
+                        CheckTestQuestionAnswer(testUserAnswer, (checkQuestionDto as TestQuestionCheckingDto).CorrectVariant, ref userGrade),
+
+                    OpenQuestionUserAnswerDto openQuestionUserAnswerDto =>
+                        CheckOpenQuestionAnswer(openQuestionUserAnswerDto, (checkQuestionDto as OpenQuestionCheckingDto).OpenQuestionsAnswers, ref userGrade),
+
+                    PracticalQuestionUserAnswerDto practicalQuestionUserAnswerDto => 
+                        CheckPracticalQuestionAnswer(practicalQuestionUserAnswerDto, checkQuestionDto as PracticalQuestionCheckingDto, ref userGrade),
+
+                    _ => throw new ArgumentException("Неизвестный тип ответа")
+                };
 
                 correctAnswers.Add(correctAnswer);
             }
@@ -65,9 +67,9 @@ namespace CourseTech.Application.Helpers
             return correctAnswer;
         }
 
-        private ICorrectAnswerDto CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, out float questionGrade)
+        private ICorrectAnswerDto CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, ref float userGrade)
         {
-            questionGrade = 0;
+            float questionGrade = 0;
 
             var correctAnswer = new PracticalQuestionCorrectAnswerDto
             {
@@ -112,6 +114,8 @@ namespace CourseTech.Application.Helpers
                 correctAnswer.Remarks = remarks;
                 correctAnswer.QuestionUserGrade = practicalQuestionGrade;
             }
+
+            userGrade += questionGrade;
 
             return correctAnswer;
         }

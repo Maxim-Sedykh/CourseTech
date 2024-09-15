@@ -10,6 +10,6 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
     {
         public List<QueryWord> QueryWords { get; set; }
 
-        public string RightQueryCode { get; set; }
+        public string CorrectQueryCode { get; set; }
     }
 }

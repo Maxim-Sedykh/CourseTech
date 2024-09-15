@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Enum;
+﻿using CourseTech.Domain.Entities.QuestionEntities;
+using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;

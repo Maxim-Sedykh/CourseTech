@@ -15,6 +15,6 @@
 
         public float CurrentGrade { get; set; }
 
-        public string UserAnalys { get; set; }
+        public string Analys { get; set; }
     }
 }

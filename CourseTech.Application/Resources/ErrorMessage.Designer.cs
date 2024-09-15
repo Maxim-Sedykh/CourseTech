@@ -205,11 +205,29 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Роль уже существует.
+        /// </summary>
+        internal static string RoleAlreadyExist {
+            get {
+                return ResourceManager.GetString("RoleAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Роль не найдена.
         /// </summary>
         internal static string RoleNotFound {
             get {
                 return ResourceManager.GetString("RoleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Роли не найдены.
+        /// </summary>
+        internal static string RolesNotFound {
+            get {
+                return ResourceManager.GetString("RolesNotFound", resourceCulture);
             }
         }
         
@@ -228,6 +246,15 @@ namespace CourseTech.Application.Resources {
         internal static string UserAlreadyExists {
             get {
                 return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на У пользователя уже есть такая роль.
+        /// </summary>
+        internal static string UserAlreadyExistThisRole {
+            get {
+                return ResourceManager.GetString("UserAlreadyExistThisRole", resourceCulture);
             }
         }
         

@@ -16,29 +16,29 @@ public enum ErrorCodes
 
     LessonNotFound = 20,
     LessonsNotFound = 21,
+    InvalidLessonType = 22,
 
     LessonRecordsNotFound = 30,
 
-    TasksDataNotFound = 40,
+    ReviewNotFound = 40,
+    ReviewsNotFound = 41,
 
-    ReviewNotFound = 50,
-    ReviewsNotFound = 51,
+    RoleNotFound = 50,
+    UserAlreadyExistThisRole = 51,
+    RolesNotFound = 52,
+    RoleAlreadyExist = 53,
 
-    InvalidClientRequest = 61,
-    PasswordIsWrong = 62,
-    PasswordNotEqualsPasswordConfirm = 63,
+    QuestionsNotFound = 60,
+    LessonQuestionsNotFound = 61,
+    LessonTestQuestionsNotFound = 62,
+    LessonOpenQuestionsNotFound = 63,
 
-    RoleNotFound = 71,
+    TestQuestionsCorrectVariantsNotFound = 70,
+    OpenQuestionsAnswerVariantsNotFound = 71,
 
-    QuestionsNotFound = 80,
-
-    LessonQuestionsNotFound = 91,
-    LessonTestQuestionsNotFound = 92,
-    LessonOpenQuestionsNotFound = 93,
-    InvalidLessonType = 94,
-
-    TestQuestionsCorrectVariantsNotFound = 100,
-    OpenQuestionsAnswerVariantsNotFound = 101,
+    InvalidClientRequest = 100,
+    PasswordIsWrong = 101,
+    PasswordNotEqualsPasswordConfirm = 102,
 
     InternalServerError = 500
 }
