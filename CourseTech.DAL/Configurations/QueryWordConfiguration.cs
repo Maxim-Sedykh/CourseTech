@@ -8,11 +8,13 @@ public class QueryWordConfiguration : IEntityTypeConfiguration<QueryWord>
 {
     public void Configure(EntityTypeBuilder<QueryWord> builder)
     {
-        builder.Property(l => l.Id).ValueGeneratedOnAdd();
+        builder.Property(qw => qw.Id).ValueGeneratedOnAdd();
 
-        builder.HasOne(q => q.Keyword)
+        builder.HasIndex(x => x.Number).IsUnique();
+
+        builder.HasOne(qw => qw.Keyword)
             .WithMany(k => k.QueryWords)
-            .HasForeignKey(q => q.KeywordId)
+            .HasForeignKey(qw => qw.KeywordId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

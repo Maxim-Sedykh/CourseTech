@@ -1,5 +1,8 @@
 using CourseTech.DAL.DependencyInjection;
 using CourseTech.Application.DependencyInjection;
+using CourseTech.Api.Middlewares;
+using CourseTech.Domain.Settings;
+using Serilog;
 
 namespace CourseTech.Api;
 
@@ -9,17 +12,22 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddAuthenticationAndAuthorization(builder);
+        builder.Services.AddSwagger();
+
+        // To Do поменять на что-то интереснее
+        builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
         builder.Services.AddDataAccessLayer(builder.Configuration);
-        builder.Services.AddApplication(/*builder.Configuration*/);
+        builder.Services.AddApplication();
 
         var app = builder.Build();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
@@ -31,10 +39,12 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
-
 
         app.MapControllers();
 

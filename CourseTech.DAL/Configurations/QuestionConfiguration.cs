@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Entities.QuestionEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,10 +8,14 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
     public void Configure(EntityTypeBuilder<Question> builder)
     {
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(q => q.Id).ValueGeneratedOnAdd();
 
-        builder.Property(r => r.DisplayQuestion).HasMaxLength(750).IsRequired();
-        builder.Property(r => r.Answer).HasMaxLength(500).IsRequired();
+        builder.HasIndex(x => x.Number).IsUnique();
+
+        builder.ToTable(x => x.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100"));
+
+        builder.Property(q => q.LessonId).IsRequired();
+        builder.Property(q => q.DisplayQuestion).IsRequired().HasMaxLength(500);
 
         builder.HasOne(q => q.Lesson)
             .WithMany(l => l.Questions)

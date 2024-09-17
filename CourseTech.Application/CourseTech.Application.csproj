@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Validations\FluentValidations\" />
     <Folder Include="Handlers\" />
     <Folder Include="Commands\" />
     <Folder Include="Queries\" />
@@ -15,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="QuickGraph" Version="3.6.61119.7" />
   </ItemGroup>

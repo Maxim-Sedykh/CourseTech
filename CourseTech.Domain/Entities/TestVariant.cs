@@ -7,7 +7,7 @@ public class TestVariant : IEntityId<int>, IAuditable
 {
     public int Id { get; set; }
 
-    public int QuestionId { get; set; }
+    public int TestQuestionId { get; set; }
 
     public TestQuestion TestQuestion { get; set; }
 

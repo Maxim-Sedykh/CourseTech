@@ -13,7 +13,7 @@ public class QueryWord : IEntityId<long>, IAuditable
 
     public Keyword Keyword { get; set; }
 
-    public int QuestionId { get; set; }
+    public int PracticalQuestionId { get; set; }
 
     public PracticalQuestion PracticalQuestion { get; set; }
 

@@ -12,11 +12,11 @@ namespace CourseTech.Domain.Entities
     {
         public long Id { get; set; }
 
-        public string OpenQuestionCorrectAnswer { get; set; }
+        public string AnswerText { get; set; }
 
         public OpenQuestion OpenQuestion { get; set; }
 
-        public int QuestionId { get; set; }
+        public int OpenQuestionId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

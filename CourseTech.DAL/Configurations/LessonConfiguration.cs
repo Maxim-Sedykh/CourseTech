@@ -11,6 +11,6 @@ public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
         builder.Property(l => l.Id).ValueGeneratedOnAdd();
 
         builder.Property(l => l.Name).HasMaxLength(75).IsRequired();
-        builder.Property(l => l.LectureMarkup).HasMaxLength(5000).IsRequired(false);
+        builder.Property(l => l.LectureMarkup).HasMaxLength(10000).IsRequired(false);
     }
 }

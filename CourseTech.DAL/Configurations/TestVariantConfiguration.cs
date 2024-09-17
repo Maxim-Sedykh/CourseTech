@@ -10,11 +10,14 @@ public class TestVariantConfiguration : IEntityTypeConfiguration<TestVariant>
     {
         builder.Property(tv => tv.Id).ValueGeneratedOnAdd();
 
-        builder.Property(tv => tv.Content).HasMaxLength(500).IsRequired();
+        builder.Property(tv => tv.Content).IsRequired().HasMaxLength(500);
+        builder.Property(tv => tv.IsRight).HasDefaultValue(false);
 
-        builder.HasOne(tv => tv.Question)
+        builder.HasIndex(tv => tv.VariantNumber).IsUnique();
+
+        builder.HasOne(tv => tv.TestQuestion)
             .WithMany(q => q.TestVariants)
-            .HasForeignKey(tv => tv.QuestionId)
+            .HasForeignKey(tv => tv.TestQuestionId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

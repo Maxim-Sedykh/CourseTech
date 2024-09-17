@@ -55,7 +55,7 @@ namespace CourseTech.Application.Helpers
             var correctAnswer = new TestQuestionCorrectAnswerDto
             {
                 Id = userAnswer.QuestionId,
-                DisplayAnswer = correctTestVariant.DisplayAnswer,
+                CorrectAnswer = correctTestVariant.DisplayAnswer,
                 AnswerCorrectness = userAnswer.UserAnswerNumberOfVariant == correctTestVariant.Number
             };
 

@@ -26,7 +26,7 @@ namespace CourseTech.Application.Mapping
 
             CreateMap<OpenQuestion, OpenQuestionCheckingDto>()
                 .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.OpenQuestionsAnswers, opt => opt.MapFrom(src => src.AnswerVariants.Select(x => x.OpenQuestionCorrectAnswer)));
+                .ForMember(dest => dest.OpenQuestionsAnswers, opt => opt.MapFrom(src => src.AnswerVariants.Select(x => x.AnswerText)));
 
             CreateMap<PracticalQuestion, PracticalQuestionDto>();
 

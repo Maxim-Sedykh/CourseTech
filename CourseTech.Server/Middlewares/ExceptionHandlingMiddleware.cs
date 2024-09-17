@@ -34,10 +34,10 @@ public class ExceptionHandlingMiddleware
         var errorMessage = exception.Message;
         var response = exception switch
         {
-            UnauthorizedAccessException => new BaseResult() { ErrorMessage = errorMessage, ErrorCode = (int)HttpStatusCode.Unauthorized },
-            _ => new BaseResult() { ErrorMessage = "Internal server error", ErrorCode = (int)HttpStatusCode.InternalServerError },
+            UnauthorizedAccessException => BaseResult.Failure((int)HttpStatusCode.Unauthorized, errorMessage),
+            _ => BaseResult.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
         };
 
-        // #ToDo Добавить переход на страницу ошибки
+        // To Do Добавить переход на страницу ошибки
     }
 }

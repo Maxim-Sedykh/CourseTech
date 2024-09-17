@@ -8,7 +8,7 @@ namespace CourseTech.Domain.Dto.Question.Pass
     {
         public int Id { get; set; }
 
-        public string DisplayAnswer { get; set; }
+        public string CorrectAnswer { get; set; }
 
         public bool AnswerCorrectness { get; set; }
     }

@@ -13,7 +13,7 @@
 
         public byte Age { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public string Password { get; set; }
 

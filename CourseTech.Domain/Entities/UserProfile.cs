@@ -10,9 +10,9 @@ public class UserProfile : IEntityId<long>, IAuditable
 
     public string Surname { get; set; }
 
-    public int Age { get; set; }
+    public byte Age { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     public bool IsExamCompleted { get; set; }
 

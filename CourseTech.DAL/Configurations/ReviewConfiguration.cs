@@ -10,7 +10,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
     {
         builder.Property(r => r.Id).ValueGeneratedOnAdd();
 
-        builder.Property(r => r.ReviewText).HasMaxLength(300).IsRequired();
+        builder.Property(r => r.ReviewText).HasMaxLength(1000).IsRequired();
 
         builder.HasOne(r => r.User)
             .WithMany(u => u.Reviews)

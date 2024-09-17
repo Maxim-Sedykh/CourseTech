@@ -1,7 +1,13 @@
-﻿using CourseTech.DAL.Interceptors;
+﻿using CourseTech.DAL.Auth;
+using CourseTech.DAL.Graph;
+using CourseTech.DAL.Interceptors;
 using CourseTech.DAL.Repositories;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.QuestionEntities;
+using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Graph;
+using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +29,11 @@ public static class DependencyInjection
         services.AddSingleton<AuditInterceptor>();
         services.AddDbContext<CourseDbContext>(options =>
         {
-            options.UseSqlServer(courseConnectionString);
+            options.UseSqlServer(courseConnectionString, b => b.MigrationsAssembly("CourseTech.DAL"));
         });
+
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IQueryGraphAnalyzer, QueryGraphAnalyzer>();
 
         services.InitRepositories();
         services.InitUnitOfWork();
@@ -34,18 +43,22 @@ public static class DependencyInjection
     {
         var types = new List<Type>()
         {
-            typeof(User),
-            typeof(Keyword),
-            typeof(Lesson),
-            typeof(LessonRecord),
             typeof(UserToken),
+            typeof(User),
             typeof(UserRole),
+            typeof(UserProfile),
+            typeof(TestVariant),
+            typeof(Review),
             typeof(Role),
             typeof(QueryWord),
+            typeof(OpenQuestionAnswer),
+            typeof(Lesson),
+            typeof(LessonRecord),
+            typeof(Keyword),
             typeof(Question),
-            typeof(Review),
-            typeof(TestVariant),
-            typeof(UserProfile)
+            typeof(OpenQuestion),
+            typeof(TestQuestion),
+            typeof(PracticalQuestion)
         };
 
         foreach (var type in types)
