@@ -17,7 +17,10 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddAuthenticationAndAuthorization(builder);
-        builder.Services.AddSwagger();
+        //builder.Services.AddSwagger();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         // To Do поменять на что-то интереснее
         builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
@@ -36,12 +39,13 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CourseTech Swagger v1.0");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
-                c.RoutePrefix = string.Empty;
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CourseTech Swagger v1.0");
+            //    c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
+            //    c.RoutePrefix = string.Empty;
+            //});
+            app.UseSwaggerUI();
         }
 
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

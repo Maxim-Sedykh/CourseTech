@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Dto.Lesson.Practice;
+﻿using Asp.Versioning;
+using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -6,10 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CourseTech.Api.Controllers
+namespace CourseTech.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class QuestionController(IQuestionService questionService) : ControllerBase
     {
         [HttpGet()]

@@ -1,13 +1,17 @@
-﻿using CourseTech.Domain.Dto.Token;
+﻿using Asp.Versioning;
+using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseTech.Api.Controllers
+namespace CourseTech.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UserTokenController(ITokenService tokenService) : Controller
     {
         /// <summary>

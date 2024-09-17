@@ -1,12 +1,12 @@
-﻿using CourseTech.Domain.Settings;
+﻿using System.Reflection;
+using System.Text;
+using Asp.Versioning;
+using CourseTech.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
-using System.Text;
-using Asp.Versioning;
 
-namespace CourseTech.Api;
+namespace CourseTech.WebApi;
 
 public static class Startup
 {
@@ -49,19 +49,17 @@ public static class Startup
     /// <param name="services"></param>
     public static void AddSwagger(this IServiceCollection services)
     {
-        ////To Do прописать версионирование получше
-        //services.AddApiVersioning(options =>
-        //{
-        //    options.DefaultApiVersion = new ApiVersion(1, 0);
-        //    options.AssumeDefaultVersionWhenUnspecified = true;
-        //    options.ReportApiVersions = true;
-        //}).AddApiExplorer(options =>
-        //{
-        //    options.GroupNameFormat = "'v'VVV";
-        //    options.SubstituteApiVersionInUrl = true;
-        //});
+        //To Do прописать версионирование получше
+        services.AddApiVersioning()
+        .AddApiExplorer(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+        });
 
-        //services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo()
@@ -115,8 +113,6 @@ public static class Startup
                     Array.Empty<string>()
                 }
             });
-            var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
         });
     }
 }

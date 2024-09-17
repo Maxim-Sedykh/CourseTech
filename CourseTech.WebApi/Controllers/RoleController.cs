@@ -1,4 +1,5 @@
-﻿using CourseTech.Application.Validations.FluentValidations.Role;
+﻿using Asp.Versioning;
+using CourseTech.Application.Validations.FluentValidations.Role;
 using CourseTech.Domain.Dto.Role;
 using CourseTech.Domain.Dto.UserRole;
 using CourseTech.Domain.Entities;
@@ -7,17 +8,15 @@ using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseTech.Api.Controllers
+namespace CourseTech.WebApi.Controllers
 {
-    //[Authorize]
-    //[ApiController]
-    //[ApiVersion("1.0")]
-    //[Route("api/v{version:apiVersion}/[controller]")]
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class RoleController(IRoleService roleService, CreateRoleValidator createRoleValidation, UpdateRoleValidator updateRoleValidator) : ControllerBase
     {
-        [HttpPost()]
+        [HttpPost("create-role")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> CreateRole([FromBody] CreateRoleDto dto)
@@ -37,7 +36,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpPut()]
+        [HttpPut("update-role")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> UpdateRole([FromBody] RoleDto dto)
@@ -57,7 +56,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpDelete()]
+        [HttpDelete("delete-role")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> DeleteRole(long id)
@@ -70,7 +69,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost()]
+        [HttpPost("add-role-for-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
@@ -83,7 +82,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpDelete()]
+        [HttpDelete("delete-role-for-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] DeleteUserRoleDto dto)
@@ -96,7 +95,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpPut()]
+        [HttpPut("update-role-for-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> UpdateRoleForUser([FromBody] UpdateUserRoleDto dto)
@@ -109,7 +108,7 @@ namespace CourseTech.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet()]
+        [HttpGet("get-all-roles")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CollectionResult<RoleDto>>> GetAllRoles()

@@ -10,10 +10,8 @@ using System.Security.Claims;
 
 namespace CourseTech.Api.Controllers
 {
-    [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
     public class UserController(IUserService userService, UpdateUserValidator updateUserValidator) : ControllerBase
     {
         [HttpGet()]

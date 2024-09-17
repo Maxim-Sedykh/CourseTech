@@ -1,4 +1,5 @@
-﻿using CourseTech.Application.Validations.FluentValidations.Auth;
+﻿using Asp.Versioning;
+using CourseTech.Application.Validations.FluentValidations.Auth;
 using CourseTech.Application.Validations.FluentValidations.Review;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Interfaces.Services;
@@ -8,10 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CourseTech.Api.Controllers
+namespace CourseTech.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ReportController(IReviewService reviewService, CreateReviewValidator createReviewValidator) : ControllerBase
     {
 
@@ -65,7 +68,7 @@ namespace CourseTech.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CollectionResult<ReviewDto>>> Create(Guid userId)
+        public async Task<ActionResult<CollectionResult<ReviewDto>>> GetUserReviews(Guid userId)
         {
             var response = await reviewService.GetUserReviews(userId);
             if (response.IsSuccess)
