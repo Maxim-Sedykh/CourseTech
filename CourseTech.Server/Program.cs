@@ -36,7 +36,12 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CourseTech Swagger v1.0");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
+                c.RoutePrefix = string.Empty;
+            });
         }
 
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -48,7 +53,7 @@ public class Program
 
         app.MapControllers();
 
-        app.MapFallbackToFile("/index.html");
+        //app.MapFallbackToFile("/index.html");
 
         app.Run();
     }

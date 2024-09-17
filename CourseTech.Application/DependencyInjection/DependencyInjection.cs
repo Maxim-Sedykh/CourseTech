@@ -1,10 +1,16 @@
 ﻿using CourseTech.Application.Helpers;
 using CourseTech.Application.Mapping;
 using CourseTech.Application.Services;
+using CourseTech.Application.Validations.FluentValidations.Auth;
+using CourseTech.Application.Validations.FluentValidations.Lesson;
+using CourseTech.Application.Validations.FluentValidations.Review;
+using CourseTech.Application.Validations.FluentValidations.Role;
+using CourseTech.Application.Validations.FluentValidations.User;
 using CourseTech.Application.Validations.Validators;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseTech.Application.DependencyInjection;
@@ -62,27 +68,20 @@ public static class DependencyInjection
 
     public static void InitFluentValidators(this IServiceCollection services)
     {
-        //var validatorsTypes = new List<Type>()
-        //{
-        //    typeof(CreateProductValidator),
-        //    typeof(UpdateProductValidator),
-        //    typeof(CreatePaymentValidator),
-        //    typeof(UpdatePaymentValidation),
-        //    typeof(UpdateOrderValidation),
-        //    typeof(CreateOrderValidation),
-        //    typeof(LoginUserValidator),
-        //    typeof(RegisterUserValidation),
-        //    typeof(CreateRoleValidation),
-        //    typeof(DeleteUserRoleValidation),
-        //    typeof(UpdateUserRoleValidation),
-        //    typeof(UserRoleValidation),
-        //    typeof(RoleValidation)
-        //};
+        var validatorsTypes = new List<Type>()
+        {
+            typeof(CreateReviewValidator),
+            typeof(CreateRoleValidator),
+            typeof(LoginUserValidator),
+            typeof(RegisterUserValidator),
+            typeof(LessonLectureValidator),
+            typeof(UpdateUserValidator)
+        };
 
-        //foreach (var validatorType in validatorsTypes)
-        //{
-        //    services.AddValidatorsFromAssembly(validatorType.Assembly);
-        //}
+        foreach (var validatorType in validatorsTypes)
+        {
+            services.AddValidatorsFromAssembly(validatorType.Assembly);
+        }
     }
 
     public static void InitEntityValidators(this IServiceCollection services)
