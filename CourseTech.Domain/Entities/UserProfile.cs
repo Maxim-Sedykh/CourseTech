@@ -12,7 +12,7 @@ public class UserProfile : IEntityId<long>, IAuditable
 
     public byte Age { get; set; }
 
-    public DateOnly DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
 
     public bool IsExamCompleted { get; set; }
 

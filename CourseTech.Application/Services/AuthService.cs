@@ -55,9 +55,9 @@ namespace CourseTech.Application.Services
                 userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
 
                 unitOfWork.UserTokens.Update(userToken);
-
-                await unitOfWork.SaveChangesAsync();
             }
+
+            await unitOfWork.SaveChangesAsync();
 
             return BaseResult<TokenDto>.Success(new TokenDto()
             {

@@ -29,7 +29,7 @@ public static class DependencyInjection
         services.AddSingleton<AuditInterceptor>();
         services.AddDbContext<CourseDbContext>(options =>
         {
-            options.UseSqlServer(courseConnectionString, b => b.MigrationsAssembly("CourseTech.DAL"));
+            options.UseSqlServer(courseConnectionString);
         });
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

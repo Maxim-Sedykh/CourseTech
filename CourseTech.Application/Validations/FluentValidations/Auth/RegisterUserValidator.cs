@@ -31,16 +31,14 @@ namespace CourseTech.Application.Validations.FluentValidations.Auth
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Введите пароль")
-                .MinimumLength(8).WithMessage("Пароль должен быть не менее 8 символов")
-                .Must(HaveAtLeastOneDigit).WithMessage("Пароль должен содержать хотя бы одну цифру")
-                .Must(HaveAtLeastOneUppercase).WithMessage("Пароль должен содержать хотя бы одну заглавную букву");
+                .MinimumLength(8).WithMessage("Пароль должен быть не менее 8 символов");
 
             RuleFor(x => x.PasswordConfirm)
                 .NotEmpty().WithMessage("Подтвердите пароль")
                 .Equal(x => x.Password).WithMessage("Пароли не совпадают");
         }
 
-        private bool BeValidDateOfBirth(DateOnly dateOfBirth) => dateOfBirth < DateOnly.FromDateTime(DateTime.Now);
+        private bool BeValidDateOfBirth(DateTime dateOfBirth) => dateOfBirth < DateTime.Now;
 
         private bool HaveAtLeastOneDigit(string password) => password.Any(char.IsDigit);
 

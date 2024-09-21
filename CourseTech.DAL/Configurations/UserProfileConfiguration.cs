@@ -15,7 +15,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             UserId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             Name = "Админ",
             Surname = "Админов",
-            DateOfBirth = new DateOnly(2002, 2, 2),
+            DateOfBirth = new DateTime(2002, 2, 2),
             CreatedAt = DateTime.UtcNow,
         },
         new UserProfile
@@ -24,7 +24,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             UserId = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7"),
             Name = "Максим",
             Surname = "Максимов",
-            DateOfBirth = new DateOnly(2006, 7, 5),
+            DateOfBirth = new DateTime(2006, 7, 5),
             CreatedAt = DateTime.UtcNow,
         },
         new UserProfile
@@ -33,7 +33,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             UserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
             Name = "Александра",
             Surname = "Александрова",
-            DateOfBirth = new DateOnly(1980, 3, 2),
+            DateOfBirth = new DateTime(1980, 3, 2),
             CreatedAt = DateTime.UtcNow,
         });
 

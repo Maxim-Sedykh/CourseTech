@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Services;
 using CourseTech.Application.Validations.FluentValidations.Auth;
+using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -9,9 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseTech.WebApi.Controllers
+namespace CourseTech.WebApi.Controllers.User
 {
-    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -24,7 +24,7 @@ namespace CourseTech.WebApi.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [HttpPost("register")]
+        [HttpPost(RouteConstants.Register)]
         public async Task<ActionResult<BaseResult>> Register([FromBody] RegisterUserDto dto)
         {
             var validationResult = await registerUserValidator.ValidateAsync(dto);
@@ -47,7 +47,7 @@ namespace CourseTech.WebApi.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [HttpPost("login")]
+        [HttpPost(RouteConstants.Login)]
         public async Task<ActionResult<BaseResult>> Login([FromBody] LoginUserDto dto)
         {
             var validationResult = await loginUserValidator.ValidateAsync(dto);

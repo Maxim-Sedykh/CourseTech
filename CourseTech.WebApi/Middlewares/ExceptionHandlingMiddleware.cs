@@ -1,4 +1,5 @@
 ﻿using CourseTech.Domain.Result;
+using System.Diagnostics;
 using System.Net;
 using ILogger = Serilog.ILogger;
 
@@ -23,6 +24,8 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
+            Debugger.Break();
+
             await HandleExceptionAsync(httpContext, ex);
         }
     }
@@ -38,6 +41,8 @@ public class ExceptionHandlingMiddleware
             _ => BaseResult.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
         };
 
-        // To Do Добавить переход на страницу ошибки
+        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.StatusCode = (int)response.Error.Code;
+        await httpContext.Response.WriteAsJsonAsync(response);
     }
 }

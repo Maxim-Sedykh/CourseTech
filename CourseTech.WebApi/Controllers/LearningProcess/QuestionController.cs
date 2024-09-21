@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Interfaces.Services;
@@ -7,15 +8,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CourseTech.WebApi.Controllers
+namespace CourseTech.WebApi.Controllers.LearningProcess
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class QuestionController(IQuestionService questionService) : ControllerBase
+    public class QuestionController(IQuestionService questionService) : BaseApiController
     {
-        [HttpGet()]
+        [HttpGet(RouteConstants.GetLessonQuestions)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
@@ -28,12 +29,12 @@ namespace CourseTech.WebApi.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost()]
+        [HttpPost(RouteConstants.PassLessonQuestions)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
         {
-            var response = await questionService.PassLessonQuestionsAsync(dto, new Guid(HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).ToString()));
+            var response = await questionService.PassLessonQuestionsAsync(dto, UserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

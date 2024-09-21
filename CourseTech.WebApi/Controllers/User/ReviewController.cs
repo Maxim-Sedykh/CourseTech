@@ -1,74 +1,73 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.Review;
-using CourseTech.Application.Validations.FluentValidations.User;
-using CourseTech.Domain.Dto.User;
+using CourseTech.Domain.Constants.Route;
+using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
-namespace CourseTech.WebApi.Controllers
+namespace CourseTech.WebApi.Controllers.User
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class UserController(IUserService userService, UpdateUserValidator updateUserValidator) : ControllerBase
+    public class ReviewController(IReviewService reviewService, CreateReviewValidator createReviewValidator) : BaseApiController
     {
-        [HttpGet("get-users")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CollectionResult<UserDto>>> GetUsersAsync()
-        {
-            var response = await userService.GetUsersAsync();
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
 
-        [HttpDelete()]
+        [HttpPost(RouteConstants.CreateReview)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult>> DeleteUserAsync(Guid userId)
+        public async Task<ActionResult<BaseResult>> CreateReviewAsync([FromBody] CreateReviewDto dto)
         {
-            var response = await userService.DeleteUserAsync(userId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
-
-        [HttpGet()]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<UpdateUserDto>>> GetUserByIdAsync(Guid userId)
-        {
-            var response = await userService.GetUserByIdAsync(userId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
-
-        [HttpPut()]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<UpdateUserDto>>> UpdateUserAsync([FromBody] UpdateUserDto dto)
-        {
-            var validationResult = await updateUserValidator.ValidateAsync(dto);
+            var validationResult = await createReviewValidator.ValidateAsync(dto);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            var response = await userService.UpdateUserDataAsync(dto);
+            var response = await reviewService.CreateReviewAsync(dto, UserId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpDelete(RouteConstants.DeleteReview)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult>> DeleteReviewAsync(long id)
+        {
+            var response = await reviewService.DeleteReview(id);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet(RouteConstants.GetReviews)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<ReviewDto>>> GetReviewsAsync()
+        {
+            var response = await reviewService.GetReviewsAsync();
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        // To Do прописать здесь комментарии
+        [HttpGet(RouteConstants.GetUserReviews)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<ReviewDto>>> GetUserReviews(Guid userId)
+        {
+            var response = await reviewService.GetUserReviews(userId);
             if (response.IsSuccess)
             {
                 return Ok(response);

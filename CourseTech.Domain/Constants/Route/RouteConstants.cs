@@ -40,40 +40,70 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
+        #region CourseResult
+
         public const string GetUserAnalys = "get-user-analys";
 
         public const string GetCouserResult = "get-lessons-for-user";
 
+        #endregion
 
-
+        #region Lesson
 
         public const string UpdateLessonLecture = "update-lesson-lecture";
-        public const string GetLessonLecture = "get-lesson-lecture";
+
+        public const string GetLessonLecture = "get-lesson-lecture/{lessonId}";
+
         public const string GetLessonNames = "lesson-names";
+
         public const string GetLessonsForUser = "get-lessons-for-user";
+
+        #endregion
+
+        #region LessonRecord
 
         public const string GetLessonsRecords = "get-lesson-records";
 
-        public const string GetLessonQuestions = "get-lesson-questions";
+        #endregion
+
+        #region Question
+
+        public const string GetLessonQuestions = "get-lesson-questions/{lessonId}";
+
         public const string PassLessonQuestions = "pass-lesson-questions";
 
+        #endregion
+
+        #region Review
 
         public const string CreateReview = "create-review";
-        public const string DeleteReview = "delete-review";
+
+        public const string DeleteReview = "delete-review/{id}";
+
         public const string GetReviews = "get-reviews";
-        public const string GetUserReviews = "get-user-reviews";
+
+        public const string GetUserReviews = "get-user-reviews/{userId}";
+
+        #endregion
+
+        #region User
 
         public const string GetUsers = "get-users";
-        public const string DeleteUser = "delete-user";
-        public const string GetUserById = "get-user";
+
+        public const string DeleteUser = "delete-user/{userId}";
+
+        public const string GetUserById = "get-user/{userId}";
+
         public const string UpdateUser = "update-user";
 
+        #endregion
+
+        #region UserProfile
+
         public const string GetUserProfile = "get-user-profile";
+
         public const string UpdateUserProfile = "update-user-profile";
 
-
-
-
-
+        #endregion
     }
 }

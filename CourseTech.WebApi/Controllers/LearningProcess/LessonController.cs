@@ -2,9 +2,11 @@
 using CourseTech.Application.Services;
 using CourseTech.Application.Validations.FluentValidations.Lesson;
 using CourseTech.Application.Validations.FluentValidations.Review;
+using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
@@ -12,15 +14,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CourseTech.WebApi.Controllers
+namespace CourseTech.WebApi.Controllers.LearningProcess
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class LessonController(ILessonService lessonService, LessonLectureValidator lessonLectureValidator) : ControllerBase
+    public class LessonController(ILessonService lessonService, LessonLectureValidator lessonLectureValidator) : BaseApiController
     {
-        [HttpPut("update-lesson-lecture")]
+        [HttpPut(RouteConstants.UpdateLessonLecture)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<LessonLectureDto>>> UpdateLessonLectureAsync([FromBody] LessonLectureDto dto)
@@ -40,7 +42,7 @@ namespace CourseTech.WebApi.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet("get-lesson-lecture")]
+        [HttpGet(RouteConstants.GetLessonLecture)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<LessonLectureDto>>> GetLessonLectureAsync(int lessonId)
@@ -53,7 +55,7 @@ namespace CourseTech.WebApi.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet("lesson-names")]
+        [HttpGet(RouteConstants.GetLessonNames)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<LessonNameDto>>> GetLessonNamesAsync()
@@ -66,12 +68,12 @@ namespace CourseTech.WebApi.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet("get-lessons-for-user")]
+        [HttpGet(RouteConstants.GetLessonsForUser)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<UserLessonsDto>>> GetLessonsForUserAsync()
         {
-            var response = await lessonService.GetLessonsForUserAsync(new Guid(HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).ToString()));
+            var response = await lessonService.GetLessonsForUserAsync(UserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

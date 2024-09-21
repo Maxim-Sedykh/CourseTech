@@ -43,11 +43,41 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<Keyword> Keywords { get; set; }
 
-    public UnitOfWork(CourseDbContext context, IBaseRepository<User> users, IBaseRepository<Review> reviews)
+    public UnitOfWork(CourseDbContext context,
+        IBaseRepository<User> users,
+        IBaseRepository<Review> reviews,
+        IBaseRepository<UserProfile> userProfiles, 
+        IBaseRepository<Role> roles, 
+        IBaseRepository<UserToken> userTokens, 
+        IBaseRepository<Lesson> lessons,
+        IBaseRepository<UserRole> userRoles, 
+        IBaseRepository<LessonRecord> lessonRecords, 
+        IBaseRepository<Question> questions, 
+        IBaseRepository<TestVariant> testVariants, 
+        IBaseRepository<QueryWord> queryWords, 
+        IBaseRepository<TestQuestion> testQuestions, 
+        IBaseRepository<OpenQuestion> openQuestions, 
+        IBaseRepository<PracticalQuestion> practicalQuestions, 
+        IBaseRepository<OpenQuestionAnswer> openQuestionAnswers,
+        IBaseRepository<Keyword> keywords)
     {
         _context = context;
         Users = users;
         Reviews = reviews;
+        UserProfiles = userProfiles;
+        Roles = roles;
+        UserTokens = userTokens;
+        Lessons = lessons;
+        UserRoles = userRoles;
+        LessonRecords = lessonRecords;
+        Questions = questions;
+        TestVariants = testVariants;
+        QueryWords = queryWords;
+        TestQuestions = testQuestions;
+        OpenQuestions = openQuestions;
+        PracticalQuestions = practicalQuestions;
+        OpenQuestionAnswers = openQuestionAnswers;
+        Keywords = keywords;
     }
 
     public async Task<IDbContextTransaction> BeginTransactionAsync()

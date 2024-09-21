@@ -11,8 +11,7 @@ public class LessonRecordConfiguration : IEntityTypeConfiguration<LessonRecord>
         builder.Property(lr => lr.Id).ValueGeneratedOnAdd();
 
         builder.Property(lr => lr.Mark)
-            .HasDefaultValue(0)
-            .HasPrecision(2);
+            .HasDefaultValue(0);
 
         builder.HasOne(lr => lr.User)
             .WithMany(u => u.LessonRecords)

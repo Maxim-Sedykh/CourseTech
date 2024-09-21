@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -6,13 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseTech.WebApi.Controllers
+namespace CourseTech.WebApi.Controllers.User
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class UserTokenController(ITokenService tokenService) : Controller
+    public class UserTokenController(ITokenService tokenService) : ControllerBase
     {
         /// <summary>
         /// Обновление токена пользователя
@@ -20,7 +21,7 @@ namespace CourseTech.WebApi.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         /// 
-        [Route("refresh-token")]
+        [Route(RouteConstants.RefreshToken)]
         [HttpPost]
         public async Task<ActionResult<BaseResult<TokenDto>>> RefreshToken([FromBody] TokenDto dto)
         {
