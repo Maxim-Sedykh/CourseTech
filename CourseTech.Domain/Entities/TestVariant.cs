@@ -15,7 +15,7 @@ public class TestVariant : IEntityId<int>, IAuditable
 
     public string Content { get; set; }
 
-    public bool IsRight { get; set; }
+    public bool IsCorrect { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

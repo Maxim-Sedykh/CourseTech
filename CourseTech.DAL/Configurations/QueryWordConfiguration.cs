@@ -10,7 +10,7 @@ public class QueryWordConfiguration : IEntityTypeConfiguration<QueryWord>
     {
         builder.Property(qw => qw.Id).ValueGeneratedOnAdd();
 
-        builder.HasIndex(x => x.Number).IsUnique();
+        builder.HasIndex(x => new { x.Id, x.Number }).IsUnique();
 
         builder.HasOne(qw => qw.Keyword)
             .WithMany(k => k.QueryWords)

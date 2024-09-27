@@ -20,7 +20,7 @@ namespace CourseTech.Application.Mapping
             // To Do возможно добавить ProjectTo
             CreateMap<TestQuestion, TestQuestionCheckingDto>()
                 .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.CorrectVariant, opt => opt.MapFrom(src => src.TestVariants.FirstOrDefault(x => x.IsRight)));
+                .ForMember(dest => dest.CorrectVariant, opt => opt.MapFrom(src => src.TestVariants.FirstOrDefault(x => x.IsCorrect)));
 
             CreateMap<OpenQuestion, OpenQuestionDto>();
 

@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace CourseTech.DAL.Migrations
 {
     /// <inheritdoc />
@@ -162,7 +160,7 @@ namespace CourseTech.DAL.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Age = table.Column<byte>(type: "tinyint", nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsExamCompleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CurrentGrade = table.Column<float>(type: "float(3)", precision: 3, scale: 2, nullable: false, defaultValue: 0f),
                     LessonsCompleted = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -302,57 +300,6 @@ namespace CourseTech.DAL.Migrations
                         principalTable: "Question",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Role",
-                columns: new[] { "Id", "CreatedAt", "Name", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "User", null },
-                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", null },
-                    { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Moderator", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "CreatedAt", "Login", "Password", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"), new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6014), "Sasha_student002", "------------------------------------------", null },
-                    { new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7"), new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6011), "Maximkaboss25", "------------------------------------------", null },
-                    { new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"), new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6002), "MainAdmin", "------------------------------------------", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "UserProfile",
-                columns: new[] { "Id", "Age", "Analys", "CreatedAt", "DateOfBirth", "Name", "Surname", "UpdatedAt", "UserId" },
-                values: new object[,]
-                {
-                    { 1L, (byte)0, null, new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8307), new DateOnly(2002, 2, 2), "Админ", "Админов", null, new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482") },
-                    { 2L, (byte)0, null, new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8316), new DateOnly(2006, 7, 5), "Максим", "Максимов", null, new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7") },
-                    { 3L, (byte)0, null, new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8320), new DateOnly(1980, 3, 2), "Александра", "Александрова", null, new Guid("0f8fad5b-d9cb-469f-a165-70867728950e") }
-                });
-
-            migrationBuilder.InsertData(
-                table: "UserRole",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[,]
-                {
-                    { 1L, new Guid("0f8fad5b-d9cb-469f-a165-70867728950e") },
-                    { 1L, new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7") },
-                    { 2L, new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482") },
-                    { 3L, new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7") }
-                });
-
-            migrationBuilder.InsertData(
-                table: "UserToken",
-                columns: new[] { "Id", "RefreshToken", "RefreshTokenExpireTime", "UserId" },
-                values: new object[,]
-                {
-                    { 1L, "jbodfiujbINOIU3O4$", new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8590), new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482") },
-                    { 2L, "hgiroej[giertjivfs", new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8609), new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7") },
-                    { 3L, "reatbyt42t423hgerf", new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8612), new Guid("0f8fad5b-d9cb-469f-a165-70867728950e") }
                 });
 
             migrationBuilder.CreateIndex(

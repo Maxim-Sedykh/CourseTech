@@ -11,9 +11,9 @@ public class TestVariantConfiguration : IEntityTypeConfiguration<TestVariant>
         builder.Property(tv => tv.Id).ValueGeneratedOnAdd();
 
         builder.Property(tv => tv.Content).IsRequired().HasMaxLength(500);
-        builder.Property(tv => tv.IsRight).HasDefaultValue(false);
+        builder.Property(tv => tv.IsCorrect).HasDefaultValue(false);
 
-        builder.HasIndex(tv => tv.VariantNumber).IsUnique();
+        builder.HasIndex(tv => new { tv.TestQuestionId, tv.VariantNumber }).IsUnique();
 
         builder.HasOne(tv => tv.TestQuestion)
             .WithMany(q => q.TestVariants)

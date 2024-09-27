@@ -10,7 +10,7 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
     {
         builder.Property(q => q.Id).ValueGeneratedOnAdd();
 
-        builder.HasIndex(x => x.Number).IsUnique();
+        builder.HasIndex(x => new { x.Id, x.Number }).IsUnique();
 
         builder.ToTable(x => x.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100"));
 

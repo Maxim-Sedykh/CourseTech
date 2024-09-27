@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseTech.Application", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseTech.UnitTests", "CourseTech.UnitTests\CourseTech.UnitTests.csproj", "{9246BB7A-C2FD-425B-9F42-8DC5E2750D33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseTech.WebApi", "CourseTech.WebApi\CourseTech.WebApi.csproj", "{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseTech.WebApi", "CourseTech.WebApi\CourseTech.WebApi.csproj", "{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

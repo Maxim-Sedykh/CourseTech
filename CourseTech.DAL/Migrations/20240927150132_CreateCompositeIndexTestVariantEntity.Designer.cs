@@ -4,6 +4,7 @@ using CourseTech.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseTech.DAL.Migrations
 {
     [DbContext(typeof(CourseDbContext))]
-    partial class CourseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240927150132_CreateCompositeIndexTestVariantEntity")]
+    partial class CreateCompositeIndexTestVariantEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,6 +151,9 @@ namespace CourseTech.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("KeywordId")
                         .HasColumnType("int");
 
@@ -157,14 +163,17 @@ namespace CourseTech.DAL.Migrations
                     b.Property<int>("PracticalQuestionId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KeywordId");
 
-                    b.HasIndex("PracticalQuestionId");
-
-                    b.HasIndex("Id", "Number")
+                    b.HasIndex("Number")
                         .IsUnique();
+
+                    b.HasIndex("PracticalQuestionId");
 
                     b.ToTable("QueryWord");
                 });

@@ -3,7 +3,7 @@ using CourseTech.Domain.Interfaces.Entities;
 
 namespace CourseTech.Domain.Entities;
 
-public class QueryWord : IEntityId<long>, IAuditable
+public class QueryWord : IEntityId<long>
 {
     public long Id { get; set; }
 
@@ -16,8 +16,4 @@ public class QueryWord : IEntityId<long>, IAuditable
     public int PracticalQuestionId { get; set; }
 
     public PracticalQuestion PracticalQuestion { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
 }

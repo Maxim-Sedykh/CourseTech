@@ -11,8 +11,6 @@ namespace CourseTech.DAL.Configurations
         {
             builder.HasBaseType<Question>();
 
-            builder.Property(q => q.Notation).IsRequired();
-
             builder.HasMany(q => q.AnswerVariants)
                 .WithOne(av => av.OpenQuestion)
                 .HasForeignKey(av => av.OpenQuestionId);

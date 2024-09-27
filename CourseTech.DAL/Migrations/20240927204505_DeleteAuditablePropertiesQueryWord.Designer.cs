@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseTech.DAL.Migrations
 {
     [DbContext(typeof(CourseDbContext))]
-    [Migration("20240918102444_Initial")]
-    partial class Initial
+    [Migration("20240927204505_DeleteAuditablePropertiesQueryWord")]
+    partial class DeleteAuditablePropertiesQueryWord
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -151,9 +151,6 @@ namespace CourseTech.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("KeywordId")
                         .HasColumnType("int");
 
@@ -162,9 +159,6 @@ namespace CourseTech.DAL.Migrations
 
                     b.Property<int>("PracticalQuestionId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -212,7 +206,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.HasIndex("Number")
+                    b.HasIndex("Id", "Number")
                         .IsUnique();
 
                     b.ToTable("Question", t =>
@@ -276,26 +270,6 @@ namespace CourseTech.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "User"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Moderator"
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.TestVariant", b =>
@@ -314,7 +288,7 @@ namespace CourseTech.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsRight")
+                    b.Property<bool>("IsCorrect")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
@@ -330,9 +304,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestQuestionId");
-
-                    b.HasIndex("VariantNumber")
+                    b.HasIndex("TestQuestionId", "VariantNumber")
                         .IsUnique();
 
                     b.ToTable("TestVariant");
@@ -362,29 +334,6 @@ namespace CourseTech.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6002),
-                            Login = "MainAdmin",
-                            Password = "------------------------------------------"
-                        },
-                        new
-                        {
-                            Id = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7"),
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6011),
-                            Login = "Maximkaboss25",
-                            Password = "------------------------------------------"
-                        },
-                        new
-                        {
-                            Id = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 60, DateTimeKind.Utc).AddTicks(6014),
-                            Login = "Sasha_student002",
-                            Password = "------------------------------------------"
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
@@ -415,8 +364,8 @@ namespace CourseTech.DAL.Migrations
                         .HasColumnType("float")
                         .HasDefaultValue(0f);
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsEditAble")
                         .ValueGeneratedOnAdd()
@@ -455,53 +404,6 @@ namespace CourseTech.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("UserProfile");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Age = (byte)0,
-                            CountOfReviews = (byte)0,
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8307),
-                            CurrentGrade = 0f,
-                            DateOfBirth = new DateOnly(2002, 2, 2),
-                            IsEditAble = false,
-                            IsExamCompleted = false,
-                            LessonsCompleted = 0,
-                            Name = "Админ",
-                            Surname = "Админов",
-                            UserId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Age = (byte)0,
-                            CountOfReviews = (byte)0,
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8316),
-                            CurrentGrade = 0f,
-                            DateOfBirth = new DateOnly(2006, 7, 5),
-                            IsEditAble = false,
-                            IsExamCompleted = false,
-                            LessonsCompleted = 0,
-                            Name = "Максим",
-                            Surname = "Максимов",
-                            UserId = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7")
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Age = (byte)0,
-                            CountOfReviews = (byte)0,
-                            CreatedAt = new DateTime(2024, 9, 18, 10, 24, 44, 63, DateTimeKind.Utc).AddTicks(8320),
-                            CurrentGrade = 0f,
-                            DateOfBirth = new DateOnly(1980, 3, 2),
-                            IsEditAble = false,
-                            IsExamCompleted = false,
-                            LessonsCompleted = 0,
-                            Name = "Александра",
-                            Surname = "Александрова",
-                            UserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e")
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.UserRole", b =>
@@ -517,28 +419,6 @@ namespace CourseTech.DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 2L,
-                            UserId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")
-                        },
-                        new
-                        {
-                            RoleId = 1L,
-                            UserId = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7")
-                        },
-                        new
-                        {
-                            RoleId = 3L,
-                            UserId = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7")
-                        },
-                        new
-                        {
-                            RoleId = 1L,
-                            UserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e")
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.UserToken", b =>
@@ -565,38 +445,11 @@ namespace CourseTech.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("UserToken");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            RefreshToken = "jbodfiujbINOIU3O4$",
-                            RefreshTokenExpireTime = new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8590),
-                            UserId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            RefreshToken = "hgiroej[giertjivfs",
-                            RefreshTokenExpireTime = new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8609),
-                            UserId = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7")
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            RefreshToken = "reatbyt42t423hgerf",
-                            RefreshTokenExpireTime = new DateTime(2024, 9, 25, 10, 24, 44, 65, DateTimeKind.Utc).AddTicks(8612),
-                            UserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e")
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", b =>
                 {
                     b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.Question");
-
-                    b.Property<string>("Notation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable(t =>
                         {
