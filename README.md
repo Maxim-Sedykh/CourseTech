@@ -1,4 +1,4 @@
-#CourseTech
+# CourseTech
 
 # Курс по MS SQL Server и T-SQL (Проект ещё в разработке)
 
