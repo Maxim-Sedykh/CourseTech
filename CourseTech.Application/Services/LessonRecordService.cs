@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Repositories;
@@ -22,6 +22,7 @@ namespace CourseTech.Application.Services
         {
             var userLessonRecords = await lessonRecordRepository.GetAll()
                 .Where(x => x.UserId == userId)
+                .Include(x => x.Lesson)
                 .Select(x => mapper.Map<LessonRecordDto>(x))
                 .ToArrayAsync();
 

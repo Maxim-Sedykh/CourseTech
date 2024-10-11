@@ -8,6 +8,7 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
 {
     public class OpenQuestion : Question
     {
+        //To Do как проверять ответы более оптимизированно
         public List<OpenQuestionAnswer> AnswerVariants {  get; set; }
     }
 }

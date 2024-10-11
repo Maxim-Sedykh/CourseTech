@@ -7,7 +7,7 @@ using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain
 {
-    public static class MapperExtensions
+    public static class MapperExtension
     {
         public static IQuestionDto MapQuestion(this IMapper mapper, Question question)
         {
@@ -30,10 +30,10 @@ namespace CourseTech.Domain
             {
                 case TestQuestion testQuestion:
                     return mapper.Map<TestQuestionCheckingDto>(testQuestion);
-                case PracticalQuestion practicalQuestion:
-                    return mapper.Map<OpenQuestionCheckingDto>(practicalQuestion);
                 case OpenQuestion openQuestion:
-                    return mapper.Map<PracticalQuestionCheckingDto>(openQuestion);
+                    return mapper.Map<OpenQuestionCheckingDto>(openQuestion);
+                case PracticalQuestion practicalQuestion:
+                    return mapper.Map<PracticalQuestionCheckingDto>(practicalQuestion);
                 default:
                     throw new ArgumentException("Invalid question type");
             }

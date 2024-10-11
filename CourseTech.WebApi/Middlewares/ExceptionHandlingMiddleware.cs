@@ -1,26 +1,21 @@
 ﻿using CourseTech.Domain.Result;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Mime;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.WebApi.Middlewares;
 
-public class ExceptionHandlingMiddleware
+/// <summary>
+/// Единый обработчик ошибок (глобальный try - catch)
+/// </summary>
+public class ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger _logger;
-
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
         {
-            await _next(httpContext);
+            await next(httpContext);
         }
         catch (Exception ex)
         {
@@ -32,7 +27,7 @@ public class ExceptionHandlingMiddleware
 
     private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
-        _logger.Error(exception, exception.Message);
+        logger.Error(exception, exception.Message);
 
         var errorMessage = exception.Message;
         var response = exception switch
@@ -41,7 +36,7 @@ public class ExceptionHandlingMiddleware
             _ => BaseResult.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
         };
 
-        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.ContentType = MediaTypeNames.Application.Json;
         httpContext.Response.StatusCode = (int)response.Error.Code;
         await httpContext.Response.WriteAsJsonAsync(response);
     }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Entities;
 using System;
 using System.Collections.Generic;

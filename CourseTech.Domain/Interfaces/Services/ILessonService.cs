@@ -1,7 +1,7 @@
-﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
+﻿using CourseTech.Domain.Dto.Lesson;
+using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
-using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
 

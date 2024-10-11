@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Dto.UserProfile
+namespace CourseTech.Domain.Dto.LessonRecord
 {
     public class LessonRecordDto
     {

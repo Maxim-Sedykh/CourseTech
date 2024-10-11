@@ -31,9 +31,9 @@ namespace CourseTech.WebApi.Controllers.User
         [HttpPut(RouteConstants.UpdateUserProfile)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult>> UpdateUserProfileAsync([FromBody] UserProfileDto dto)
+        public async Task<ActionResult<BaseResult>> UpdateUserProfileAsync([FromBody] UpdateUserProfileDto dto)
         {
-            var response = await userProfileService.UpdateUserProfileAsync(dto);
+            var response = await userProfileService.UpdateUserProfileAsync(dto, UserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

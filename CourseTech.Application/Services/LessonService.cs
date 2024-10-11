@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
-using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Repositories;
@@ -16,8 +16,9 @@ namespace CourseTech.Application.Services
         public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {
             var lesson = await lessonRepository.GetAll()
+                .Where(x => x.Id == lessonId)
                 .Select(x => mapper.Map<LessonLectureDto>(x))
-                .FirstOrDefaultAsync(x => x.Id == lessonId);
+                .FirstOrDefaultAsync();
 
             if (lesson is null)
             {
@@ -33,7 +34,7 @@ namespace CourseTech.Application.Services
                 .Select(x => mapper.Map<LessonNameDto>(x))
                 .ToArrayAsync();
 
-            if (lessonNames is null)
+            if (!lessonNames.Any())
             {
                 return CollectionResult<LessonNameDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
@@ -75,6 +76,8 @@ namespace CourseTech.Application.Services
             }
 
             currentLesson.LectureMarkup = dto.LessonMarkup.ToString();
+            currentLesson.Name = dto.Name;
+            currentLesson.LessonType = dto.LessonType;
 
             lessonRepository.Update(currentLesson);
             await lessonRepository.SaveChangesAsync();

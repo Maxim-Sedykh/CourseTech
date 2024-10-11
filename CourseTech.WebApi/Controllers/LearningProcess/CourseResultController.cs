@@ -36,7 +36,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<UserAnalysDto>>> GetUserAnalys()
         {
-            var response = await courseResultService.GetUserAnalys(UserId);
+            var response = await courseResultService.GetUserAnalys(new Guid("87ccb692-b6eb-44b2-5354-08dcdf8cc4af"));
             if (response.IsSuccess)
             {
                 return Ok(response);

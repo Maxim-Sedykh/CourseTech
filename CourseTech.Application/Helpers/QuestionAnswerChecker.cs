@@ -1,10 +1,11 @@
 ﻿using Azure.Core;
-using CourseTech.Domain.Constants;
+using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Pass;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Helpers;
+using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
@@ -12,7 +13,7 @@ using CourseTech.Domain.Parameters;
 
 namespace CourseTech.Application.Helpers
 {
-    public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer) : IQuestionAnswerChecker
+    public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlHelper sqlHelper) : IQuestionAnswerChecker
     {
         public List<ICorrectAnswerDto> CheckUserAnswers(List<ICheckQuestionDto> checkQuestionDtos, List<IUserAnswerDto> userAnswers, out float userGrade)
         {
@@ -26,6 +27,7 @@ namespace CourseTech.Application.Helpers
 
                 if (userAnswer.QuestionId != checkQuestionDto.QuestionId)
                 {
+                    //To Do как-то по другому тут это делать
                     return new List<ICorrectAnswerDto>();
                 }
 
@@ -55,8 +57,8 @@ namespace CourseTech.Application.Helpers
             var correctAnswer = new TestQuestionCorrectAnswerDto
             {
                 Id = userAnswer.QuestionId,
-                CorrectAnswer = correctTestVariant.DisplayAnswer,
-                AnswerCorrectness = userAnswer.UserAnswerNumberOfVariant == correctTestVariant.Number
+                CorrectAnswer = correctTestVariant.Content,
+                AnswerCorrectness = userAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber
             };
 
             if (correctAnswer.AnswerCorrectness)
@@ -80,8 +82,8 @@ namespace CourseTech.Application.Helpers
 
             try
             {
-                var userResult = SqlHelper.ExecuteQuery(userAnswer.UserCodeAnswer);
-                var rightResult = SqlHelper.ExecuteQuery(questionChecking.CorrectQueryCode);
+                var userResult = sqlHelper.ExecuteQuery(userAnswer.UserCodeAnswer);
+                var rightResult = sqlHelper.ExecuteQuery(questionChecking.CorrectQueryCode);
 
                 DataTableComparer comparer = new DataTableComparer();
                 int result = comparer.Compare(userResult, rightResult);
@@ -91,6 +93,8 @@ namespace CourseTech.Application.Helpers
                     correctAnswer.AnswerCorrectness = true;
                     questionGrade += QuestionGradeConstants.PracticalQuestionGrade;
                     correctAnswer.QueryResult = userResult;
+
+                    correctAnswer.QuestionUserGrade = questionGrade;
                 }
                 else
                 {
@@ -102,6 +106,7 @@ namespace CourseTech.Application.Helpers
                     correctAnswer.Remarks = remarks;
                     correctAnswer.QuestionUserGrade = practicalQuestionGrade;
                     questionGrade += practicalQuestionGrade;
+                    correctAnswer.QueryResult = userResult;
                 }
             }
             catch (Exception)
@@ -119,7 +124,8 @@ namespace CourseTech.Application.Helpers
 
             return correctAnswer;
         }
-
+        
+        // To Do обработать здесь пробелы
         private ICorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, ref float userGrade)
         {
             var correctAnswer = new OpenQuestionCorrectAnswerDto

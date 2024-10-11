@@ -5,6 +5,7 @@ using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
@@ -94,14 +95,16 @@ namespace CourseTech.Application.Services
 
                     await unitOfWork.SaveChangesAsync();
 
+                    var dateOfBirth = dto.DateOfBirth;
+
                     UserProfile userProfile = new UserProfile()
                     {
                         UserId = user.Id,
                         IsEditAble = true,
                         Name = dto.Name,
                         Surname = dto.Surname,
-                        Age = dto.Age,
-                        DateOfBirth = dto.DateOfBirth,
+                        Age = dateOfBirth.GetYearsByDateToNow(),
+                        DateOfBirth = dateOfBirth,
                         IsExamCompleted = false,
                         CurrentGrade = 0,
                         LessonsCompleted = 0,

@@ -2,7 +2,7 @@
 using CourseTech.Application.Services;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.FinalResult;
-using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;

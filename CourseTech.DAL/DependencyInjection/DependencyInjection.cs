@@ -5,6 +5,7 @@ using CourseTech.DAL.Repositories;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
+using CourseTech.Domain.Helpers;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
@@ -33,7 +34,10 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
         services.AddScoped<IQueryGraphAnalyzer, QueryGraphAnalyzer>();
+
+        services.AddSingleton<ISqlHelper, SqlHelper>();
 
         services.InitRepositories();
         services.InitUnitOfWork();

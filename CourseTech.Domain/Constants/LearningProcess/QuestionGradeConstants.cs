@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Constants
+namespace CourseTech.Domain.Constants.LearningProcess
 {
     public static class QuestionGradeConstants
     {

@@ -10,8 +10,8 @@ namespace CourseTech.Domain.Dto.TestVariant
     {
         public int QuestionId { get; set; }
 
-        public string DisplayAnswer { get; set; }
+        public string Content { get; set; }
 
-        public byte Number { get; set; }
+        public int VariantNumber { get; set; }
     }
 }

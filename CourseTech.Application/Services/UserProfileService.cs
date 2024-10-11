@@ -3,6 +3,7 @@ using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -15,8 +16,10 @@ namespace CourseTech.Application.Services
         public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {
             var profileDto = await userProfileRepository.GetAll()
-                        .Select(x => mapper.Map<UserProfileDto>(x))
-                        .FirstOrDefaultAsync(x => x.UserId == userId);
+                .Include(x => x.User)
+                .Where(x => x.UserId == userId)
+                .Select(x => mapper.Map<UserProfileDto>(x))
+                .FirstOrDefaultAsync();
 
             if (profileDto is null)
             {
@@ -26,17 +29,25 @@ namespace CourseTech.Application.Services
             return BaseResult<UserProfileDto>.Success(profileDto);
         }
 
-        public async Task<BaseResult> UpdateUserProfileAsync(UserProfileDto dto)
+        public async Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
         {
             var profile = await userProfileRepository.GetAll()
-                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+                .FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (profile is null)
             {
                 BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
+            var dateOfBirth = dto.DateOfBirth;
+
+            profile.Name = dto.Name;
+            profile.Surname = dto.Surname;
+            profile.DateOfBirth = dateOfBirth;
+            profile.Age = dateOfBirth.GetYearsByDateToNow();
+
             userProfileRepository.Update(profile);
+
             await userProfileRepository.SaveChangesAsync();
 
             return BaseResult.Success();

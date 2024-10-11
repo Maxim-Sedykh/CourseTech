@@ -6,7 +6,6 @@ using CourseTech.Domain.Dto.UserRole;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Entities
 {
-    public class OpenQuestionAnswer : IEntityId<long>, IAuditable
+    public class OpenQuestionAnswer : IEntityId<long>
     {
         public long Id { get; set; }
 
@@ -17,9 +17,5 @@ namespace CourseTech.Domain.Entities
         public OpenQuestion OpenQuestion { get; set; }
 
         public int OpenQuestionId { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
     }
 }

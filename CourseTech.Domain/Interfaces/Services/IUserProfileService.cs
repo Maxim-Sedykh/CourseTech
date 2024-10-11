@@ -20,6 +20,6 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult> UpdateUserProfileAsync(UserProfileDto dto);
+        Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId);
     }
 }

@@ -11,8 +11,6 @@
 
         public string Surname { get; set; }
 
-        public byte Age { get; set; }
-
         public DateTime DateOfBirth { get; set; }
 
         public string Password { get; set; }

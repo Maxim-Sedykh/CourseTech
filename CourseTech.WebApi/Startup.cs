@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
+using System.Web.Http;
 using Asp.Versioning;
+using CourseTech.Application.Helpers;
 using CourseTech.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

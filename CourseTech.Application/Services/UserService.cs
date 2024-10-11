@@ -14,6 +14,8 @@ namespace CourseTech.Application.Services
     {
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {
+            //To Do что сделать здесь с токеном при удалении юзера
+
             var user = await unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user is null)
@@ -51,8 +53,11 @@ namespace CourseTech.Application.Services
         public async Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
         {
             var user = await unitOfWork.Users.GetAll()
+                .Include(x => x.UserProfile)
+                .Include(x => x.Roles)
+                .Where(x => x.Id == userId)
                 .Select(x => mapper.Map<UpdateUserDto>(x))
-                .FirstOrDefaultAsync(x => x.Id == userId);
+                .FirstOrDefaultAsync();
 
             if (user is null)
             {
@@ -65,6 +70,7 @@ namespace CourseTech.Application.Services
         public async Task<CollectionResult<UserDto>> GetUsersAsync()
         {
             var users = await unitOfWork.Users.GetAll()
+                .Include(x => x.Roles)
                 .Select(x => mapper.Map<UserDto>(x))
                 .ToArrayAsync();
 
@@ -74,6 +80,7 @@ namespace CourseTech.Application.Services
         public async Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
         {
             var user = await unitOfWork.Users.GetAll()
+                .Include(x => x.UserProfile)
                 .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             if (user is null)
@@ -81,7 +88,11 @@ namespace CourseTech.Application.Services
                 return BaseResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            user = mapper.Map<User>(dto);
+            // To Do можно ли здесь маппить
+            user.UserProfile.Name = dto.Name;
+            user.UserProfile.Surname = dto.Surname;
+            user.Login = dto.Login;
+            user.UserProfile.IsEditAble = dto.IsEditAble;
 
             unitOfWork.Users.Update(user);
             await unitOfWork.SaveChangesAsync();

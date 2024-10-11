@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
-using CourseTech.Domain.Constants;
+using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
-using CourseTech.Domain.Dto.UserProfile;
+using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Repositories;
@@ -60,17 +60,18 @@ namespace CourseTech.Application.Services
         //To Do Test it on user null
         public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
-            var userAnalysDto = await userProfileRepository.GetAll()
-                .Where(x => x.UserId == userId)
-                .Select(x => mapper.Map<UserAnalysDto>(x))
-                .FirstOrDefaultAsync();
+            var profile = await userProfileRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.UserId == userId);
 
-            if (userAnalysDto is null)
+            if (profile is null)
             {
                 return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            return BaseResult<UserAnalysDto>.Success(userAnalysDto);
+            return BaseResult<UserAnalysDto>.Success(new UserAnalysDto()
+            {
+                Analys = profile.Analys
+            });
         }
 
         private UserAnalysDto CreateAnalys(float usersCurrentGrade, List<LessonRecordDto> userLessonRecords, int lessonsCount)

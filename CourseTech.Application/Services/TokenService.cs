@@ -112,6 +112,7 @@ namespace CourseTech.Application.Services
 
             var user = await _userRepository.GetAll()
                 .Include(x => x.UserToken)
+                .Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.Login == userName);
 
             if (user == null || user.UserToken.RefreshToken != refreshToken ||

@@ -34,7 +34,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
         {
-            var response = await questionService.PassLessonQuestionsAsync(dto, UserId);
+            var response = await questionService.PassLessonQuestionsAsync(dto, new Guid("87CCB692-B6EB-44B2-5354-08DCDF8CC4AF"));
             if (response.IsSuccess)
             {
                 return Ok(response);

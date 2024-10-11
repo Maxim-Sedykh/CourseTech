@@ -1,9 +1,10 @@
-using CourseTech.Domain.Settings;
-using CourseTech.WebApi;
-using Serilog;
+using CourseTech.Application.Converters;
 using CourseTech.Application.DependencyInjection;
 using CourseTech.DAL.DependencyInjection;
+using CourseTech.Domain.Settings;
+using CourseTech.WebApi;
 using CourseTech.WebApi.Middlewares;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,13 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSett
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddControllers();
+// To Do может это можно не писать в Program.cs?
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new UserAnswerDtoConverter());
+    options.JsonSerializerOptions.Converters.Add(new QuestionDtoConverter());
+    options.JsonSerializerOptions.Converters.Add(new CorrectAnswerDtoConverter());
+});
 
 builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwagger();
@@ -25,7 +32,6 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

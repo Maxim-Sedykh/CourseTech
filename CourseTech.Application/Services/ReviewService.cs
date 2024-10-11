@@ -59,7 +59,7 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
 
         if (review is null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return BaseResult.Failure((int)ErrorCodes.ReviewNotFound, ErrorMessage.ReviewNotFound);
         }
 
         unitOfWork.Reviews.Remove(review);
@@ -72,6 +72,7 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
     public async Task<CollectionResult<ReviewDto>> GetReviewsAsync()
     {
         var reviews = await unitOfWork.Reviews.GetAll()
+                .Include(x => x.User)
                 .Select(x => mapper.Map<ReviewDto>(x))
                 .ToArrayAsync();
 
@@ -85,7 +86,9 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
 
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
+        //To Do где лучше писать Include, в каком порядке лучше писать запросы в linqtoentities, оптимизировать запрос
         var reviews = await unitOfWork.Reviews.GetAll()
+                .Include(x => x.User)
                 .Where(x => x.UserId == userId)
                 .Select(x => mapper.Map<ReviewDto>(x))
                 .ToArrayAsync();

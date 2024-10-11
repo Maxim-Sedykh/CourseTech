@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Constants;
+﻿using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Interfaces.Graph;
 using QuickGraph;
 

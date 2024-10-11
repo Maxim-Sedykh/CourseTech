@@ -9,6 +9,7 @@ using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Get;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Databases;
@@ -33,6 +34,7 @@ namespace CourseTech.Application.Services
             }
 
             var questions = await unitOfWork.Questions.GetAll()
+                .Include(q => (q as TestQuestion).TestVariants)
                 .Where(q => q.LessonId == lessonId)
                 .Select(q => mapper.MapQuestion(q))
                 .ToListAsync();
@@ -67,9 +69,9 @@ namespace CourseTech.Application.Services
             // To Do оптимизировать
             var questions = await unitOfWork.Questions.GetAll()
                 .Where(q => q.LessonId == dto.LessonId)
-                .Include(q => q is TestQuestion ? ((TestQuestion)q).TestVariants : null)
-                .Include(q => q is OpenQuestion ? ((OpenQuestion)q).AnswerVariants : null)
-                .Include(q => q is PracticalQuestion ? ((PracticalQuestion)q).QueryWords : null)
+                .Include(q => (q as TestQuestion).TestVariants)
+                .Include(q => (q as OpenQuestion).AnswerVariants)
+                .Include(q => (q as PracticalQuestion).QueryWords)
                 .ThenInclude(qw => qw.Keyword)
                 .Select(x => mapper.MapQuestionCheckings(x))
                 .ToListAsync();
