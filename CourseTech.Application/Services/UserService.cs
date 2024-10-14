@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -10,12 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
-    public class UserService(IUnitOfWork unitOfWork, IMapper mapper) : IUserService
+    public class UserService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService) : IUserService
     {
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {
-            //To Do что сделать здесь с токеном при удалении юзера
-
             var user = await unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user is null)
@@ -30,6 +29,8 @@ namespace CourseTech.Application.Services
                 return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
+            var userToken = await unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+
             using (var transaction = await unitOfWork.BeginTransactionAsync())
             {
                 try
@@ -37,7 +38,14 @@ namespace CourseTech.Application.Services
                     unitOfWork.Users.Remove(user);
                     unitOfWork.UserProfiles.Remove(userProfile);
 
+                    if (userToken != null)
+                    {
+                        unitOfWork.UserTokens.Remove(userToken);
+                    }
+
                     await unitOfWork.SaveChangesAsync();
+
+                    await cacheService.RemoveAsync(CacheKeys.Users);
 
                     await transaction.CommitAsync();
                 }
@@ -69,10 +77,12 @@ namespace CourseTech.Application.Services
 
         public async Task<CollectionResult<UserDto>> GetUsersAsync()
         {
-            var users = await unitOfWork.Users.GetAll()
-                .Include(x => x.Roles)
-                .Select(x => mapper.Map<UserDto>(x))
-                .ToArrayAsync();
+            var users = await cacheService.GetOrAddToCache(
+                CacheKeys.Users,
+                async () => await unitOfWork.Users.GetAll()
+                    .Include(x => x.Roles)
+                    .Select(x => mapper.Map<UserDto>(x))
+                    .ToArrayAsync());
 
             return CollectionResult<UserDto>.Success(users);
         }
@@ -88,14 +98,12 @@ namespace CourseTech.Application.Services
                 return BaseResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            // To Do можно ли здесь маппить
-            user.UserProfile.Name = dto.Name;
-            user.UserProfile.Surname = dto.Surname;
-            user.Login = dto.Login;
-            user.UserProfile.IsEditAble = dto.IsEditAble;
+            mapper.Map(dto, user);
 
             unitOfWork.Users.Update(user);
             await unitOfWork.SaveChangesAsync();
+
+            await cacheService.RemoveAsync(CacheKeys.Users);
 
             return BaseResult<UpdateUserDto>.Success(dto);
         }

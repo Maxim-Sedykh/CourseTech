@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Enum;
 
-public enum LessonType
+public enum QuestionTypes
 {
-    Common = 0,
-
-    WithPractical = 1,
-
-    Exam = 2 //Экзамен содержит практические
+    Test = 0,
+    Open = 1,
+    Practical = 2,
 }

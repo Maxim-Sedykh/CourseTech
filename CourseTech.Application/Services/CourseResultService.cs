@@ -1,19 +1,22 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CourseTech.Application.Services
 {
     public class CourseResultService(IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<LessonRecord> lessonRecordRepository,
-        IBaseRepository<Lesson> lessonRepository, IMapper mapper) : ICourseResultService
+        IBaseRepository<Lesson> lessonRepository, IMapper mapper, ICacheService cacheService) : ICourseResultService
     {
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
@@ -52,31 +55,36 @@ namespace CourseTech.Application.Services
             userProfileRepository.Update(profile);
             await userProfileRepository.SaveChangesAsync();
 
+            await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{profile.UserId}");
+
             var courseResult = mapper.Map<CourseResultDto>(profile);
 
             return BaseResult<CourseResultDto>.Success(courseResult);
         }
 
-        //To Do Test it on user null
         public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
-            var profile = await userProfileRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.UserId == userId);
+            var userAnalys = await cacheService.GetOrAddToCache(
+                $"{CacheKeys.UserAnalys}{userId}",
+                async () =>
+                {
+                    return await userProfileRepository.GetAll()
+                        .Where(x => x.UserId == userId)
+                        .Select(x => mapper.Map<UserAnalysDto>(x))
+                        .FirstOrDefaultAsync();
+                });
 
-            if (profile is null)
+            if (userAnalys == null)
             {
-                return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+                return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserAnalysNotFound, ErrorMessage.UserAnalysNotFound);
             }
 
-            return BaseResult<UserAnalysDto>.Success(new UserAnalysDto()
-            {
-                Analys = profile.Analys
-            });
+            return BaseResult<UserAnalysDto>.Success(userAnalys);
         }
 
         private UserAnalysDto CreateAnalys(float usersCurrentGrade, List<LessonRecordDto> userLessonRecords, int lessonsCount)
         {
-            var analys = new UserAnalysDto { Analys = AnalysConstants.UndefinedOverall };
+            var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };
             var examLessonRecord = userLessonRecords.LastOrDefault();
 
             if (userLessonRecords.Count != lessonsCount || examLessonRecord == null)
@@ -86,10 +94,10 @@ namespace CourseTech.Application.Services
 
             string firstPartOfAnalys = usersCurrentGrade switch
             {
-                > 90 => AnalysConstants.ExcellentOverall,
-                > 75 => AnalysConstants.GoodOverall,
-                > 60 => AnalysConstants.SatisfactoryOverall,
-                _ => AnalysConstants.UnsatisfactoryOverall
+                > 90 => AnalysParts.ExcellentOverall,
+                > 75 => AnalysParts.GoodOverall,
+                > 60 => AnalysParts.SatisfactoryOverall,
+                _ => AnalysParts.UnsatisfactoryOverall
             };
 
             var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Count - 1).ToList();
@@ -99,7 +107,7 @@ namespace CourseTech.Application.Services
                 var averageMark = commonLessonRecords.Average(x => x.Mark);
                 var maxMarkCommonLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).First();
 
-                string secondPartOfAnalys = string.Format(AnalysConstants.LessonsAnalys,
+                string secondPartOfAnalys = string.Format(AnalysParts.LessonsAnalys,
                     averageMark,
                     maxMarkCommonLessonRecord.LessonName,
                     maxMarkCommonLessonRecord.Mark,

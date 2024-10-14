@@ -13,6 +13,6 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<CollectionResult<LessonRecordDto>> GetLessonRecordsAsync(Guid userId);
+        Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId);
     }
 }

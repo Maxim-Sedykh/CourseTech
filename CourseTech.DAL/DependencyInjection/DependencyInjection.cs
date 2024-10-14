@@ -1,4 +1,5 @@
 ﻿using CourseTech.DAL.Auth;
+using CourseTech.DAL.Cache;
 using CourseTech.DAL.Graph;
 using CourseTech.DAL.Interceptors;
 using CourseTech.DAL.Repositories;
@@ -6,13 +7,17 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Helpers;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
+using Role = CourseTech.Domain.Entities.Role;
 
 namespace CourseTech.DAL.DependencyInjection;
 
@@ -38,6 +43,8 @@ public static class DependencyInjection
         services.AddScoped<IQueryGraphAnalyzer, QueryGraphAnalyzer>();
 
         services.AddSingleton<ISqlHelper, SqlHelper>();
+
+        services.InitCaching(configuration);
 
         services.InitRepositories();
         services.InitUnitOfWork();
@@ -76,5 +83,25 @@ public static class DependencyInjection
     private static void InitUnitOfWork(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+    }
+
+    private static void InitCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<ICacheService, CacheService>();
+
+        var redisConfig = configuration.GetSection(nameof(RedisSettings));
+        var redisUrl = redisConfig["Url"];
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisUrl;
+            options.InstanceName = redisConfig["InstanceName"];
+        });
+
+        services.AddScoped(cfg =>
+        {
+            var multiplexer = ConnectionMultiplexer.Connect(redisUrl ?? string.Empty);
+            return multiplexer.GetDatabase();
+        });
     }
 }

@@ -10,7 +10,7 @@ public class Lesson : IEntityId<int>, IAuditable
 
     public string Name { get; set; }
 
-    public LessonType LessonType { get; set; }
+    public LessonTypes LessonType { get; set; }
 
     public string LectureMarkup { get; set; }
 

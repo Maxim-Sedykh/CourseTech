@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.DAL.Cache;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Extensions;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
@@ -16,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CourseTech.Application.Services
 {
     public class AuthService(IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork,
-            IAuthValidator authValidator, IPasswordHasher passwordHasher) : IAuthService
+            IAuthValidator authValidator, IPasswordHasher passwordHasher, ICacheService cacheService) : IAuthService
     {
 
         /// <inheritdoc/>
@@ -129,6 +132,8 @@ namespace CourseTech.Application.Services
                     await unitOfWork.UserRoles.CreateAsync(userRole);
 
                     await unitOfWork.SaveChangesAsync();
+
+                    await cacheService.RemoveAsync(CacheKeys.Users);
 
                     await transaction.CommitAsync();
                 }

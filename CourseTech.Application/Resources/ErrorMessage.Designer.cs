@@ -187,6 +187,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Транзакция Redis выполнена неудачно.
+        /// </summary>
+        internal static string RedisTransactionFailed {
+            get {
+                return ResourceManager.GetString("RedisTransactionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отзыв не найден.
         /// </summary>
         internal static string ReviewNotFound {
@@ -255,6 +264,15 @@ namespace CourseTech.Application.Resources {
         internal static string UserAlreadyExistThisRole {
             get {
                 return ResourceManager.GetString("UserAlreadyExistThisRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не найден анализ пользователя.
+        /// </summary>
+        internal static string UserAnalysNotFound {
+            get {
+                return ResourceManager.GetString("UserAnalysNotFound", resourceCulture);
             }
         }
         

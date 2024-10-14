@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Constants.LearningProcess
 {
-    public static class QuestionGradeConstants
+    public static class QuestionGrades
     {
         public const float TestQuestionGrade = 1;
         public const float OpenQuestionGrade = 2;

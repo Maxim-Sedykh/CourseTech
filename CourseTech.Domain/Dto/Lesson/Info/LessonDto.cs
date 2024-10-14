@@ -17,6 +17,6 @@ namespace CourseTech.Domain.Dto.Lesson.LessonInfo
 
         public string Name { get; set; }
 
-        public LessonType LessonType { get; set; }
+        public LessonTypes LessonType { get; set; }
     }
 }

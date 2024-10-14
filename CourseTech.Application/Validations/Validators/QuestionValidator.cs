@@ -49,7 +49,7 @@ namespace CourseTech.Application.Validations.Validators
 
         public BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions,
                                             int userAnswersCount,
-                                            LessonType currentLessonType)
+                                            LessonTypes currentLessonType)
         {
             if (!lessonQuestions.Any() || lessonQuestions.Count != userAnswersCount
                 || !lessonQuestions.OfType<TestQuestionCheckingDto>().Any() || !lessonQuestions.OfType<OpenQuestionCheckingDto>().Any())
@@ -58,7 +58,7 @@ namespace CourseTech.Application.Validations.Validators
                     ErrorMessage.LessonQuestionsNotFound);
             }
 
-            if (currentLessonType != LessonType.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
+            if (currentLessonType != LessonTypes.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
             {
                 return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
                     ErrorMessage.InvalidLessonType);

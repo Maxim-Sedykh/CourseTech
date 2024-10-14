@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Constants.LearningProcess
 {
-    public static class UserQueryAnalyzeRemarks
+    public static class QueryAnalyzeRemarks
     {
         public static readonly char[] SqlQuerySplitters = [' ', ',', '.', '(', ')', ';'];
 

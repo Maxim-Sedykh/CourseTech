@@ -23,7 +23,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CollectionResult<LessonRecordDto>>> GetLessonsRecords()
         {
-            var response = await lessonRecordService.GetLessonRecordsAsync(UserId);
+            var response = await lessonRecordService.GetUserLessonRecordsAsync(UserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

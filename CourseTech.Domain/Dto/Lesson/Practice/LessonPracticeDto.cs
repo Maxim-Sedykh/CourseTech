@@ -13,7 +13,7 @@ namespace CourseTech.Domain.Dto.Lesson.Test
     {
         public int LessonId { get; set; }
 
-        public LessonType LessonType { get; set; }
+        public LessonTypes LessonType { get; set; }
 
         public List<IQuestionDto> Questions { get; set; }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Constants.LearningProcess
 {
-    public static class AnalysConstants
+    public static class AnalysParts
     {
         public const string UndefinedOverall = "Извините, данные вашего анализа были утеряны";
         public const string SatisfactoryOverall = "Данный курс вы прошли удовлетворительно";

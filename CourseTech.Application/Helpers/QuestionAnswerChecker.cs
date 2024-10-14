@@ -63,7 +63,7 @@ namespace CourseTech.Application.Helpers
 
             if (correctAnswer.AnswerCorrectness)
             {
-                userGrade += QuestionGradeConstants.TestQuestionGrade;
+                userGrade += QuestionGrades.TestQuestionGrade;
             }
 
             return correctAnswer;
@@ -91,7 +91,7 @@ namespace CourseTech.Application.Helpers
                 if (result == 0)
                 {
                     correctAnswer.AnswerCorrectness = true;
-                    questionGrade += QuestionGradeConstants.PracticalQuestionGrade;
+                    questionGrade += QuestionGrades.PracticalQuestionGrade;
                     correctAnswer.QueryResult = userResult;
 
                     correctAnswer.QuestionUserGrade = questionGrade;
@@ -132,12 +132,12 @@ namespace CourseTech.Application.Helpers
             {
                 Id = userAnswer.QuestionId,
                 CorrectAnswer = openQuestionAnswerVariants.FirstOrDefault(),
-                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v == userAnswer.UserAnswer)
+                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v == userAnswer.UserAnswer.ToLower().Trim())
             };
 
             if (correctAnswer.AnswerCorrectness)
             {
-                userGrade += QuestionGradeConstants.OpenQuestionGrade;
+                userGrade += QuestionGrades.OpenQuestionGrade;
             }
 
             return correctAnswer;

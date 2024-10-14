@@ -40,5 +40,7 @@ public enum ErrorCodes
     PasswordIsWrong = 101,
     PasswordNotEqualsPasswordConfirm = 102,
 
+    RedisTransactionFailed = 102,
+
     InternalServerError = 500
 }

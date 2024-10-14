@@ -16,9 +16,9 @@ namespace CourseTech.DAL.Graph
                 return;
 
             var graph = CreateGraph(questionKeywords);
-            var gradePerCategory = (float)Math.Round(QuestionGradeConstants.PracticalQuestionGrade / (questionKeywords.Count + 2), 2);
+            var gradePerCategory = (float)Math.Round(QuestionGrades.PracticalQuestionGrade / (questionKeywords.Count + 2), 2);
 
-            var words = sqlQuery.Split(UserQueryAnalyzeRemarks.SqlQuerySplitters, StringSplitOptions.RemoveEmptyEntries);
+            var words = sqlQuery.Split(QueryAnalyzeRemarks.SqlQuerySplitters, StringSplitOptions.RemoveEmptyEntries);
             var keywordIndexes = new List<int>();
 
             foreach (var edge in graph.Edges)
@@ -35,7 +35,7 @@ namespace CourseTech.DAL.Graph
             }
             else
             {
-                remarks.Add(UserQueryAnalyzeRemarks.KeywordsIncorrectOrderRemark);
+                remarks.Add(QueryAnalyzeRemarks.KeywordsIncorrectOrderRemark);
             }
 
             foreach (var keyword in graph.Vertices)
@@ -46,7 +46,7 @@ namespace CourseTech.DAL.Graph
                 }
                 else
                 {
-                    remarks.Add(string.Format(UserQueryAnalyzeRemarks.MissingKeywordRemark, keyword.ToUpper()));
+                    remarks.Add(string.Format(QueryAnalyzeRemarks.MissingKeywordRemark, keyword.ToUpper()));
                 }
             }
 

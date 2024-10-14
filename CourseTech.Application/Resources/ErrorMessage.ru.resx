@@ -192,4 +192,10 @@
   <data name="UserRolesNotFound" xml:space="preserve">
     <value>Роли пользователя не найдены</value>
   </data>
+  <data name="UserAnalysNotFound" xml:space="preserve">
+    <value>Не найден анализ пользователя</value>
+  </data>
+  <data name="RedisTransactionFailed" xml:space="preserve">
+    <value>Транзакция Redis выполнена неудачно</value>
+  </data>
 </root>

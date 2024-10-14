@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -11,7 +13,7 @@ using System.Data;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewService
+public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
@@ -41,6 +43,8 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
 
                 await unitOfWork.SaveChangesAsync();
 
+                await cacheService.RemoveAsync(CacheKeys.Reviews);
+
                 await transaction.CommitAsync();
             }
             catch (Exception)
@@ -57,7 +61,7 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
         var review = await unitOfWork.Reviews.GetAll()
             .FirstOrDefaultAsync(x => x.Id == reviewId);
 
-        if (review is null)
+        if (review == null)
         {
             return BaseResult.Failure((int)ErrorCodes.ReviewNotFound, ErrorMessage.ReviewNotFound);
         }
@@ -66,15 +70,22 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
 
         await unitOfWork.SaveChangesAsync();
 
+        await cacheService.RemoveAsync(CacheKeys.Reviews);
+
         return BaseResult.Success();
     }
 
     public async Task<CollectionResult<ReviewDto>> GetReviewsAsync()
     {
-        var reviews = await unitOfWork.Reviews.GetAll()
-                .Include(x => x.User)
-                .Select(x => mapper.Map<ReviewDto>(x))
-                .ToArrayAsync();
+        var reviews = await cacheService.GetOrAddToCache(
+            CacheKeys.Reviews,
+            async () =>
+            {
+                return await unitOfWork.Reviews.GetAll()
+                    .Include(x => x.User)
+                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .ToArrayAsync();
+            });
 
         if (!reviews.Any())
         {
@@ -86,12 +97,11 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper) : IReviewServ
 
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
-        //To Do где лучше писать Include, в каком порядке лучше писать запросы в linqtoentities, оптимизировать запрос
         var reviews = await unitOfWork.Reviews.GetAll()
-                .Include(x => x.User)
-                .Where(x => x.UserId == userId)
-                .Select(x => mapper.Map<ReviewDto>(x))
-                .ToArrayAsync();
+                    .Where(x => x.UserId == userId)
+                    .Include(x => x.User)
+                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .ToArrayAsync();
 
         if (!reviews.Any())
         {

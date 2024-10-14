@@ -19,6 +19,6 @@ namespace CourseTech.Domain.Interfaces.Validators
 
         BaseResult ValidateCorrectAnswersOnNull(IEnumerable<TestVariantDto> correctTestVariants, IEnumerable<OpenQuestionAnswerDto> openQuestionAnswers);
 
-        BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions, int userAnswersCount, LessonType lessonType);
+        BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions, int userAnswersCount, LessonTypes lessonType);
     }
 }

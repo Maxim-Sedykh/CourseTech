@@ -1,29 +1,24 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Resources;
 using CourseTech.Domain;
-using CourseTech.Domain.Dto.Keyword;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
-using CourseTech.Domain.Dto.OpenQuestionAnswer;
-using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Get;
-using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
-using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
-using CourseTech.Domain.Parameters;
 using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
-    public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper, IQuestionAnswerChecker questionAnswerChecker, IQuestionValidator questionValidator) : IQuestionService
+    public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper, IQuestionAnswerChecker questionAnswerChecker,
+        IQuestionValidator questionValidator, ICacheService cacheService) : IQuestionService
     {
         public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
@@ -33,11 +28,13 @@ namespace CourseTech.Application.Services
                 return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
-            var questions = await unitOfWork.Questions.GetAll()
+            var questions = await cacheService.GetOrAddToCache(
+                CacheKeys.LessonQuestions,
+                async () => await unitOfWork.Questions.GetAll()
                 .Include(q => (q as TestQuestion).TestVariants)
                 .Where(q => q.LessonId == lessonId)
                 .Select(q => mapper.MapQuestion(q))
-                .ToListAsync();
+                .ToListAsync());
 
             if (!questions.Any())
             {
@@ -112,6 +109,10 @@ namespace CourseTech.Application.Services
                     });
 
                     await unitOfWork.SaveChangesAsync();
+
+                    await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{userId}");
+                    await cacheService.RemoveAsync($"{CacheKeys.UserLessonRecords}{userId}");
+
                     await transaction.CommitAsync();
                 }
                 catch (Exception)
