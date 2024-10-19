@@ -49,7 +49,7 @@ public static class DependencyInjection
         services.InitRepositories();
         services.InitUnitOfWork();
     }
-
+     
     private static void InitRepositories(this IServiceCollection services)
     {
         var types = new List<Type>()
@@ -87,6 +87,7 @@ public static class DependencyInjection
 
     private static void InitCaching(this IServiceCollection services, IConfiguration configuration)
     {
+        // To Do убрать хард код
         services.AddScoped<ICacheService, CacheService>();
 
         var redisConfig = configuration.GetSection(nameof(RedisSettings));
@@ -94,8 +95,7 @@ public static class DependencyInjection
 
         services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = redisUrl;
-            options.InstanceName = redisConfig["InstanceName"];
+            options.Configuration = configuration.GetConnectionString("Cache");
         });
 
         services.AddScoped(cfg =>

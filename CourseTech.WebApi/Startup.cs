@@ -1,12 +1,9 @@
-﻿using System.Reflection;
-using System.Text;
-using System.Web.Http;
-using Asp.Versioning;
-using CourseTech.Application.Helpers;
+﻿using Asp.Versioning;
 using CourseTech.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace CourseTech.WebApi;
 

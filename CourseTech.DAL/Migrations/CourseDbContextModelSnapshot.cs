@@ -319,6 +319,15 @@ namespace CourseTech.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
+                            CreatedAt = new DateTime(2024, 10, 19, 12, 9, 58, 192, DateTimeKind.Local).AddTicks(8922),
+                            Login = "maximka",
+                            Password = "----------------"
+                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>

@@ -23,9 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseTech.WebApi", "Course
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29B840D9-FA25-44F1-ACB1-84F2E1B805F8}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
 		prometheus.yml = prometheus.yml
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B86F6551-E790-45D2-A8B3-9C3323F420CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +54,10 @@ Global
 		{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B86F6551-E790-45D2-A8B3-9C3323F420CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B86F6551-E790-45D2-A8B3-9C3323F420CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B86F6551-E790-45D2-A8B3-9C3323F420CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B86F6551-E790-45D2-A8B3-9C3323F420CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +68,7 @@ Global
 		{2DCD8BD9-AA25-4113-B229-79F6D2BC165C} = {2A212D7A-C7A2-4B50-B442-558628FE408C}
 		{9246BB7A-C2FD-425B-9F42-8DC5E2750D33} = {884F75B5-EA8C-4BFE-925F-C0FD5FFD94C7}
 		{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E} = {6442B39E-9412-4AE8-A4A1-472D7FD2E800}
+		{B86F6551-E790-45D2-A8B3-9C3323F420CE} = {29B840D9-FA25-44F1-ACB1-84F2E1B805F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32356B9B-8670-43AC-8028-68C4282CB9B9}

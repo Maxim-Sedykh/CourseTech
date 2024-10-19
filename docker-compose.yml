@@ -1,0 +1,70 @@
+version: '3.8' 
+
+services:
+ coursetech.webapi:
+  image: coursetech.webapi
+  container_name: coursetech.webapi
+  build:
+   context: .
+   dockerfile: CourseTech.WebApi/Dockerfile
+  ports:
+   - "8080:80"
+  depends_on:
+   - coursetech.database
+   - coursetech.cache
+  networks:
+   - coursetechnw
+
+ coursetech.database:
+  image: mcr.microsoft.com/mssql/server:2022-latest
+  container_name: coursetech.database
+  environment:
+   - ACCEPT_EULA=Y
+   - SA_PASSWORD=25Feb!2002
+   - DB_NAME=CourseTech
+  volumes:
+   - ./.containers/products-db:/var/lib/sqlserver/data
+  ports:
+   - "5837:1433"
+  networks:
+   - coursetechnw
+
+ prometheus:
+  image: prom/prometheus:latest
+  container_name: prometheus
+  ports:
+   - "9090:9090"
+  volumes:
+   - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  command:
+   - '--config.file=/etc/prometheus/prometheus.yml'
+  depends_on:
+   - coursetech.webapi
+  networks:
+   - coursetechnw
+
+ grafana:
+  image: grafana/grafana:latest
+  container_name: grafana
+  ports:
+   - "3000:3000"
+  environment:
+   - GF_SECURITY_ADMIN_PASSWORD=admin
+  volumes:
+   - ./grafana:/var/lib/grafana
+  depends_on:
+   - prometheus
+  networks:
+   - coursetechnw
+
+ coursetech.cache:
+  image: redis:latest
+  container_name: coursetech.cache
+  restart: always
+  ports:
+   - "6379:6379"
+  networks:
+   - coursetechnw
+
+networks:
+ coursetechnw:

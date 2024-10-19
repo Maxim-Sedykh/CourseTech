@@ -137,7 +137,7 @@ namespace CourseTech.Application.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                 }

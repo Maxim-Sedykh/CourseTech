@@ -11,7 +11,7 @@ namespace CourseTech.WebApi.Controllers
         protected Guid UserId
         {
             get
-            {
+            { // To Do пофикси эксэпшн здесь
                 return new Guid(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
             }
         }

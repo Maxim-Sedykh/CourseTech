@@ -8,9 +8,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["CourseTech.WebApi/CourseTech.WebApi.csproj", "CourseTech.WebApi/"]
-COPY ["CourseTech.Application/CourseTech.Application.csproj", "CourseTech.Application/"]
-COPY ["CourseTech.DAL/CourseTech.DAL.csproj", "CourseTech.DAL/"]
-COPY ["CourseTech.Domain/CourseTech.Domain.csproj", "CourseTech.Domain/"]
 RUN dotnet restore "./CourseTech.WebApi/CourseTech.WebApi.csproj"
 COPY . .
 WORKDIR "/src/CourseTech.WebApi"
