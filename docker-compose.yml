@@ -1,4 +1,4 @@
-version: '3.8' 
+version: '3.8'
 
 services:
  coursetech.webapi:
@@ -23,7 +23,7 @@ services:
    - SA_PASSWORD=25Feb!2002
    - DB_NAME=CourseTech
   volumes:
-   - ./.containers/products-db:/var/lib/sqlserver/data
+   - coursetech-db:/var/lib/sqlserver/data
   ports:
    - "5837:1433"
   networks:
@@ -65,6 +65,10 @@ services:
    - "6379:6379"
   networks:
    - coursetechnw
+
+volumes:
+ coursetech-db:
+  driver: local
 
 networks:
  coursetechnw:

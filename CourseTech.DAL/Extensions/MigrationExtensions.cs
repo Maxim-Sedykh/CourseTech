@@ -18,7 +18,7 @@ namespace CourseTech.Domain.Extensions
 
             using CourseDbContext dbContext = score.ServiceProvider.GetService<CourseDbContext>();
 
-            dbContext.Database.Migrate();
+            //dbContext.Database.Migrate();
         }
     }
 }
