@@ -1,27 +1,21 @@
-﻿using AutoMapper;
-using CourseTech.Application.Commands.Reviews;
+﻿using CourseTech.Application.Commands.Reviews;
 using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Handlers.ReviewHandlers;
-using CourseTech.Application.Handlers.UserProfileHandlers;
 using CourseTech.Application.Queries.Reviews;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Data;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
+public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
