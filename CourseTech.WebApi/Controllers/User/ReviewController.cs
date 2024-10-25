@@ -4,6 +4,7 @@ using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
@@ -61,7 +62,6 @@ namespace CourseTech.WebApi.Controllers.User
             return BadRequest(response);
         }
 
-        // To Do прописать здесь комментарии
         [HttpGet(RouteConstants.GetUserReviews)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

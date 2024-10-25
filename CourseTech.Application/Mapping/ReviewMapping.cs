@@ -13,7 +13,6 @@ namespace CourseTech.Application.Mapping
     {
         public ReviewMapping()
         {
-            // To Do .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToLongDateString())) лишнее?
             CreateMap<Review, ReviewDto>()
                 .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.User.Login))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToLongDateString()))

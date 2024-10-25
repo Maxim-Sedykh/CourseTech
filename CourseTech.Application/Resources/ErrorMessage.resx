@@ -198,4 +198,7 @@
   <data name="RedisTransactionFailed" xml:space="preserve">
     <value>Транзакция Redis выполнена неудачно</value>
   </data>
+  <data name="AnswerCheckError" xml:space="preserve">
+    <value>Возникла ошибка при проверке ответов пользователя</value>
+  </data>
 </root>

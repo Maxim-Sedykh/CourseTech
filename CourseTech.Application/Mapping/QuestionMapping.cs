@@ -23,10 +23,8 @@ namespace CourseTech.Application.Mapping
                     QuestionId = x.TestQuestionId,
                     Content = x.Content,
                     VariantNumber = x.VariantNumber,
-                }))); //To Do как здесь это делать правильно?
+                })));
 
-            // To Do здесь приходится делать Where фильтрацию и подтягивать все TestVariants, а как делать типо Outer apply в ef core?
-            // To Do возможно добавить ProjectTo
             CreateMap<TestQuestion, TestQuestionCheckingDto>()
                 .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.CorrectVariant, opt => 
@@ -48,7 +46,6 @@ namespace CourseTech.Application.Mapping
 
             CreateMap<PracticalQuestion, PracticalQuestionDto>();
 
-            // To Do не уверен что так правильно
             CreateMap<PracticalQuestion, PracticalQuestionCheckingDto>()
                 .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.PracticalQuestionKeywords, opt => opt.MapFrom(src => src.QueryWords.Select(x => x.Keyword.Word).ToList()));

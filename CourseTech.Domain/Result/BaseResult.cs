@@ -1,6 +1,5 @@
 ﻿namespace CourseTech.Domain.Result;
 
-//To Do оптимизировать код вот здесь, new - не самая лучшая практика
 public class BaseResult
 {
     protected BaseResult(Error error = null)

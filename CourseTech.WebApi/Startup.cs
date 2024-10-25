@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CourseTech.Application.Converters;
 using CourseTech.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -48,7 +49,6 @@ public static class Startup
     /// <param name="services"></param>
     public static void AddSwagger(this IServiceCollection services)
     {
-        //To Do прописать версионирование получше
         services.AddApiVersioning()
         .AddApiExplorer(options =>
         {
@@ -112,6 +112,20 @@ public static class Startup
                     Array.Empty<string>()
                 }
             });
+        });
+    }
+
+    /// <summary>
+    /// Добавление контроллеров и JSON-конверторов
+    /// </summary>
+    /// <param name="services"></param>
+    public static void AddControllersAndJsonConvertors(this IServiceCollection services)
+    {
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new UserAnswerDtoConverter());
+            options.JsonSerializerOptions.Converters.Add(new QuestionDtoConverter());
+            options.JsonSerializerOptions.Converters.Add(new CorrectAnswerDtoConverter());
         });
     }
 }

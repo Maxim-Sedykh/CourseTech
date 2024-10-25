@@ -18,6 +18,7 @@ namespace CourseTech.Application.Services
     public class CourseResultService(IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<LessonRecord> lessonRecordRepository,
         IBaseRepository<Lesson> lessonRepository, IMapper mapper, ICacheService cacheService) : ICourseResultService
     {
+
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
             var profile = await userProfileRepository.GetAll()

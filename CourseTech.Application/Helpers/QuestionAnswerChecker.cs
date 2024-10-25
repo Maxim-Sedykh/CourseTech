@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using CourseTech.Domain.Constants.LearningProcess;
+﻿using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Pass;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
@@ -9,7 +8,7 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Parameters;
+using System.Text.RegularExpressions;
 
 namespace CourseTech.Application.Helpers
 {
@@ -27,7 +26,6 @@ namespace CourseTech.Application.Helpers
 
                 if (userAnswer.QuestionId != checkQuestionDto.QuestionId)
                 {
-                    //To Do как-то по другому тут это делать
                     return new List<ICorrectAnswerDto>();
                 }
 
@@ -40,7 +38,7 @@ namespace CourseTech.Application.Helpers
                     OpenQuestionUserAnswerDto openQuestionUserAnswerDto =>
                         CheckOpenQuestionAnswer(openQuestionUserAnswerDto, (checkQuestionDto as OpenQuestionCheckingDto).OpenQuestionsAnswers, ref userGrade),
 
-                    PracticalQuestionUserAnswerDto practicalQuestionUserAnswerDto => 
+                    PracticalQuestionUserAnswerDto practicalQuestionUserAnswerDto =>
                         CheckPracticalQuestionAnswer(practicalQuestionUserAnswerDto, checkQuestionDto as PracticalQuestionCheckingDto, ref userGrade),
 
                     _ => throw new ArgumentException("Неизвестный тип ответа")
@@ -102,7 +100,7 @@ namespace CourseTech.Application.Helpers
                         questionChecking.PracticalQuestionKeywords,
                         out float practicalQuestionGrade,
                         out List<string> remarks);
-                        
+
                     correctAnswer.Remarks = remarks;
                     correctAnswer.QuestionUserGrade = practicalQuestionGrade;
                     questionGrade += practicalQuestionGrade;
@@ -124,15 +122,16 @@ namespace CourseTech.Application.Helpers
 
             return correctAnswer;
         }
-        
-        // To Do обработать здесь пробелы
+
         private ICorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, ref float userGrade)
         {
+            string normalizedUserAnswer = Regex.Replace(userAnswer.UserAnswer.ToLower().Trim(), @"s+", " ");
+
             var correctAnswer = new OpenQuestionCorrectAnswerDto
             {
                 Id = userAnswer.QuestionId,
                 CorrectAnswer = openQuestionAnswerVariants.FirstOrDefault(),
-                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v == userAnswer.UserAnswer.ToLower().Trim())
+                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v == normalizedUserAnswer)
             };
 
             if (correctAnswer.AnswerCorrectness)

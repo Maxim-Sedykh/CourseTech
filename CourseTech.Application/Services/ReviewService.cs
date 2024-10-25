@@ -1,4 +1,10 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Commands.Reviews;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Handlers.ReviewHandlers;
+using CourseTech.Application.Handlers.UserProfileHandlers;
+using CourseTech.Application.Queries.Reviews;
+using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;
@@ -8,38 +14,30 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService) : IReviewService
+public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
-        var user = await unitOfWork.Users.GetAll()
-            .Include(x => x.UserProfile)
-            .FirstOrDefaultAsync(x => x.Id == userId);
+        var userProfile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
-        if (user is null)
+        if (userProfile is null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         using (var transaction = await unitOfWork.BeginTransactionAsync())
         {
             try
             {
-                var review = new Review()
-                {
-                    UserId = user.Id,
-                    ReviewText = dto.ReviewText
-                };
-
-                user.UserProfile.CountOfReviews++;
-
-                await unitOfWork.Reviews.CreateAsync(review);
-                unitOfWork.Users.Update(user);
+                await mediator.Send(new CreateReviewCommand(dto.ReviewText, userId));
+                await mediator.Send(new UpdateProfileReviewsCountCommand(userProfile));
 
                 await unitOfWork.SaveChangesAsync();
 
@@ -47,8 +45,10 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService
 
                 await transaction.CommitAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.Message);
+
                 await transaction.RollbackAsync();
             }
         }
@@ -58,17 +58,14 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService
 
     public async Task<BaseResult> DeleteReview(long reviewId)
     {
-        var review = await unitOfWork.Reviews.GetAll()
-            .FirstOrDefaultAsync(x => x.Id == reviewId);
+        var review = await mediator.Send(new GetReviewByIdQuery(reviewId));
 
         if (review == null)
         {
             return BaseResult.Failure((int)ErrorCodes.ReviewNotFound, ErrorMessage.ReviewNotFound);
         }
 
-        unitOfWork.Reviews.Remove(review);
-
-        await unitOfWork.SaveChangesAsync();
+        await mediator.Send(new DeleteReviewCommand(review));
 
         await cacheService.RemoveAsync(CacheKeys.Reviews);
 
@@ -81,10 +78,7 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService
             CacheKeys.Reviews,
             async () =>
             {
-                return await unitOfWork.Reviews.GetAll()
-                    .Include(x => x.User)
-                    .Select(x => mapper.Map<ReviewDto>(x))
-                    .ToArrayAsync();
+                return await mediator.Send(new GetReviewDtosQuery());
             });
 
         if (!reviews.Any())
@@ -97,11 +91,7 @@ public class ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService
 
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
-        var reviews = await unitOfWork.Reviews.GetAll()
-                    .Where(x => x.UserId == userId)
-                    .Include(x => x.User)
-                    .Select(x => mapper.Map<ReviewDto>(x))
-                    .ToArrayAsync();
+        var reviews = await mediator.Send(new GetUserReviewDtosQuery(userId), new CancellationToken());
 
         if (!reviews.Any())
         {

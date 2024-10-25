@@ -61,6 +61,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Возникла ошибка при проверке ответов пользователя.
+        /// </summary>
+        internal static string AnswerCheckError {
+            get {
+                return ResourceManager.GetString("AnswerCheckError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
         /// </summary>
         internal static string InternalServerError {

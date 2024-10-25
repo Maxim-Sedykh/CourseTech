@@ -20,7 +20,6 @@ namespace CourseTech.Application.Mapping
                 .ForMember(dest => dest.IsExamCompleted, opt => opt.MapFrom(src => src.UserProfile.IsExamCompleted))
                 .ForMember(dest => dest.IsEditAble, opt => opt.MapFrom(src => src.UserProfile.IsEditAble));
 
-            //To Do может это можно как-то оптимизировать
             CreateMap<User, UpdateUserDto>()
                 .ForPath(dest => dest.Name, opt => opt.MapFrom(src => src.UserProfile.Name))
                 .ForPath(dest => dest.Surname, opt => opt.MapFrom(src => src.UserProfile.Surname))

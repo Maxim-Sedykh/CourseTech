@@ -8,12 +8,8 @@ namespace CourseTech.WebApi.Controllers
         /// <summary>
         /// Идентификатор авторизованного пользователя
         /// </summary>
-        protected Guid UserId
-        {
-            get
-            { // To Do пофикси эксэпшн здесь
-                return new Guid(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            }
-        }
+        protected Guid UserId => Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)
+            ? userId
+            : Guid.Empty;
     }
 }

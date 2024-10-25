@@ -16,13 +16,7 @@ builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection(nameo
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.UseHttpClientMetrics();
 
-// To Do может это можно не писать в Program.cs?
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new UserAnswerDtoConverter());
-    options.JsonSerializerOptions.Converters.Add(new QuestionDtoConverter());
-    options.JsonSerializerOptions.Converters.Add(new CorrectAnswerDtoConverter());
-});
+builder.Services.AddControllersAndJsonConvertors();
 
 builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwagger();
@@ -45,7 +39,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
         c.RoutePrefix = string.Empty;
     });
-    app.ApplyMigrations();
+    //app.ApplyMigrations();
 }
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

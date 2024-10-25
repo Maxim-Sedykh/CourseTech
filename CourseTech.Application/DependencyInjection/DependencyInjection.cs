@@ -12,6 +12,7 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 namespace CourseTech.Application.DependencyInjection;
 
@@ -23,6 +24,8 @@ public static class DependencyInjection
     public static void AddApplication(this IServiceCollection services)
     {
         services.InitAutoMapper();
+
+        services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         services.InitServices();
 

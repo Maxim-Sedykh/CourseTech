@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace CourseTech.WebApi.Controllers.Admin
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]

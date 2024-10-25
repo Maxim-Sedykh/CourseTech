@@ -63,7 +63,6 @@ namespace CourseTech.Application.Services
                 return BaseResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
-            // To Do оптимизировать
             var questions = await unitOfWork.Questions.GetAll()
                 .Where(q => q.LessonId == dto.LessonId)
                 .Include(q => (q as TestQuestion).TestVariants)
@@ -81,7 +80,12 @@ namespace CourseTech.Application.Services
 
             var correctAnswers = questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, out float userGrade);
 
-            await UpdateProfileAndCreateLessonRecord(profile, lesson, userId, userGrade);
+            if (correctAnswers.Any())
+            {
+                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
+            }
+
+            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade);
 
             return BaseResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
             {
@@ -90,12 +94,14 @@ namespace CourseTech.Application.Services
             });
         }
 
-        private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, Lesson lesson, Guid userId, float userGrade)
+        private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, int lessonId, float userGrade)
         {
             using (var transaction = await unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
+                    var userId = profile.UserId;
+
                     profile.CurrentGrade += userGrade;
                     profile.LessonsCompleted++;
 
@@ -103,7 +109,7 @@ namespace CourseTech.Application.Services
 
                     await unitOfWork.LessonRecords.CreateAsync(new LessonRecord()
                     {
-                        LessonId = lesson.Id,
+                        LessonId = lessonId,
                         UserId = userId,
                         Mark = userGrade
                     });

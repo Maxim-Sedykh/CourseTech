@@ -87,7 +87,6 @@ public static class DependencyInjection
 
     private static void InitCaching(this IServiceCollection services, IConfiguration configuration)
     {
-        // To Do убрать хард код
         services.AddScoped<ICacheService, CacheService>();
 
         var redisConfig = configuration.GetSection(nameof(RedisSettings));

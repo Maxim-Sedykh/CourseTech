@@ -198,4 +198,7 @@
   <data name="RedisTransactionFailed" xml:space="preserve">
     <value>Redis transaction failed</value>
   </data>
+  <data name=" AnswerCheckError" xml:space="preserve">
+    <value>An error occurred while checking the user's responses</value>
+  </data>
 </root>

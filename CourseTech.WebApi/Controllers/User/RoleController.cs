@@ -6,11 +6,12 @@ using CourseTech.Domain.Dto.UserRole;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
