@@ -9,8 +9,5 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.Reviews
 {
-    public class GetReviewByIdQuery(long reviewId) : IRequest<Review>
-    {
-        public long ReviewId { get; set; } = reviewId;
-    }
+    public record GetReviewByIdQuery(long ReviewId) : IRequest<Review>;
 }

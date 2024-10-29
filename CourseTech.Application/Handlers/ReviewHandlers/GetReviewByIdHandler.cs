@@ -18,7 +18,7 @@ namespace CourseTech.Application.Handlers.ReviewHandlers
         public async Task<Review> Handle(GetReviewByIdQuery request, CancellationToken cancellationToken)
         {
             return await reviewRepository.GetAll()
-                .FirstOrDefaultAsync(x => x.Id == request.ReviewId);
+                .FirstOrDefaultAsync(x => x.Id == request.ReviewId, cancellationToken);
         }
     }
 }

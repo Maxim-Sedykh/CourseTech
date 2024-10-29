@@ -1,4 +1,11 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Commands.RoleCommands;
+using CourseTech.Application.Commands.UserCommand;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Commands.UserTokenCommands;
+using CourseTech.Application.Queries.RoleQueries;
+using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.UserTokenQueries;
 using CourseTech.Application.Resources;
 using CourseTech.DAL.Cache;
 using CourseTech.Domain.Constants.Cache;
@@ -14,20 +21,20 @@ using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CourseTech.Application.Services
 {
     public class AuthService(IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork,
-            IAuthValidator authValidator, IPasswordHasher passwordHasher, ICacheService cacheService) : IAuthService
+            IAuthValidator authValidator, ICacheService cacheService, IMediator mediator) : IAuthService
     {
 
         /// <inheritdoc/>
         public async Task<BaseResult<TokenDto>> Login(LoginUserDto dto)
         {
-            var user = await unitOfWork.Users.GetAll()
-                .Include(x => x.Roles)
-                .FirstOrDefaultAsync(x => x.Login == dto.Login);
+            var user = await mediator.Send(new GetUserWithRolesByLoginQuery(dto.Login));
 
             var validateLoginResult = authValidator.ValidateLogin(user, enteredPassword: dto.Password);
             if (!validateLoginResult.IsSuccess)
@@ -40,28 +47,16 @@ namespace CourseTech.Application.Services
             var accessToken = tokenService.GenerateAccessToken(claims);
             var refreshToken = tokenService.GenerateRefreshToken();
 
-            var userToken = await unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(user.Id));
 
             if (userToken == null)
             {
-                userToken = new UserToken()
-                {
-                    UserId = user.Id,
-                    RefreshToken = refreshToken,
-                    RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
-                };
-
-                await unitOfWork.UserTokens.CreateAsync(userToken);
+                await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken));
             }
             else
             {
-                userToken.RefreshToken = refreshToken;
-                userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
-
-                unitOfWork.UserTokens.Update(userToken);
+                await mediator.Send(new UpdateUserTokenCommand(userToken, refreshToken));
             }
-
-            await unitOfWork.SaveChangesAsync();
 
             return BaseResult<TokenDto>.Success(new TokenDto()
             {
@@ -78,7 +73,7 @@ namespace CourseTech.Application.Services
                 return BaseResult<UserDto>.Failure((int)ErrorCodes.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
             }
 
-            var user = await unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.Login == dto.Login);
+            var user = await mediator.Send(new GetUserByLoginQuery(dto.Login));
 
             if (user != null)
             {
@@ -89,47 +84,18 @@ namespace CourseTech.Application.Services
             {
                 try
                 {
-                    user = new User()
-                    {
-                        Login = dto.Login,
-                        Password = passwordHasher.Hash(dto.Password),
-                    };
-                    await unitOfWork.Users.CreateAsync(user);
+                    user = await mediator.Send(new CreateUserCommand(dto.Login, dto.Password));
 
-                    await unitOfWork.SaveChangesAsync();
+                    await mediator.Send(new CreateUserProfileCommand(user.Id, dto.Name, dto.Surname, dto.DateOfBirth));
 
-                    var dateOfBirth = dto.DateOfBirth;
-
-                    UserProfile userProfile = new UserProfile()
-                    {
-                        UserId = user.Id,
-                        IsEditAble = true,
-                        Name = dto.Name,
-                        Surname = dto.Surname,
-                        Age = dateOfBirth.GetYearsByDateToNow(),
-                        DateOfBirth = dateOfBirth,
-                        IsExamCompleted = false,
-                        CurrentGrade = 0,
-                        LessonsCompleted = 0,
-                        CountOfReviews = 0
-                    };
-
-                    await unitOfWork.UserProfiles.CreateAsync(userProfile);
-
-                    var role = await unitOfWork.Roles.GetAll().FirstOrDefaultAsync(x => x.Name == nameof(Roles.User));
+                    var role = await mediator.Send(new GetRoleByNameQuery(nameof(Roles.User)));
 
                     if (role == null)
                     {
                         return BaseResult<UserDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
                     }
 
-                    UserRole userRole = new UserRole()
-                    {
-                        UserId = user.Id,
-                        RoleId = role.Id
-                    };
-
-                    await unitOfWork.UserRoles.CreateAsync(userRole);
+                    await mediator.Send(new CreateUserRoleCommand(role.Id, user.Id));
 
                     await unitOfWork.SaveChangesAsync();
 
@@ -137,9 +103,12 @@ namespace CourseTech.Application.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await transaction.RollbackAsync();
+
+                    //logger.LogError(ex, ex.Message);
+                    //return BaseResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, "Ошибка при регистрации. Пожалуйста, попробуйте позже.");
                 }
             }
 

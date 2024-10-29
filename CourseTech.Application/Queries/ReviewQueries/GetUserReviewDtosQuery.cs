@@ -8,8 +8,5 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.Reviews
 {
-    public class GetUserReviewDtosQuery(Guid userId) : IRequest<ReviewDto[]>
-    {
-        public Guid UserId { get; set; } = userId;
-    }
+    public record GetUserReviewDtosQuery(Guid UserId) : IRequest<ReviewDto[]>;
 }

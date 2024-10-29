@@ -9,8 +9,5 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
-    public class GetProfileByUserIdQuery(Guid userId) : IRequest<UserProfile>
-    {
-        public Guid UserId { get; set; } = userId;
-    }
+    public record GetProfileByUserIdQuery(Guid UserId) : IRequest<UserProfile>;
 }

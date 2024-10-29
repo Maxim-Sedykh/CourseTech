@@ -11,7 +11,7 @@ namespace CourseTech.Application.Handlers.ReviewHandlers
         {
             reviewRepository.Remove(request.Review);
 
-            await reviewRepository.SaveChangesAsync();
+            await reviewRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

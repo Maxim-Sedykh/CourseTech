@@ -11,11 +11,10 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
+public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
@@ -33,15 +32,15 @@ public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, I
                 await mediator.Send(new CreateReviewCommand(dto.ReviewText, userId));
                 await mediator.Send(new UpdateProfileReviewsCountCommand(userProfile));
 
-                await unitOfWork.SaveChangesAsync();
-
                 await cacheService.RemoveAsync(CacheKeys.Reviews);
+
+                await unitOfWork.SaveChangesAsync();
 
                 await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message);
+                /*logger.LogError(ex.Message);*/
 
                 await transaction.RollbackAsync();
             }
@@ -70,10 +69,7 @@ public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, I
     {
         var reviews = await cacheService.GetOrAddToCache(
             CacheKeys.Reviews,
-            async () =>
-            {
-                return await mediator.Send(new GetReviewDtosQuery());
-            });
+            async () => await mediator.Send(new GetReviewDtosQuery()));
 
         if (!reviews.Any())
         {
@@ -85,7 +81,7 @@ public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, I
 
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
-        var reviews = await mediator.Send(new GetUserReviewDtosQuery(userId), new CancellationToken());
+        var reviews = await mediator.Send(new GetUserReviewDtosQuery(userId));
 
         if (!reviews.Any())
         {

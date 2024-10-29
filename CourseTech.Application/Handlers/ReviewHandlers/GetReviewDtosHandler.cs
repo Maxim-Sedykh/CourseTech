@@ -22,7 +22,7 @@ namespace CourseTech.Application.Handlers.ReviewHandlers
                     .AsNoTracking()
                     .Include(x => x.User)
                     .Select(x => mapper.Map<ReviewDto>(x))
-                    .ToArrayAsync();
+                    .ToArrayAsync(cancellationToken);
         }
     }
 }

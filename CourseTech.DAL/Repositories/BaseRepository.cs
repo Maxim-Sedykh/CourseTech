@@ -19,9 +19,9 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return _table.AsQueryable();
     }
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbContext.SaveChangesAsync();
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<TEntity> CreateAsync(TEntity entity)

@@ -10,6 +10,14 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
     {
         builder.Property(r => r.Id).ValueGeneratedOnAdd();
 
+        builder.HasData(new Review()
+        {
+            Id = 1,
+            UserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
+            ReviewText = "kakakaka",
+            CreatedAt = DateTime.UtcNow,
+        });
+
         builder.Property(r => r.ReviewText).HasMaxLength(1000).IsRequired();
 
         builder.HasOne(r => r.User)

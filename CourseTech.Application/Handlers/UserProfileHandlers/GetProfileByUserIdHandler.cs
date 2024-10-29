@@ -18,7 +18,7 @@ namespace CourseTech.Application.Handlers.UserProfileHandlers
     {
         public async Task<UserProfile> Handle(GetProfileByUserIdQuery request, CancellationToken cancellationToken)
         {
-            return await userProfileRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == request.UserId);
+            return await userProfileRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
         }
     }
 }

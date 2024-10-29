@@ -14,6 +14,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Password).IsRequired();
         builder.Property(u => u.Login).HasMaxLength(18).IsRequired();
 
+        builder.HasData(new User()
+        {
+            Id = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
+            Login = "jajaj",
+            Password = "---------------------",
+            CreatedAt = DateTime.UtcNow
+        });
+
         builder.HasOne(u => u.UserProfile)
             .WithOne(up => up.User)
             .HasPrincipalKey<User>(u => u.Id)

@@ -15,13 +15,13 @@ namespace CourseTech.Application.Handlers.UserProfileHandlers
 {
     public class UpdateProfileReviewsCountHandler(IBaseRepository<UserProfile> userProfileRepository) : IRequestHandler<UpdateProfileReviewsCountCommand>
     {
-        public async Task Handle(UpdateProfileReviewsCountCommand request, CancellationToken cancellationToken)
+        public Task Handle(UpdateProfileReviewsCountCommand request, CancellationToken cancellationToken)
         {
             request.UserProfile.CountOfReviews++;
 
             userProfileRepository.Update(request.UserProfile);
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

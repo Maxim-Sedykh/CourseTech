@@ -1,4 +1,9 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Commands.UserCommand;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Commands.UserTokenCommands;
+using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.UserTokenQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
@@ -7,40 +12,41 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
-    public class UserService(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService) : IUserService
+    public class UserService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator) : IUserService
     {
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {
-            var user = await unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await mediator.Send(new GetUserByIdQuery(userId));
 
             if (user is null)
             {
                 return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            var userProfile = await unitOfWork.UserProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var userProfile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
             if (userProfile is null)
             {
                 return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            var userToken = await unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
 
             using (var transaction = await unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
-                    unitOfWork.Users.Remove(user);
-                    unitOfWork.UserProfiles.Remove(userProfile);
+                    await mediator.Send(new DeleteUserCommand(user));
+                    await mediator.Send(new DeleteUserProfileCommand(userProfile));
 
                     if (userToken != null)
                     {
-                        unitOfWork.UserTokens.Remove(userToken);
+                        await mediator.Send(new DeleteUserTokenCommand(userToken));
                     }
 
                     await unitOfWork.SaveChangesAsync();
@@ -60,12 +66,7 @@ namespace CourseTech.Application.Services
 
         public async Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
         {
-            var user = await unitOfWork.Users.GetAll()
-                .Include(x => x.UserProfile)
-                .Include(x => x.Roles)
-                .Where(x => x.Id == userId)
-                .Select(x => mapper.Map<UpdateUserDto>(x))
-                .FirstOrDefaultAsync();
+            var user = await mediator.Send(new GetUpdateUserDtoByUserIdQuery(userId));
 
             if (user is null)
             {
@@ -79,29 +80,21 @@ namespace CourseTech.Application.Services
         {
             var users = await cacheService.GetOrAddToCache(
                 CacheKeys.Users,
-                async () => await unitOfWork.Users.GetAll()
-                    .Include(x => x.Roles)
-                    .Select(x => mapper.Map<UserDto>(x))
-                    .ToArrayAsync());
+                async () => await mediator.Send(new GetUserDtosQuery()));
 
             return CollectionResult<UserDto>.Success(users);
         }
 
         public async Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
         {
-            var user = await unitOfWork.Users.GetAll()
-                .Include(x => x.UserProfile)
-                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var user = await mediator.Send(new GetUserWithProfileByUserIdQuery(dto.Id));
 
             if (user is null)
             {
                 return BaseResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            mapper.Map(dto, user);
-
-            unitOfWork.Users.Update(user);
-            await unitOfWork.SaveChangesAsync();
+            await mediator.Send(new UpdateUserCommand(dto, user));
 
             await cacheService.RemoveAsync(CacheKeys.Users);
 

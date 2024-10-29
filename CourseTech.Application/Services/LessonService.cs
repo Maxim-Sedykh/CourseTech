@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using CourseTech.Application.Commands.LessonCommands;
+using CourseTech.Application.Queries.LessonQueries;
+using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;
@@ -6,27 +8,19 @@ using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonService(IBaseRepository<Lesson> lessonRepository, IBaseRepository<UserProfile> userProfileRepository,
-        IMapper mapper, ICacheService cacheService) : ILessonService
+    public class LessonService(ICacheService cacheService, IMediator mediator) : ILessonService
     {
         public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {
             var lesson = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.LessonLecture}{lessonId}",
-                async () =>
-                {
-                    return await lessonRepository.GetAll()
-                        .Where(x => x.Id == lessonId)
-                        .Select(x => mapper.Map<LessonLectureDto>(x))
-                        .FirstOrDefaultAsync();
-                });
+                async () => await mediator.Send(new GetLessonLectureDtoByIdQuery(lessonId)));
 
             if (lesson is null)
             {
@@ -40,12 +34,7 @@ namespace CourseTech.Application.Services
         {
             var lessonNames = await cacheService.GetOrAddToCache(
                 CacheKeys.LessonNames,
-                async () =>
-                {
-                    return await lessonRepository.GetAll()
-                        .Select(x => mapper.Map<LessonNameDto>(x))
-                        .ToArrayAsync();
-                });
+                async () => await mediator.Send(new GetLessonNamesQuery()));
 
             if (!lessonNames.Any())
             {
@@ -57,18 +46,16 @@ namespace CourseTech.Application.Services
 
         public async Task<BaseResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId)
         {
-            var profile = await userProfileRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
+            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
             if (profile == null)
             {
                 return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            var lessons = await lessonRepository.GetAll()
-                .Select(x => mapper.Map<LessonDto>(x))
-                .ToListAsync();
+            var lessons = await mediator.Send(new GetLessonDtosQuery());
 
-            if (lessons is null)
+            if (!lessons.Any())
             {
                 return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
@@ -82,7 +69,7 @@ namespace CourseTech.Application.Services
 
         public async Task<BaseResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto)
         {
-            var currentLesson = await lessonRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var currentLesson = await mediator.Send(new GetLessonByIdQuery(dto.Id));
             if (currentLesson == null)
             {
                 return BaseResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
@@ -90,9 +77,7 @@ namespace CourseTech.Application.Services
 
             if (HasChanges(currentLesson, dto))
             {
-                mapper.Map(dto, currentLesson);
-                lessonRepository.Update(currentLesson);
-                await lessonRepository.SaveChangesAsync();
+                await mediator.Send(new UpdateLessonCommand(dto, currentLesson));
 
                 await RemoveOldCacheAsync(currentLesson, dto);
             }

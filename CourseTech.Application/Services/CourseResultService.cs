@@ -1,4 +1,9 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Queries.LessonQueries;
+using CourseTech.Application.Queries.LessonRecordQueries;
+using CourseTech.Application.Queries.UserProfileQueries;
+using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
@@ -10,70 +15,47 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CourseTech.Application.Services
 {
-    public class CourseResultService(IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<LessonRecord> lessonRecordRepository,
-        IBaseRepository<Lesson> lessonRepository, IMapper mapper, ICacheService cacheService) : ICourseResultService
+    public class CourseResultService(IMapper mapper, ICacheService cacheService, IMediator mediator) : ICourseResultService
     {
 
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
-            var profile = await userProfileRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.UserId == userId);
+            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
             if (profile is null)
             {
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            var usersLessonRecords = await lessonRecordRepository.GetAll()
-                .Include(x => x.Lesson)
-                .Where(x => x.UserId == profile.UserId)
-                .Select(x => mapper.Map<LessonRecordDto>(x))
-                .OrderBy(x => x.CreatedAt)
-                .ToListAsync();
+            var userLessonRecords = await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId));
 
-            if (!usersLessonRecords.Any())
-            {
-                return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
-            }
-
-            var lessonsCount = await lessonRepository.GetAll().CountAsync();
+            var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
 
             if (lessonsCount == 0)
             {
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 
-            var analys = CreateAnalys(profile.CurrentGrade, usersLessonRecords, lessonsCount);
+            var analysDto = CreateAnalys(profile.CurrentGrade, userLessonRecords, lessonsCount);
 
-            profile.Analys = analys.Analys;
-            profile.IsExamCompleted = true;
-
-            userProfileRepository.Update(profile);
-            await userProfileRepository.SaveChangesAsync();
+            await mediator.Send(new UpdateCompletedCourseUserProfileCommand(profile, analysDto.Analys));
 
             await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{profile.UserId}");
 
-            var courseResult = mapper.Map<CourseResultDto>(profile);
-
-            return BaseResult<CourseResultDto>.Success(courseResult);
+            return BaseResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
         }
 
         public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
             var userAnalys = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.UserAnalys}{userId}",
-                async () =>
-                {
-                    return await userProfileRepository.GetAll()
-                        .Where(x => x.UserId == userId)
-                        .Select(x => mapper.Map<UserAnalysDto>(x))
-                        .FirstOrDefaultAsync();
-                });
+                async () => await mediator.Send(new GetAnalysByUserIdQuery(userId)));
 
             if (userAnalys == null)
             {
@@ -83,12 +65,12 @@ namespace CourseTech.Application.Services
             return BaseResult<UserAnalysDto>.Success(userAnalys);
         }
 
-        private UserAnalysDto CreateAnalys(float usersCurrentGrade, List<LessonRecordDto> userLessonRecords, int lessonsCount)
+        private UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
         {
             var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };
             var examLessonRecord = userLessonRecords.LastOrDefault();
 
-            if (userLessonRecords.Count != lessonsCount || examLessonRecord == null)
+            if (userLessonRecords.Length != lessonsCount || examLessonRecord == null)
             {
                 return analys;
             }
@@ -101,7 +83,7 @@ namespace CourseTech.Application.Services
                 _ => AnalysParts.UnsatisfactoryOverall
             };
 
-            var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Count - 1).ToList();
+            var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Length - 1).ToList();
 
             if (commonLessonRecords.Count > 0)
             {

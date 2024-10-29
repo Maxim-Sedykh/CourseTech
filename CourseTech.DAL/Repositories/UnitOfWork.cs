@@ -3,6 +3,7 @@ using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CourseTech.DAL.Repositories;
@@ -85,8 +86,8 @@ public class UnitOfWork : IUnitOfWork
         return await _context.Database.BeginTransactionAsync();
     }
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Commands.LessonRecordCommands;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Queries.LessonQueries;
+using CourseTech.Application.Queries.QuestionQueries;
+using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
-using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
@@ -13,28 +16,22 @@ using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 
 namespace CourseTech.Application.Services
 {
-    public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper, IQuestionAnswerChecker questionAnswerChecker,
-        IQuestionValidator questionValidator, ICacheService cacheService) : IQuestionService
+    public class QuestionService(IUnitOfWork unitOfWork, IQuestionAnswerChecker questionAnswerChecker,
+        IQuestionValidator questionValidator, ICacheService cacheService, IMediator mediator) : IQuestionService
     {
         public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
-            var lesson = await unitOfWork.Lessons.GetAll().FirstOrDefaultAsync(x => x.Id == lessonId);
+            var lesson = await mediator.Send(new GetLessonByIdQuery(lessonId));
             if (lesson is null)
             {
                 return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
-            var questions = await cacheService.GetOrAddToCache(
-                CacheKeys.LessonQuestions,
-                async () => await unitOfWork.Questions.GetAll()
-                .Include(q => (q as TestQuestion).TestVariants)
-                .Where(q => q.LessonId == lessonId)
-                .Select(q => mapper.MapQuestion(q))
-                .ToListAsync());
+            var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lesson.Id));
 
             if (!questions.Any())
             {
@@ -51,11 +48,9 @@ namespace CourseTech.Application.Services
 
         public async Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId)
         {
-            var profile = await unitOfWork.UserProfiles.GetAll()
-                .FirstOrDefaultAsync(x => x.UserId == userId);
+            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId)); ;
 
-            var lesson = await unitOfWork.Lessons.GetAll()
-                .FirstOrDefaultAsync(x => x.Id == dto.LessonId);
+            var lesson = await mediator.Send(new GetLessonByIdQuery(dto.LessonId));
 
             var validationResult = questionValidator.ValidateUserLessonOnNull(profile, lesson);
             if (!validationResult.IsSuccess)
@@ -63,14 +58,7 @@ namespace CourseTech.Application.Services
                 return BaseResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
-            var questions = await unitOfWork.Questions.GetAll()
-                .Where(q => q.LessonId == dto.LessonId)
-                .Include(q => (q as TestQuestion).TestVariants)
-                .Include(q => (q as OpenQuestion).AnswerVariants)
-                .Include(q => (q as PracticalQuestion).QueryWords)
-                .ThenInclude(qw => qw.Keyword)
-                .Select(x => mapper.MapQuestionCheckings(x))
-                .ToListAsync();
+            var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id));
 
             var questionValidationResult = questionValidator.ValidateQuestions(questions, dto.UserAnswerDtos.Count, lesson.LessonType);
             if (!questionValidationResult.IsSuccess)
@@ -102,17 +90,8 @@ namespace CourseTech.Application.Services
                 {
                     var userId = profile.UserId;
 
-                    profile.CurrentGrade += userGrade;
-                    profile.LessonsCompleted++;
-
-                    unitOfWork.UserProfiles.Update(profile);
-
-                    await unitOfWork.LessonRecords.CreateAsync(new LessonRecord()
-                    {
-                        LessonId = lessonId,
-                        UserId = userId,
-                        Mark = userGrade
-                    });
+                    await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
+                    await mediator.Send(new CreateLessonRecordCommand(userId, lessonId, userGrade));
 
                     await unitOfWork.SaveChangesAsync();
 

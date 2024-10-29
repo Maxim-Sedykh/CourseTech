@@ -39,7 +39,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<RoleDto>> UpdateRoleAsync(RoleDto dto);
+        Task<BaseResult> UpdateRoleAsync(RoleDto dto);
 
         /// <summary>
         /// Добавление роли для пользователя

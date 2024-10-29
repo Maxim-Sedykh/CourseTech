@@ -1,4 +1,6 @@
-﻿using CourseTech.Application.Resources;
+﻿using CourseTech.Application.Commands.UserTokenCommands;
+using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
@@ -6,6 +8,7 @@ using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using CourseTech.Domain.Settings;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -22,17 +25,17 @@ namespace CourseTech.Application.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly IMediator _mediator;
         private readonly string _jwtKey;
         private readonly string _issuer;
         private readonly string _audience;
 
-        public TokenService(IOptions<JwtSettings> options, IBaseRepository<User> userRepository)
+        public TokenService(IOptions<JwtSettings> options, IMediator mediator)
         {
             _jwtKey = options.Value.JwtKey;
             _issuer = options.Value.Issuer;
             _audience = options.Value.Audience;
-            _userRepository = userRepository;
+            _mediator = mediator;
         }
 
         /// <inheritdoc/>
@@ -108,12 +111,9 @@ namespace CourseTech.Application.Services
             string refreshToken = dto.RefreshToken;
 
             var claimsPrincipal = GetPrincipalFromExpiredToken(accessToken);
-            var userName = claimsPrincipal.Identity?.Name;
+            var login = claimsPrincipal.Identity?.Name;
 
-            var user = await _userRepository.GetAll()
-                .Include(x => x.UserToken)
-                .Include(x => x.Roles)
-                .FirstOrDefaultAsync(x => x.Login == userName);
+            var user = await _mediator.Send(new GetUserWithTokenAndRolesByLoginQuery(login));
 
             if (user == null || user.UserToken.RefreshToken != refreshToken ||
                 user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
@@ -126,10 +126,7 @@ namespace CourseTech.Application.Services
             var newAccessToken = GenerateAccessToken(newClaims);
             var newRefreshToken = GenerateRefreshToken();
 
-            user.UserToken.RefreshToken = newRefreshToken;
-
-            _userRepository.Update(user);
-            await _userRepository.SaveChangesAsync();
+            await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
 
             return BaseResult<TokenDto>.Success(new TokenDto() 
             { 

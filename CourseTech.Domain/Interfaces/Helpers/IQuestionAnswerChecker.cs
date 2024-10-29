@@ -1,13 +1,4 @@
-﻿using CourseTech.Domain.Dto.Question.Get;
-using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
-using CourseTech.Domain.Dto.TestVariant;
-using CourseTech.Domain.Interfaces.Dtos.Question;
-using CourseTech.Domain.Parameters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain.Interfaces.Helpers
 {

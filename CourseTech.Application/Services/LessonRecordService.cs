@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.LessonRecord;
@@ -8,24 +9,18 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonRecordService(IBaseRepository<LessonRecord> lessonRecordRepository, IMapper mapper, ICacheService cacheService) : ILessonRecordService
+    public class LessonRecordService(ICacheService cacheService, IMediator mediator) : ILessonRecordService
     {
         public async Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId)
         {
             var userLessonRecords = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.UserLessonRecords}{userId}",
-                async () =>
-                {
-                    return await lessonRecordRepository.GetAll()
-                        .Where(x => x.UserId == userId)
-                        .Include(x => x.Lesson)
-                        .Select(x => mapper.Map<LessonRecordDto>(x))
-                        .ToArrayAsync();
-                });
+                async () => await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId)));
 
             if (!userLessonRecords.Any())
             {
