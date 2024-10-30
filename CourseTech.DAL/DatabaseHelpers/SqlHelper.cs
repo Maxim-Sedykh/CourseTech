@@ -5,32 +5,37 @@ using System.Data;
 
 namespace CourseTech.Domain.Helpers
 {
-    public class SqlHelper(IConfiguration config) : ISqlHelper
+    public class SqlHelper : ISqlHelper
     {
-        // To Do сделать здесь всё ассинхронным
-        public DataTable ExecuteQuery(string sqlQuery)
+        private readonly IConfiguration _config;
+
+        public SqlHelper(IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("FilmDbConnection");
-            DataTable table = new DataTable();
+            _config = config;
+        }
+
+        public async Task<DataTable> ExecuteQueryAsync(string sqlQuery)
+        {
+            var connectionString = _config.GetConnectionString("FilmDbConnection");
+            DataTable table = new();
 
             if (!sqlQuery.Trim().StartsWith("select", StringComparison.OrdinalIgnoreCase))
             {
                 return table;
             }
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(sqlQuery, connection))
             {
-                SqlCommand command = new SqlCommand(sqlQuery.ToLower(), connection);
-                connection.Open();
-
-                using (SqlDataReader reader = command.ExecuteReader())
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         table.Columns.Add(reader.GetName(i));
                     }
 
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         var row = table.NewRow();
                         for (int i = 0; i < reader.FieldCount; i++)

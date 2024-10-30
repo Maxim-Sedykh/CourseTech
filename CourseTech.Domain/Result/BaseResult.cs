@@ -20,7 +20,7 @@ public class BaseResult
 public class BaseResult<T> : BaseResult
 {
     protected BaseResult(T data, Error error = null)
-       : base(error)
+        : base(error)
     {
         Data = data;
     }
@@ -28,8 +28,8 @@ public class BaseResult<T> : BaseResult
     public T Data { get; }
 
     public static BaseResult<T> Success(T data) =>
-        new BaseResult<T>(data: data);
+        new BaseResult<T>(data);
 
     public static new BaseResult<T> Failure(int errorCode, string errorMessage) =>
-    new BaseResult<T>(default, new Error(errorMessage, errorCode));
+        new BaseResult<T>(default, new Error(errorMessage, errorCode));
 }

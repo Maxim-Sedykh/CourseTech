@@ -5,7 +5,6 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CourseTech.WebApi.Controllers.User
 {
@@ -16,11 +15,9 @@ namespace CourseTech.WebApi.Controllers.User
     public class UserProfileController(IUserProfileService userProfileService) : BaseApiController
     {
         [HttpGet(RouteConstants.GetUserProfile)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<UserProfileDto>>> GetUserProfileAsync()
         {
-            var response = await userProfileService.GetUserProfileAsync(UserId);
+            var response = await userProfileService.GetUserProfileAsync(AuthorizedUserId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -29,11 +26,9 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPut(RouteConstants.UpdateUserProfile)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult>> UpdateUserProfileAsync([FromBody] UpdateUserProfileDto dto)
         {
-            var response = await userProfileService.UpdateUserProfileAsync(dto, UserId);
+            var response = await userProfileService.UpdateUserProfileAsync(dto, AuthorizedUserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

@@ -1,19 +1,17 @@
 ﻿using Asp.Versioning;
-using CourseTech.Application.Services;
 using CourseTech.Application.Validations.FluentValidations.Auth;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
 {
     [ApiController]
     [ApiVersion("1.0")]
+    [AllowAnonymous]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController(IAuthService authService,
         LoginUserValidator loginUserValidator,

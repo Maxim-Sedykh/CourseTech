@@ -9,19 +9,16 @@ using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class CourseResultService(IMapper mapper, ICacheService cacheService, IMediator mediator) : ICourseResultService
+    public class CourseResultService(IMapper mapper, ICacheService cacheService, IMediator mediator, ILogger logger) : ICourseResultService
     {
 
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
@@ -39,6 +36,8 @@ namespace CourseTech.Application.Services
 
             if (lessonsCount == 0)
             {
+                logger.Error(ErrorMessage.LessonsNotFound);
+
                 return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 

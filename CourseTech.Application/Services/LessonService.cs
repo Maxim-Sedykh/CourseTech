@@ -11,10 +11,11 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonService(ICacheService cacheService, IMediator mediator) : ILessonService
+    public class LessonService(ICacheService cacheService, IMediator mediator, ILogger logger) : ILessonService
     {
         public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {
@@ -38,6 +39,8 @@ namespace CourseTech.Application.Services
 
             if (!lessonNames.Any())
             {
+                logger.Error(ErrorMessage.LessonsNotFound);
+
                 return CollectionResult<LessonNameDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 
@@ -57,6 +60,8 @@ namespace CourseTech.Application.Services
 
             if (!lessons.Any())
             {
+                logger.Error(ErrorMessage.LessonsNotFound);
+
                 return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 

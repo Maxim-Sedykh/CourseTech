@@ -1,15 +1,17 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.Review;
+using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using CourseTech.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -17,8 +19,6 @@ namespace CourseTech.WebApi.Controllers.User
     {
 
         [HttpPost(RouteConstants.CreateReview)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult>> CreateReviewAsync([FromBody] CreateReviewDto dto)
         {
             var validationResult = await createReviewValidator.ValidateAsync(dto);
@@ -28,7 +28,7 @@ namespace CourseTech.WebApi.Controllers.User
                 return BadRequest(validationResult.Errors);
             }
 
-            var response = await reviewService.CreateReviewAsync(dto, UserId);
+            var response = await reviewService.CreateReviewAsync(dto, AuthorizedUserId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -36,9 +36,8 @@ namespace CourseTech.WebApi.Controllers.User
             return BadRequest(response);
         }
 
+        [AllowRoles(Roles.Admin, Roles.Moderator)]
         [HttpDelete(RouteConstants.DeleteReview)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult>> DeleteReviewAsync(long id)
         {
             var response = await reviewService.DeleteReview(id);
@@ -49,9 +48,8 @@ namespace CourseTech.WebApi.Controllers.User
             return BadRequest(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(RouteConstants.GetReviews)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CollectionResult<ReviewDto>>> GetReviewsAsync()
         {
             var response = await reviewService.GetReviewsAsync();
@@ -62,9 +60,8 @@ namespace CourseTech.WebApi.Controllers.User
             return BadRequest(response);
         }
 
+        [AllowRoles(Roles.Admin, Roles.Moderator)]
         [HttpGet(RouteConstants.GetUserReviews)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CollectionResult<ReviewDto>>> GetUserReviews(Guid userId)
         {
             var response = await reviewService.GetUserReviews(userId);

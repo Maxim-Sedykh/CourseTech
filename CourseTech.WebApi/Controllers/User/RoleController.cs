@@ -1,25 +1,25 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.Role;
+using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Role;
 using CourseTech.Domain.Dto.UserRole;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using CourseTech.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
 {
-    [Authorize]
+    [AllowRoles(Roles.Admin, Roles.Moderator)]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class RoleController(IRoleService roleService, CreateRoleValidator createRoleValidation, UpdateRoleValidator updateRoleValidator) : ControllerBase
     {
         [HttpPost(RouteConstants.CreateRole)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> CreateRole([FromBody] CreateRoleDto dto)
         {
             var validationResult = await createRoleValidation.ValidateAsync(dto);
@@ -38,8 +38,6 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPut(RouteConstants.UpdateRole)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> UpdateRole([FromBody] RoleDto dto)
         {
             var validationResult = await updateRoleValidator.ValidateAsync(dto);
@@ -58,8 +56,6 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpDelete(RouteConstants.DeleteRoleById)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> DeleteRole(long id)
         {
             var response = await roleService.DeleteRoleAsync(id);
@@ -71,8 +67,6 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPost(RouteConstants.AddRoleForUser)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
         {
             var response = await roleService.AddRoleForUserAsync(dto);
@@ -84,8 +78,6 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpDelete(RouteConstants.DeleteRoleForUser)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] DeleteUserRoleDto dto)
         {
             var response = await roleService.DeleteRoleForUserAsync(dto);
@@ -97,8 +89,6 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPut(RouteConstants.UpdateRoleForUser)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Role>>> UpdateRoleForUser([FromBody] UpdateUserRoleDto dto)
         {
             var response = await roleService.UpdateRoleForUserAsync(dto);
@@ -109,9 +99,8 @@ namespace CourseTech.WebApi.Controllers.User
             return BadRequest(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(RouteConstants.GetAllRoles)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CollectionResult<RoleDto>>> GetAllRoles()
         {
             var response = await roleService.GetAllRoles();

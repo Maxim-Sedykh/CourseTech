@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Enum
+namespace CourseTech.Domain.Dto.Question
 {
-    public enum Roles
+    public class UserGradeDto
     {
-        User = 1,
-        Admin = 2,
-        Moderator = 3
+        public float Grade { get; set; }
     }
 }

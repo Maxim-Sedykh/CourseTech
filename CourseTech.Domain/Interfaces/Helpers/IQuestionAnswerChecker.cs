@@ -1,9 +1,10 @@
-﻿using CourseTech.Domain.Interfaces.Dtos.Question;
+﻿using CourseTech.Domain.Dto.Question;
+using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain.Interfaces.Helpers
 {
     public interface IQuestionAnswerChecker
     {
-        List<ICorrectAnswerDto> CheckUserAnswers(List<ICheckQuestionDto> checkQuestions, List<IUserAnswerDto> userAnswers, out float userGrade);
+        Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestions, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade);
     }
 }

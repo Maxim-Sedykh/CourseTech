@@ -1,16 +1,12 @@
-﻿using AutoMapper;
-using CourseTech.Application.Queries.LessonRecordQueries;
+﻿using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.LessonRecord;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {

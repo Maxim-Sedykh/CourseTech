@@ -7,28 +7,24 @@ using CourseTech.Application.Queries.RoleQueries;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Queries.UserTokenQueries;
 using CourseTech.Application.Resources;
-using CourseTech.DAL.Cache;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
-using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using ILogger = Serilog.ILogger;
+using Roles = CourseTech.Domain.Constants.Roles;
 
 namespace CourseTech.Application.Services
 {
     public class AuthService(IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork,
-            IAuthValidator authValidator, ICacheService cacheService, IMediator mediator) : IAuthService
+            IAuthValidator authValidator, ICacheService cacheService, IMediator mediator, ILogger logger) : IAuthService
     {
 
         /// <inheritdoc/>
@@ -103,12 +99,12 @@ namespace CourseTech.Application.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
 
-                    //logger.LogError(ex, ex.Message);
-                    //return BaseResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, "Ошибка при регистрации. Пожалуйста, попробуйте позже.");
+                    logger.Error(ex, ex.Message);
+                    return BaseResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, ErrorMessage.RegistrationFailed);
                 }
             }
 

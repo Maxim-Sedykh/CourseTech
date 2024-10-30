@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CourseTech.Application.Commands.LessonRecordCommands;
+﻿using CourseTech.Application.Commands.LessonRecordCommands;
 using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Queries.LessonQueries;
 using CourseTech.Application.Queries.QuestionQueries;
@@ -8,6 +7,7 @@ using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
+using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
@@ -17,11 +17,12 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
     public class QuestionService(IUnitOfWork unitOfWork, IQuestionAnswerChecker questionAnswerChecker,
-        IQuestionValidator questionValidator, ICacheService cacheService, IMediator mediator) : IQuestionService
+        IQuestionValidator questionValidator, ICacheService cacheService, IMediator mediator, ILogger logger) : IQuestionService
     {
         public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
@@ -48,7 +49,7 @@ namespace CourseTech.Application.Services
 
         public async Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId)
         {
-            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId)); ;
+            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
             var lesson = await mediator.Send(new GetLessonByIdQuery(dto.LessonId));
 
@@ -66,14 +67,19 @@ namespace CourseTech.Application.Services
                 return BaseResult<PracticeCorrectAnswersDto>.Failure((int)questionValidationResult.Error.Code, questionValidationResult.Error.Message);
             }
 
-            var correctAnswers = questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, out float userGrade);
+            var userGrade = new UserGradeDto()
+            {
+                Grade = profile.CurrentGrade
+            };
+
+            var correctAnswers = await questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, userGrade);
 
             if (correctAnswers.Any())
             {
                 return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
             }
 
-            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade);
+            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade);
 
             return BaseResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
             {
@@ -100,8 +106,10 @@ namespace CourseTech.Application.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    logger.Error(ex, ex.Message);
+
                     await transaction.RollbackAsync();
                 }
             }

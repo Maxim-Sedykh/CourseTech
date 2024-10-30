@@ -1,25 +1,20 @@
-﻿using AutoMapper;
-using CourseTech.Application.Commands.UserProfileCommands;
+﻿using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Queries.UserProfileQueries;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.UserProfile;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class UserProfileService(ICacheService cacheService, IDatabase redisDatabase, IMediator mediator) : IUserProfileService
+    public class UserProfileService(ICacheService cacheService, IDatabase redisDatabase, IMediator mediator, ILogger logger) : IUserProfileService
     {
         public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {
@@ -59,6 +54,8 @@ namespace CourseTech.Application.Services
 
             if (!committed)
             {
+                logger.Error(ErrorMessage.RedisTransactionFailed);
+
                 return BaseResult.Failure((int)ErrorCodes.RedisTransactionFailed, ErrorMessage.RedisTransactionFailed);
             }
 

@@ -4,22 +4,16 @@ using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using CourseTech.Domain.Settings;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.Services
 {
@@ -128,10 +122,10 @@ namespace CourseTech.Application.Services
 
             await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
 
-            return BaseResult<TokenDto>.Success(new TokenDto() 
-            { 
-                AccessToken = accessToken, 
-                RefreshToken = refreshToken, 
+            return BaseResult<TokenDto>.Success(new TokenDto()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
             });
         }
     }

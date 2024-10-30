@@ -41,6 +41,11 @@ public enum ErrorCodes
     PasswordNotEqualsPasswordConfirm = 102,
 
     RedisTransactionFailed = 110,
+    RegistrationFailed = 111,
+    DeleteUserFailed = 112,
+    UpdateRoleForUserFailed = 113,
+    CreateReviewFailed = 114,
+    PassLessonFailed = 115,
 
     AnswerCheckError = 120,
 

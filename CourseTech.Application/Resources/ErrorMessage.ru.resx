@@ -198,7 +198,23 @@
   <data name="RedisTransactionFailed" xml:space="preserve">
     <value>Транзакция Redis выполнена неудачно</value>
   </data>
-  <data name=" AnswerCheckError" xml:space="preserve">
+  <data name="AnswerCheckError" xml:space="preserve">
     <value>Возникла ошибка при проверке ответов пользователя</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Не удалось зарегистрироваться</value>
+  </data>
+  <data name="DeleteUserFailed" xml:space="preserve">
+    <value>Не удалось удалить пользователя</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UpdateRoleForUserFailed" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CreateReviewFailed" xml:space="preserve">
+    <value>Не удалось создать отзыв</value>
+  </data>
+  <data name="PassLessonFailed" xml:space="preserve">
+    <value>Не удалось пройти урок</value>
   </data>
 </root>

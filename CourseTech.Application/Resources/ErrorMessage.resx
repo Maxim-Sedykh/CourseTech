@@ -201,4 +201,19 @@
   <data name="AnswerCheckError" xml:space="preserve">
     <value>Возникла ошибка при проверке ответов пользователя</value>
   </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Не удалось зарегистрироваться</value>
+  </data>
+  <data name="DeleteUserFailed" xml:space="preserve">
+    <value>Не удалось удалить пользователя</value>
+  </data>
+  <data name="UpdateRoleForUserFailed" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CreateReviewFailed" xml:space="preserve">
+    <value>Не удалось создать отзыв</value>
+  </data>
+  <data name="PassLessonFailed" xml:space="preserve">
+    <value>Не удалось пройти урок</value>
+  </data>
 </root>

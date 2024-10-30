@@ -11,10 +11,11 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator) : IReviewService
+public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
@@ -40,7 +41,7 @@ public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, I
             }
             catch (Exception ex)
             {
-                /*logger.LogError(ex.Message);*/
+                logger.Error(ex, ex.Message);
 
                 await transaction.RollbackAsync();
             }

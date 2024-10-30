@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CourseTech.Application.Commands.UserCommand;
+﻿using CourseTech.Application.Commands.UserCommand;
 using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Commands.UserTokenCommands;
 using CourseTech.Application.Queries.UserQueries;
@@ -13,11 +12,11 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class UserService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator) : IUserService
+    public class UserService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IUserService
     {
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {
@@ -55,8 +54,10 @@ namespace CourseTech.Application.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    logger.Error(ex, ex.Message);
+
                     await transaction.RollbackAsync();
                 }
             }

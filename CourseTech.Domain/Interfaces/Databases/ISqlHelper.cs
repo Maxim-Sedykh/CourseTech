@@ -9,6 +9,6 @@ namespace CourseTech.Domain.Interfaces.Databases
 {
     public interface ISqlHelper
     {
-        DataTable ExecuteQuery(string sqlQuery);
+        Task<DataTable> ExecuteQueryAsync(string sqlQuery);
     }
 }

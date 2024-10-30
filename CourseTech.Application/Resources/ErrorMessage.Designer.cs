@@ -70,6 +70,24 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось создать отзыв.
+        /// </summary>
+        internal static string CreateReviewFailed {
+            get {
+                return ResourceManager.GetString("CreateReviewFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось удалить пользователя.
+        /// </summary>
+        internal static string DeleteUserFailed {
+            get {
+                return ResourceManager.GetString("DeleteUserFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
         /// </summary>
         internal static string InternalServerError {
@@ -169,6 +187,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось пройти урок.
+        /// </summary>
+        internal static string PassLessonFailed {
+            get {
+                return ResourceManager.GetString("PassLessonFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Неверный пароль.
         /// </summary>
         internal static string PasswordIsWrong {
@@ -201,6 +228,15 @@ namespace CourseTech.Application.Resources {
         internal static string RedisTransactionFailed {
             get {
                 return ResourceManager.GetString("RedisTransactionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось зарегистрироваться.
+        /// </summary>
+        internal static string RegistrationFailed {
+            get {
+                return ResourceManager.GetString("RegistrationFailed", resourceCulture);
             }
         }
         
@@ -255,6 +291,15 @@ namespace CourseTech.Application.Resources {
         internal static string TestQuestionsCorrectVariantsNotFound {
             get {
                 return ResourceManager.GetString("TestQuestionsCorrectVariantsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        internal static string UpdateRoleForUserFailed {
+            get {
+                return ResourceManager.GetString("UpdateRoleForUserFailed", resourceCulture);
             }
         }
         
