@@ -20,7 +20,7 @@ namespace CourseTech.Application.Handlers.TokenHandlers
             {
                 UserId = request.UserId,
                 RefreshToken = request.RefreshToken,
-                RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7) // To Do hardcoude beach
+                RefreshTokenExpireTime = DateTime.UtcNow.AddDays(request.RefreshTokenValidityInDays)
             };
 
             await userTokenRepository.CreateAsync(userToken);

@@ -10,7 +10,9 @@ using MediatR;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonRecordService(ICacheService cacheService, IMediator mediator) : ILessonRecordService
+    public class LessonRecordService(
+        ICacheService cacheService,
+        IMediator mediator) : ILessonRecordService
     {
         public async Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId)
         {

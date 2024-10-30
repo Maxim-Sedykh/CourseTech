@@ -14,7 +14,11 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class UserProfileService(ICacheService cacheService, IDatabase redisDatabase, IMediator mediator, ILogger logger) : IUserProfileService
+    public class UserProfileService(
+        ICacheService cacheService,
+        IDatabase redisDatabase,
+        IMediator mediator,
+        ILogger logger) : IUserProfileService
     {
         public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {

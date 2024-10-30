@@ -16,7 +16,11 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class UserService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IUserService
+    public class UserService(
+        IUnitOfWork unitOfWork,
+        ICacheService cacheService,
+        IMediator mediator,
+        ILogger logger) : IUserService
     {
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {

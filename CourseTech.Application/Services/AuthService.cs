@@ -17,15 +17,28 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
+using CourseTech.Domain.Settings;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ILogger = Serilog.ILogger;
 using Roles = CourseTech.Domain.Constants.Roles;
 
 namespace CourseTech.Application.Services
 {
-    public class AuthService(IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork,
-            IAuthValidator authValidator, ICacheService cacheService, IMediator mediator, ILogger logger) : IAuthService
+    public class AuthService(
+            IMapper mapper,
+            ITokenService tokenService,
+            IUnitOfWork unitOfWork,
+            IAuthValidator authValidator,
+            ICacheService cacheService,
+            IMediator mediator,
+            ILogger logger,
+            IOptions<JwtSettings> jwtOptions) : IAuthService
     {
+
+        public JwtSettings JwtSettings { get; } = jwtOptions.Value;
+
 
         /// <inheritdoc/>
         public async Task<BaseResult<TokenDto>> Login(LoginUserDto dto)
@@ -47,7 +60,7 @@ namespace CourseTech.Application.Services
 
             if (userToken == null)
             {
-                await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken));
+                await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken, JwtSettings.RefreshTokenValidityInDays));
             }
             else
             {

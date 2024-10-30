@@ -15,7 +15,11 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services;
 
-public class ReviewService(IUnitOfWork unitOfWork, ICacheService cacheService, IMediator mediator, ILogger logger) : IReviewService
+public class ReviewService(
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService,
+    IMediator mediator,
+    ILogger logger) : IReviewService
 {
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {

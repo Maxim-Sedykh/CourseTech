@@ -17,8 +17,13 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class RoleService(IUnitOfWork unitOfWork, IMapper mapper, IRoleValidator roleValidator,
-        ICacheService cacheService, IMediator mediator, ILogger logger) : IRoleService
+    public class RoleService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IRoleValidator roleValidator,
+        ICacheService cacheService,
+        IMediator mediator,
+        ILogger logger) : IRoleService
     {
         /// <inheritdoc/>
         public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto)

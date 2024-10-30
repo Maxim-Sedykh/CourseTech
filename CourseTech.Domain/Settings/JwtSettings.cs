@@ -14,5 +14,5 @@ public class JwtSettings
 
     public string Lifetime { get; set; }
 
-    public string RefreshTokenValidityInDays { get; set; }
+    public int RefreshTokenValidityInDays { get; set; }
 }

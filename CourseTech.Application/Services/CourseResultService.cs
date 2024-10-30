@@ -18,7 +18,11 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class CourseResultService(IMapper mapper, ICacheService cacheService, IMediator mediator, ILogger logger) : ICourseResultService
+    public class CourseResultService(
+        IMapper mapper,
+        ICacheService cacheService,
+        IMediator mediator,
+        ILogger logger) : ICourseResultService
     {
 
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)

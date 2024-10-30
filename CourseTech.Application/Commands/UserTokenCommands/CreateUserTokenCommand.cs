@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserTokenCommands
 {
-    public record CreateUserTokenCommand(Guid UserId, string RefreshToken) : IRequest;
+    public record CreateUserTokenCommand(Guid UserId, string RefreshToken, int RefreshTokenValidityInDays) : IRequest;
 }

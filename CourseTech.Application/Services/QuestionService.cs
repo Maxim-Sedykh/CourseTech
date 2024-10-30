@@ -21,8 +21,13 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class QuestionService(IUnitOfWork unitOfWork, IQuestionAnswerChecker questionAnswerChecker,
-        IQuestionValidator questionValidator, ICacheService cacheService, IMediator mediator, ILogger logger) : IQuestionService
+    public class QuestionService(
+        IUnitOfWork unitOfWork,
+        IQuestionAnswerChecker questionAnswerChecker,
+        IQuestionValidator questionValidator,
+        ICacheService cacheService,
+        IMediator mediator,
+        ILogger logger) : IQuestionService
     {
         public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {

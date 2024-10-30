@@ -15,7 +15,10 @@ using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
-    public class LessonService(ICacheService cacheService, IMediator mediator, ILogger logger) : ILessonService
+    public class LessonService(
+        ICacheService cacheService,
+        IMediator mediator,
+        ILogger logger) : ILessonService
     {
         public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {
