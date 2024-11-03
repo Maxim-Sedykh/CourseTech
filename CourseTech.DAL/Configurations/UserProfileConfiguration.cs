@@ -1,10 +1,14 @@
 ﻿using Azure;
+using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Профиль пользователя" (настройка таблицы в БД)
+/// </summary>
 public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
     public void Configure(EntityTypeBuilder<UserProfile> builder)
@@ -21,7 +25,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
         builder.Property(x => x.IsEditAble).HasDefaultValue(true);
         builder.Property(x => x.IsExamCompleted).HasDefaultValue(false);
 
-        builder.Property(x => x.Analys).IsRequired(false);
+        builder.Property(x => x.Analys).HasDefaultValue(AnalysParts.NotReceivedYet);
         builder.Property(x => x.CurrentGrade)
             .IsRequired()
             .HasDefaultValue(0)

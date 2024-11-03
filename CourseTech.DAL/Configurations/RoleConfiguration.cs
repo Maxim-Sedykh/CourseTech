@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Роль" (настройка таблицы в БД)
+/// </summary>
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)

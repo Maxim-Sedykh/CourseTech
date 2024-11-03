@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Пользователь" (настройка таблицы в БД)
+/// </summary>
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)

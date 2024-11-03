@@ -12,7 +12,6 @@ namespace CourseTech.Application.Validations.FluentValidations.Auth
     {
         public LoginUserValidator()
         {
-            // To Do может здесь как-то юзать константы...
             RuleFor(user => user.Login)
             .NotEmpty().WithMessage("Введите логин")
             .MinimumLength(4).WithMessage("Длина логина должна быть больше четырёх символов")

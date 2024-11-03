@@ -5,7 +5,6 @@ using System.Text.Json;
 
 namespace CourseTech.DAL.Cache;
 
-/// <inheritdoc/>
 public class CacheService(IDistributedCache cache) : ICacheService
 {
     /// <inheritdoc/>
@@ -33,12 +32,14 @@ public class CacheService(IDistributedCache cache) : ICacheService
         }
     }
 
+    /// <inheritdoc/>
     public async Task<T> GetObjectAsync<T>(string key) where T : class
     {
         var data = await cache.GetAsync(key);
         return data != null ? JsonSerializer.Deserialize<T>(data) : default;
     }
 
+    /// <inheritdoc/>
     public async Task<T> GetOrAddToCache<T>(string key, Func<Task<T>> factory) where T : class
     {
         T cachedValue = await GetObjectAsync<T>(key);

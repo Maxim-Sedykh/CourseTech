@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Вариант ответа для тестового вопроса" (настройка таблицы в БД)
+/// </summary>
 public class TestVariantConfiguration : IEntityTypeConfiguration<TestVariant>
 {
     public void Configure(EntityTypeBuilder<TestVariant> builder)

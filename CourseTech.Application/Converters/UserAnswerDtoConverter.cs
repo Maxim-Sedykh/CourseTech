@@ -10,29 +10,24 @@ namespace CourseTech.Application.Converters
         public override IUserAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using var document = JsonDocument.ParseValue(ref reader);
+            var rootElement = document.RootElement;
 
-            string type = document.RootElement.GetProperty("Type").GetString();
-            switch (type)
+            string type = rootElement.GetProperty("Type").GetString();
+
+            return type switch
             {
-                case "OpenQuestionUserAnswerDto":
-                    return JsonSerializer.Deserialize<OpenQuestionUserAnswerDto>(document.RootElement.GetRawText(), options);
-                case "PracticalQuestionUserAnswerDto":
-                    return JsonSerializer.Deserialize<PracticalQuestionUserAnswerDto>(document.RootElement.GetRawText(), options);
-                case "TestQuestionUserAnswerDto":
-                    return JsonSerializer.Deserialize<TestQuestionUserAnswerDto>(document.RootElement.GetRawText(), options);
-                default:
-                    throw new Exception("Неизвестный тип объекта");
-            }
+                nameof(OpenQuestionUserAnswerDto) => JsonSerializer.Deserialize<OpenQuestionUserAnswerDto>(rootElement.GetRawText(), options),
+                nameof(PracticalQuestionUserAnswerDto) => JsonSerializer.Deserialize<PracticalQuestionUserAnswerDto>(rootElement.GetRawText(), options),
+                nameof(TestQuestionUserAnswerDto) => JsonSerializer.Deserialize<TestQuestionUserAnswerDto>(rootElement.GetRawText(), options),
+                _ => throw new Exception("Неизвестный тип объекта")
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, IUserAnswerDto value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("Type");
-            writer.WriteStringValue(value.GetType().Name);
-
+            writer.WriteString("Type", value.GetType().Name);
             JsonSerializer.Serialize(writer, value, options);
-
             writer.WriteEndObject();
         }
     }

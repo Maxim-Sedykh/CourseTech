@@ -3,6 +3,10 @@ using System.Web.Http.Filters;
 
 namespace CourseTech.WebApi.Attributes
 {
+    /// <summary>
+    /// Атрибут, для того чтобы передавать массив ролей
+    /// Если пользователь имеет хоть одну роль из списка, то валидация проходит
+    /// </summary>
     public class AllowRolesAttribute : AuthorizationFilterAttribute
     {
         private readonly HashSet<string> _roles;

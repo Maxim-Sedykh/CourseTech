@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.DAL.Configurations
 {
+    /// <summary>
+    /// Конфигурация сущности "Вопрос тестового типа" (настройка таблицы в БД)
+    /// </summary>
     public class TestQuestionConfiguration : IEntityTypeConfiguration<TestQuestion>
     {
         public void Configure(EntityTypeBuilder<TestQuestion> builder)

@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CourseTech.DAL.Interceptors;
 
+/// <summary>
+/// Перехватчик запросов в базу.
+/// Служит для того чтобы заполнять свойства интерфейса IAuditable (CreatedAt, UpdatedAt).
+/// </summary>
 public class AuditInterceptor : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,

@@ -4,6 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Вопрос" (настройка таблицы в БД).
+/// Используется подход TPH ( Таблица на всю иерархию ).
+/// Наследуемые классы TestQuestion, OpenQuestion, PracticalQuestion.
+/// </summary>
 public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
     public void Configure(EntityTypeBuilder<Question> builder)

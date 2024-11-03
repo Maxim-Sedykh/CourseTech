@@ -5,18 +5,12 @@ using System.Data;
 
 namespace CourseTech.Domain.Helpers
 {
-    public class SqlHelper : ISqlHelper
+    public class SqlQueryProvider(IConfiguration config) : ISqlQueryProvider
     {
-        private readonly IConfiguration _config;
-
-        public SqlHelper(IConfiguration config)
-        {
-            _config = config;
-        }
-
+        /// <inheritdoc/>
         public async Task<DataTable> ExecuteQueryAsync(string sqlQuery)
         {
-            var connectionString = _config.GetConnectionString("FilmDbConnection");
+            var connectionString = config.GetConnectionString("FilmDbConnection");
             DataTable table = new();
 
             if (!sqlQuery.Trim().StartsWith("select", StringComparison.OrdinalIgnoreCase))

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace CourseTech.Application.Helpers
 {
-    public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlHelper sqlHelper) : IQuestionAnswerChecker
+    public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
     {
 
         public async Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestionDtos, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade)
@@ -103,8 +103,8 @@ namespace CourseTech.Application.Helpers
 
             try
             {
-                var userResult = await sqlHelper.ExecuteQueryAsync(userAnswer.UserCodeAnswer);
-                var correctResult = await sqlHelper.ExecuteQueryAsync(questionChecking.CorrectQueryCode);
+                var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer);
+                var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode);
 
                 if (IsResultsEqual(userResult, correctResult))
                 {
@@ -131,10 +131,10 @@ namespace CourseTech.Application.Helpers
             return correctAnswer;
         }
 
-        private bool IsResultsEqual(DataTable userResult, DataTable rightResult)
+        private bool IsResultsEqual(DataTable userResult, DataTable correctResult)
         {
             var comparer = new DataTableComparer();
-            return comparer.Compare(userResult, rightResult) == 0;
+            return comparer.Compare(userResult, correctResult) == 0;
         }
 
         private List<string> GetRemarks(string userCodeAnswer, List<string> keywords, out float practicalQuestionGrade)

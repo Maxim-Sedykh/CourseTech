@@ -19,7 +19,6 @@ using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using CourseTech.Domain.Settings;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ILogger = Serilog.ILogger;
 using Roles = CourseTech.Domain.Constants.Roles;
@@ -77,16 +76,12 @@ namespace CourseTech.Application.Services
         /// <inheritdoc/>
         public async Task<BaseResult<UserDto>> Register(RegisterUserDto dto)
         {
-            if (dto.Password != dto.PasswordConfirm)
-            {
-                return BaseResult<UserDto>.Failure((int)ErrorCodes.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
-            }
-
             var user = await mediator.Send(new GetUserByLoginQuery(dto.Login));
 
-            if (user != null)
+            var validateRegisterResult = authValidator.ValidateRegister(user, enteredPassword: dto.Password, enteredPasswordConfirm: dto.PasswordConfirm);
+            if (!validateRegisterResult.IsSuccess)
             {
-                return BaseResult<UserDto>.Failure((int)ErrorCodes.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
+                return BaseResult<UserDto>.Failure((int)validateRegisterResult.Error.Code, validateRegisterResult.Error.Message);
             }
 
             using (var transaction = await unitOfWork.BeginTransactionAsync())

@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities.QuestionEntities;
+﻿using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.DAL.Configurations
 {
+    /// <summary>
+    /// Конфигурация сущности "Вопрос практического типа" (настройка таблицы в БД)
+    /// </summary>
     public class PracticalQuestionConfiguration : IEntityTypeConfiguration<PracticalQuestion>
     {
         public void Configure(EntityTypeBuilder<PracticalQuestion> builder)
@@ -18,9 +22,11 @@ namespace CourseTech.DAL.Configurations
 
             builder.Property(q => q.CorrectQueryCode).IsRequired();
 
-            builder.HasMany(q => q.QueryWords)
-                .WithOne(qw => qw.PracticalQuestion)
-                .HasForeignKey(qw => qw.PracticalQuestionId);
+            builder.HasMany(x => x.Keywords)
+            .WithMany(x => x.PracticalQuestions)
+            .UsingEntity<PracticalQuestionQueryKeyword>(
+                x => x.HasOne<Keyword>().WithMany().HasForeignKey(x => x.KeywordId),
+                x => x.HasOne<PracticalQuestion>().WithMany().HasForeignKey(x => x.PracticalQuestionId));
         }
     }
 }

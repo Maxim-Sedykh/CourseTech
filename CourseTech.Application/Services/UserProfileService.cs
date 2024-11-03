@@ -20,6 +20,7 @@ namespace CourseTech.Application.Services
         IMediator mediator,
         ILogger logger) : IUserProfileService
     {
+        /// <inheritdoc/>
         public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {
             var profileDto = await cacheService.GetOrAddToCache(
@@ -34,6 +35,7 @@ namespace CourseTech.Application.Services
             return BaseResult<UserProfileDto>.Success(profileDto);
         }
 
+        /// <inheritdoc/>
         public async Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));

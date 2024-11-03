@@ -42,14 +42,18 @@ public static class DependencyInjection
 
         services.AddScoped<IQueryGraphAnalyzer, QueryGraphAnalyzer>();
 
-        services.AddSingleton<ISqlHelper, SqlHelper>();
+        services.AddSingleton<ISqlQueryProvider, SqlQueryProvider>();
 
         services.InitCaching(configuration);
 
         services.InitRepositories();
         services.InitUnitOfWork();
     }
-     
+    
+    /// <summary>
+    /// Внедрение зависимостей для репозиториев
+    /// </summary>
+    /// <param name="services"></param>
     private static void InitRepositories(this IServiceCollection services)
     {
         var types = new List<Type>()
@@ -61,7 +65,7 @@ public static class DependencyInjection
             typeof(TestVariant),
             typeof(Review),
             typeof(Role),
-            typeof(QueryWord),
+            typeof(PracticalQuestionQueryKeyword),
             typeof(OpenQuestionAnswer),
             typeof(Lesson),
             typeof(LessonRecord),
@@ -80,11 +84,20 @@ public static class DependencyInjection
         }
     }
 
+    /// <summary>
+    /// Внедрение зависимости для UoW
+    /// </summary>
+    /// <param name="services"></param>
     private static void InitUnitOfWork(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
+    /// <summary>
+    /// Настройка кэширования
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
     private static void InitCaching(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ICacheService, CacheService>();

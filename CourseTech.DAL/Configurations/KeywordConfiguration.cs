@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Ключевое слово" (настройка таблицы в БД)
+/// </summary>
 public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
 {
     public void Configure(EntityTypeBuilder<Keyword> builder)

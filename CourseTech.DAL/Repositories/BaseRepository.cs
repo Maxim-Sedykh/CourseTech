@@ -14,16 +14,19 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         _table = _dbContext.Set<TEntity>();
     }
 
+    /// <inheritdoc/>
     public IQueryable<TEntity> GetAll()
     {
         return _table.AsQueryable();
     }
 
+    /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    /// <inheritdoc/>
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
         ValidateEntityOnNull(entity);
@@ -33,6 +36,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return entity;
     }
 
+    /// <inheritdoc/>
     public void Remove(TEntity entity)
     {
         ValidateEntityOnNull(entity);
@@ -40,6 +44,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         _table.Remove(entity);
     }
 
+    /// <inheritdoc/>
     public TEntity Update(TEntity entity)
     {
         ValidateEntityOnNull(entity);

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.DAL.Configurations
 {
+    /// <summary>
+    /// Конфигурация сущности "Ответы на вопрос открытого типа" (настройка таблицы в БД)
+    /// </summary>
     public class OpenQuestionAnswerConfiguration : IEntityTypeConfiguration<OpenQuestionAnswer>
     {
         public void Configure(EntityTypeBuilder<OpenQuestionAnswer> builder)

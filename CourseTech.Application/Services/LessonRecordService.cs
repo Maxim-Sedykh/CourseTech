@@ -14,6 +14,7 @@ namespace CourseTech.Application.Services
         ICacheService cacheService,
         IMediator mediator) : ILessonRecordService
     {
+        /// <inheritdoc/>
         public async Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId)
         {
             var userLessonRecords = await cacheService.GetOrAddToCache(

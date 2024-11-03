@@ -10,11 +10,13 @@ namespace CourseTech.DAL.Repositories;
 
 public class UnitOfWork(CourseDbContext dbContext) : IUnitOfWork
 {
+    /// <inheritdoc/>
     public async Task<IDbContextTransaction> BeginTransactionAsync()
     {
         return await dbContext.Database.BeginTransactionAsync();
     }
 
+    /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await dbContext.SaveChangesAsync(cancellationToken);

@@ -1,0 +1,23 @@
+﻿namespace CourseTech.Domain.Entities;
+
+/// <summary>
+/// Ключевые слова корректных запросов для практического типа заданий.
+/// Таблица сцепка, для реализации связи "Многие ко многим" между практическими вопросами и ключевыми словами.
+/// </summary>
+public class PracticalQuestionQueryKeyword
+{
+    /// <summary>
+    /// Номер по порядку ключевого слова в запросе.
+    /// </summary>
+    public int Number { get; set; }
+
+    /// <summary>
+    /// Идентификатор ключевого слова.
+    /// </summary>
+    public int KeywordId { get; set; }
+
+    /// <summary>
+    /// Идентификатор вопроса практического типа.
+    /// </summary>
+    public int PracticalQuestionId { get; set; }
+}

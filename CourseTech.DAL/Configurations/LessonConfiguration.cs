@@ -6,6 +6,9 @@ namespace CourseTech.DAL.Configurations;
 
 public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
 {
+    /// <summary>
+    /// Конфигурация сущности "Урок" (настройка таблицы в БД)
+    /// </summary>
     public void Configure(EntityTypeBuilder<Lesson> builder)
     {
         builder.Property(l => l.Id).ValueGeneratedOnAdd();

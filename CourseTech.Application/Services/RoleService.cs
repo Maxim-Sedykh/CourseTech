@@ -162,6 +162,7 @@ namespace CourseTech.Application.Services
             return BaseResult<UserRoleDto>.Success(new UserRoleDto(user.Login, newRoleForUser.Name));
         }
 
+        /// <inheritdoc/>
         public async Task<CollectionResult<RoleDto>> GetAllRoles()
         {
             var roles = await cacheService.GetOrAddToCache(

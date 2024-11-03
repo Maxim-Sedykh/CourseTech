@@ -1,5 +1,10 @@
 ﻿namespace CourseTech.Domain.Result;
 
+/// <summary>
+/// Класс для реализации паттерна Result Pattern.
+/// Абстракция, которая представляет собой коллекции результов выполнения операции
+/// </summary>
+/// <typeparam name="T">Тип элемента коллекции</typeparam>
 public class CollectionResult<T> : BaseResult<IEnumerable<T>>
 {
     private CollectionResult(IEnumerable<T> data, Error error = null)

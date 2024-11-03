@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Extensions
 {
+    /// <summary>
+    /// Расширение для DateTime.
+    /// </summary>
     public static class DateTimeExtension
     {
         /// <summary>
-        /// Вычислить количество лет с текущей даты до dateTime
+        /// Вычислить количество лет с текущей даты до dateTime.
         /// </summary>
-        /// <param name="dateTime">Дата рождения</param>
+        /// <param name="dateTime">Дата</param>
         /// <returns>Количество полных лет</returns>
         public static int GetYearsByDateToNow(this DateTime dateTime)
         {

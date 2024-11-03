@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Constants.Route
 {
+    /// <summary>
+    /// Константы для указания понятного роута в контроллерах.
+    /// </summary>
     public static class RouteConstants
     {
         #region Аутентификация
@@ -40,7 +43,7 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region CourseResult
+        #region Результат курса
 
         public const string GetUserAnalys = "get-user-analys";
 
@@ -48,7 +51,7 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region Lesson
+        #region Урок
 
         public const string UpdateLessonLecture = "update-lesson-lecture";
 
@@ -60,13 +63,13 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region LessonRecord
+        #region Записи прохождения уроков
 
         public const string GetLessonsRecords = "get-lesson-records";
 
         #endregion
 
-        #region Question
+        #region Вопрос
 
         public const string GetLessonQuestions = "get-lesson-questions/{lessonId}";
 
@@ -74,7 +77,7 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region Review
+        #region Отзыв
 
         public const string CreateReview = "create-review";
 
@@ -86,7 +89,7 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region User
+        #region Пользователь
 
         public const string GetUsers = "get-users";
 
@@ -98,7 +101,7 @@ namespace CourseTech.Domain.Constants.Route
 
         #endregion
 
-        #region UserProfile
+        #region Профиль пользователя
 
         public const string GetUserProfile = "get-user-profile";
 

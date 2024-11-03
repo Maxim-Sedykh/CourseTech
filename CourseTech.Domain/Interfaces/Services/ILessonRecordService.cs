@@ -4,12 +4,12 @@ using CourseTech.Domain.Result;
 namespace CourseTech.Domain.Interfaces.Services
 {
     /// <summary>
-    /// Сервис для работы с записями о прохождении какого-либо урока определённым пользователем
+    /// Сервис для работы с записями о прохождении какого-либо урока определённым пользователем.
     /// </summary>
     public interface ILessonRecordService
     {
         /// <summary>
-        /// Получение записей о прохождении уроков пользователем по индентификатору пользователя
+        /// Получение записей о прохождении уроков пользователем по индентификатору пользователя.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>

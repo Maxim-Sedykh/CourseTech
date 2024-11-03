@@ -6,39 +6,32 @@ using System.Security.Claims;
 namespace CourseTech.Domain.Interfaces.Services
 {
     /// <summary>
-    /// Сервис для работы с токенами
+    /// Сервис для работы с токенами.
     /// </summary>
     public interface ITokenService
     {
         /// <summary>
-        /// Генерация Access-токена
+        /// Генерация Access-токена.
         /// </summary>
         /// <param name="claims"></param>
         /// <returns></returns>
         string GenerateAccessToken(IEnumerable<Claim> claims);
 
         /// <summary>
-        /// Генерация Refresh-токена
+        /// Генерация Refresh-токена.
         /// </summary>
         /// <returns></returns>
         string GenerateRefreshToken();
 
         /// <summary>
-        /// Получение ClaimsPrincipal из исчезающего токена
-        /// </summary>
-        /// <param name="accessToken"></param>
-        /// <returns></returns>
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken);
-
-        /// <summary>
-        /// Обновление токена пользователя
+        /// Обновление токена пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
         Task<BaseResult<TokenDto>> RefreshToken(TokenDto dto);
 
         /// <summary>
-        /// Получение основных клаймов из пользователя
+        /// Получение основных клаймов из пользователя.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>

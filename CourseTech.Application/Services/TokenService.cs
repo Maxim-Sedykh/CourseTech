@@ -76,29 +76,6 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
-        {
-            var tokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
-                ValidateLifetime = true,
-                ValidAudience = _audience,
-                ValidIssuer = _issuer
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
-            {
-                throw new SecurityTokenException(ErrorMessage.InvalidToken);
-            }
-            return claimsPrincipal;
-        }
-
-        /// <inheritdoc/>
         public async Task<BaseResult<TokenDto>> RefreshToken(TokenDto dto)
         {
             string accessToken = dto.AccessToken;
@@ -127,6 +104,33 @@ namespace CourseTech.Application.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             });
+        }
+
+        /// <summary>
+        /// Получение ClaimsPrincipal из исчезающего токена
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
+        {
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
+                ValidateLifetime = true,
+                ValidAudience = _audience,
+                ValidIssuer = _issuer
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new SecurityTokenException(ErrorMessage.InvalidToken);
+            }
+            return claimsPrincipal;
         }
     }
 }

@@ -1,5 +1,9 @@
 ﻿namespace CourseTech.Domain.Result;
 
+/// <summary>
+/// Класс для реализации паттерна Result Pattern.
+/// Абстракция, которая представляет собой результат выполнения операции
+/// </summary>
 public class BaseResult
 {
     protected BaseResult(Error error = null)
@@ -17,6 +21,12 @@ public class BaseResult
         new BaseResult(new Error(errorMessage, errorCode));
 }
 
+/// <summary>
+/// Класс для реализации паттерна Result Pattern.
+/// Абстракция, которая представляет собой результат выполнения операции
+/// Имеет свойство Data
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class BaseResult<T> : BaseResult
 {
     protected BaseResult(T data, Error error = null)

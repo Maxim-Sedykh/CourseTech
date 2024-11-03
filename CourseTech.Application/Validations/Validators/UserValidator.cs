@@ -6,22 +6,19 @@ using CourseTech.Domain.Result;
 
 namespace CourseTech.Application.Validations.Validators
 {
-    public class RoleValidator : IRoleValidator
+    public class UserValidator : IUserValidator
     {
         /// <inheritdoc/>
-        public BaseResult ValidateRoleForUser(User user, params Role[] roles)
+        public BaseResult ValidateDeletingUser(UserProfile userProfile, User user)
         {
-            if (user == null)
+            if (user is null)
             {
                 return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            foreach (Role role in roles)
+            if (userProfile is null)
             {
-                if (role == null)
-                {
-                    return BaseResult.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
-                }
+                return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
             return BaseResult.Success();

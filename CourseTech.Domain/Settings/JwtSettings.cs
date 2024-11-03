@@ -1,5 +1,8 @@
 ﻿namespace CourseTech.Domain.Settings;
 
+/// <summary>
+/// Настройки Jwt-токена
+/// </summary>
 public class JwtSettings
 {
     public const string DefaultSection = "Jwt";

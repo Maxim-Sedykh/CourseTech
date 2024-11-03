@@ -12,7 +12,6 @@ using System.Data;
 
 namespace CourseTech.Application.Converters
 {
-    // To Do https://stackoverflow.com/questions/74827249/json-polymorphic-serialization-in-net7-web-api
     public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
     {
         public override ICorrectAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -22,41 +21,49 @@ namespace CourseTech.Application.Converters
 
         public override void Write(Utf8JsonWriter writer, ICorrectAnswerDto value, JsonSerializerOptions options)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             writer.WriteStartObject();
 
-            writer.WriteNumber("Id", value.Id);
-            writer.WriteString("CorrectAnswer", value.CorrectAnswer);
-            writer.WriteBoolean("AnswerCorrectness", value.AnswerCorrectness);
+            writer.WriteNumber(nameof(value.Id), value.Id);
+            writer.WriteString(nameof(value.CorrectAnswer), value.CorrectAnswer);
+            writer.WriteBoolean(nameof(value.AnswerCorrectness), value.AnswerCorrectness);
 
             if (value is PracticalQuestionCorrectAnswerDto correctAnswer)
             {
-                writer.WritePropertyName("QuestionUserGrade");
-                JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
+                WritePracticalQuestionProperties(writer, correctAnswer, options);
+            }
 
-                writer.WritePropertyName("Remarks");
-                JsonSerializer.Serialize(writer, correctAnswer.Remarks, options);
+            writer.WriteEndObject();
+        }
 
-                var dataTable = correctAnswer.QueryResult;
+        private void WritePracticalQuestionProperties(Utf8JsonWriter writer, PracticalQuestionCorrectAnswerDto correctAnswer, JsonSerializerOptions options)
+        {
+            writer.WritePropertyName(nameof(correctAnswer.QuestionUserGrade));
+            JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
 
-                writer.WritePropertyName("QueryResult");
+            writer.WritePropertyName(nameof(correctAnswer.Remarks));
+            JsonSerializer.Serialize(writer, correctAnswer.Remarks, options);
 
-                if (dataTable != null)
-                {
-                    var dataTableJsonFormat = dataTable
-                    .AsEnumerable()
+            writer.WritePropertyName(nameof(correctAnswer.QueryResult));
+            SerializeQueryResult(writer, correctAnswer.QueryResult, options);
+        }
+
+        private void SerializeQueryResult(Utf8JsonWriter writer, DataTable dataTable, JsonSerializerOptions options)
+        {
+            if (dataTable != null)
+            {
+                var dataTableJsonFormat = dataTable.AsEnumerable()
                     .Select(row => dataTable.Columns.Cast<DataColumn>()
                     .ToDictionary(col => col.ColumnName, col => row[col]))
                     .ToList();
 
-                    JsonSerializer.Serialize(writer, dataTableJsonFormat, options);
-                }
-                else
-                {
-                    JsonSerializer.Serialize(writer, new List<Dictionary<string, object>>(), options);
-                }
+                JsonSerializer.Serialize(writer, dataTableJsonFormat, options);
             }
-
-            writer.WriteEndObject();
+            else
+            {
+                JsonSerializer.Serialize(writer, new List<Dictionary<string, object>>(), options);
+            }
         }
     }
 }

@@ -5,13 +5,17 @@ using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Application.Queries.UserProfileQueries;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
+using CourseTech.Application.Validations.Validators;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
+using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.LessonRecord;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
+using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
 using ILogger = Serilog.ILogger;
@@ -22,28 +26,22 @@ namespace CourseTech.Application.Services
         IMapper mapper,
         ICacheService cacheService,
         IMediator mediator,
-        ILogger logger) : ICourseResultService
+        ICourseResultValidator courseResultValidator) : ICourseResultService
     {
 
+        /// <inheritdoc/>
         public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
+            var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
 
-            if (profile is null)
+            var validationResult = courseResultValidator.ValidateUserCourseResult(profile, lessonsCount);
+            if (!validationResult.IsSuccess)
             {
-                return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+                return BaseResult<CourseResultDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
             var userLessonRecords = await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId));
-
-            var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
-
-            if (lessonsCount == 0)
-            {
-                logger.Error(ErrorMessage.LessonsNotFound);
-
-                return BaseResult<CourseResultDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
-            }
 
             var analysDto = CreateAnalys(profile.CurrentGrade, userLessonRecords, lessonsCount);
 
@@ -54,6 +52,7 @@ namespace CourseTech.Application.Services
             return BaseResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
         }
 
+        /// <inheritdoc/>
         public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
             var userAnalys = await cacheService.GetOrAddToCache(
@@ -68,6 +67,13 @@ namespace CourseTech.Application.Services
             return BaseResult<UserAnalysDto>.Success(userAnalys);
         }
 
+        /// <summary>
+        /// Метод для создание анализа пользователю, который прошёл курс, на основе его прохождений уроков
+        /// </summary>
+        /// <param name="usersCurrentGrade"></param>
+        /// <param name="userLessonRecords"></param>
+        /// <param name="lessonsCount"></param>
+        /// <returns>Модель для анализа</returns>
         private UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
         {
             var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };

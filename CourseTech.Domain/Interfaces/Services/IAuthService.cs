@@ -7,19 +7,19 @@ using System.Security.Claims;
 namespace CourseTech.Domain.Interfaces.Services
 {
     /// <summary>
-    /// Сервис предназначенный для авторизации/регистрации
+    /// Сервис предназначенный для авторизации/регистрации.
     /// </summary>
     public interface IAuthService
     {
         /// <summary>
-        /// Регистрация пользователя
+        /// Регистрация пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
         Task<BaseResult<UserDto>> Register(RegisterUserDto dto);
 
         /// <summary>
-        /// Авторизация пользователя
+        /// Авторизация пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>

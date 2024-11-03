@@ -21,6 +21,7 @@ public class ReviewService(
     IMediator mediator,
     ILogger logger) : IReviewService
 {
+    /// <inheritdoc/>
     public async Task<BaseResult> CreateReviewAsync(CreateReviewDto dto, Guid userId)
     {
         var userProfile = await mediator.Send(new GetProfileByUserIdQuery(userId));
@@ -54,6 +55,7 @@ public class ReviewService(
         return BaseResult.Success();
     }
 
+    /// <inheritdoc/>
     public async Task<BaseResult> DeleteReview(long reviewId)
     {
         var review = await mediator.Send(new GetReviewByIdQuery(reviewId));
@@ -70,6 +72,7 @@ public class ReviewService(
         return BaseResult.Success();
     }
 
+    /// <inheritdoc/>
     public async Task<CollectionResult<ReviewDto>> GetReviewsAsync()
     {
         var reviews = await cacheService.GetOrAddToCache(
@@ -84,6 +87,7 @@ public class ReviewService(
         return CollectionResult<ReviewDto>.Success(reviews);
     }
 
+    /// <inheritdoc/>
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
         var reviews = await mediator.Send(new GetUserReviewDtosQuery(userId));

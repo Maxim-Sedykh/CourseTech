@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations
 {
+    /// <summary>
+    /// Конфигурация сущности "Вопрос открытого типа" (настройка таблицы в БД)
+    /// </summary>
     public class OpenQuestionConfiguration : IEntityTypeConfiguration<OpenQuestion>
     {
         public void Configure(EntityTypeBuilder<OpenQuestion> builder)

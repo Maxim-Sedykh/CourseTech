@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 namespace CourseTech.Domain.Interfaces.Services
 {
     /// <summary>
-    /// Сервис для работы с вопросами после урока, практической частью
+    /// Сервис для работы с вопросами после урока, практической частью.
     /// </summary>
     public interface IQuestionService
     {
         /// <summary>
-        /// Получение вопросов для тестирования по идентификатору урока
+        /// Получение вопросов для тестирования по идентификатору урока.
         /// </summary>
         /// <param name="lessonId"></param>
         /// <returns></returns>
         Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
 
         /// <summary>
-        /// Завершение прохождения тестирования
+        /// Завершение прохождения тестирования.
         /// </summary>
         /// <param name="dto"></param>
         /// <param name="userId"></param>

@@ -11,6 +11,7 @@ namespace CourseTech.DAL.Auth
 
         private static readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
 
+        /// <inheritdoc/>
         public string Hash(string password)
         {
             byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
@@ -19,6 +20,7 @@ namespace CourseTech.DAL.Auth
             return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
         }
 
+        /// <inheritdoc/>
         public bool Verify(string enteredPassword, string passwordHash)
         {
             string[] parts = passwordHash.Split('-');

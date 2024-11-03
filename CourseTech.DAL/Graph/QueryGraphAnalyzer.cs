@@ -6,7 +6,7 @@ namespace CourseTech.DAL.Graph
 {
     public class QueryGraphAnalyzer : IQueryGraphAnalyzer
     {
-        // To Do графы здесь плохо используются, нужно улучшить алгоритм с графом
+        /// <inheritdoc/>
         public void CalculateUserQueryScore(string sqlQuery, List<string> questionKeywords, out float grade, out List<string> remarks)
         {
             grade = 0;
@@ -53,7 +53,11 @@ namespace CourseTech.DAL.Graph
             grade = (float)Math.Round(grade, 2);
         }
 
-
+        /// <summary>
+        /// Создаёт граф ключевых слов с вершинами и рёбрами
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <returns></returns>
         private AdjacencyGraph<string, Edge<string>> CreateGraph(List<string> keywords)
         {
             var graph = new AdjacencyGraph<string, Edge<string>>();

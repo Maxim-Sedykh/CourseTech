@@ -10,6 +10,7 @@ using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
+using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
 using ILogger = Serilog.ILogger;
@@ -20,22 +21,19 @@ namespace CourseTech.Application.Services
         IUnitOfWork unitOfWork,
         ICacheService cacheService,
         IMediator mediator,
-        ILogger logger) : IUserService
+        ILogger logger,
+        IUserValidator userValidator) : IUserService
     {
+        /// <inheritdoc/>
         public async Task<BaseResult> DeleteUserAsync(Guid userId)
         {
             var user = await mediator.Send(new GetUserByIdQuery(userId));
-
-            if (user is null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
-            }
-
             var userProfile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
-            if (userProfile is null)
+            var validationResult = userValidator.ValidateDeletingUser(userProfile, user);
+            if (!validationResult.IsSuccess)
             {
-                return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+                return BaseResult.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
             var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
@@ -69,6 +67,7 @@ namespace CourseTech.Application.Services
             return BaseResult.Success();
         }
 
+        /// <inheritdoc/>
         public async Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
         {
             var user = await mediator.Send(new GetUpdateUserDtoByUserIdQuery(userId));
@@ -81,6 +80,7 @@ namespace CourseTech.Application.Services
             return BaseResult<UpdateUserDto>.Success(user);
         }
 
+        /// <inheritdoc/>
         public async Task<CollectionResult<UserDto>> GetUsersAsync()
         {
             var users = await cacheService.GetOrAddToCache(
@@ -90,6 +90,7 @@ namespace CourseTech.Application.Services
             return CollectionResult<UserDto>.Success(users);
         }
 
+        /// <inheritdoc/>
         public async Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
         {
             var user = await mediator.Send(new GetUserWithProfileByUserIdQuery(dto.Id));

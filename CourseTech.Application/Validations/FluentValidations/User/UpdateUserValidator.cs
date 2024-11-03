@@ -18,7 +18,6 @@ namespace CourseTech.Application.Validations.FluentValidations.User
                .MinimumLength(4).WithMessage("Логин должен быть не менее 4 символов")
                .MaximumLength(20).WithMessage("Логин должен быть не более 20 символов");
 
-            // To Do можно выделить валидацию полей юзера в отдельный класс или экстэншн
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Введите имя")
                 .Matches(@"^[А-Яа-я]+$").WithMessage("Имя должно содержать только русские буквы");

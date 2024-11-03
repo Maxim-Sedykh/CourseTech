@@ -5,6 +5,7 @@ using CourseTech.Application.Queries.QuestionQueries;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
+using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.Question;
@@ -29,19 +30,16 @@ namespace CourseTech.Application.Services
         IMediator mediator,
         ILogger logger) : IQuestionService
     {
+        /// <inheritdoc/>
         public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
             var lesson = await mediator.Send(new GetLessonByIdQuery(lessonId));
-            if (lesson is null)
-            {
-                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-            }
+            var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lessonId));
 
-            var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lesson.Id));
-
-            if (!questions.Any())
+            var lessonQuestionsValidationResult = questionValidator.ValidateLessonQuestions(lesson, questions);
+            if (!lessonQuestionsValidationResult.IsSuccess)
             {
-                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
+                return BaseResult<LessonPracticeDto>.Failure((int)lessonQuestionsValidationResult.Error.Code, lessonQuestionsValidationResult.Error.Message);
             }
 
             return BaseResult<LessonPracticeDto>.Success(new LessonPracticeDto()
@@ -52,6 +50,7 @@ namespace CourseTech.Application.Services
             });
         }
 
+        /// <inheritdoc/>
         public async Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
@@ -93,6 +92,13 @@ namespace CourseTech.Application.Services
             });
         }
 
+        /// <summary>
+        /// Обновление профиля и создание записи о прохождении урока в транзакции
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="lessonId"></param>
+        /// <param name="userGrade"></param>
+        /// <returns></returns>
         private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, int lessonId, float userGrade)
         {
             using (var transaction = await unitOfWork.BeginTransactionAsync())

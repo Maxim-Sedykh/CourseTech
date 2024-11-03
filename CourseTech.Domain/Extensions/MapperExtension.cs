@@ -7,8 +7,18 @@ using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain.Extensions;
 
+/// <summary>
+/// Расширение для Automapper'а.
+/// </summary>
 public static class MapperExtension
 {
+    /// <summary>
+    /// Метод для маппинга сущности Question в разные типы QuestionDto.
+    /// </summary>
+    /// <param name="mapper"></param>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static IQuestionDto MapQuestion(this IMapper mapper, Question question)
     {
         switch (question)
@@ -24,6 +34,13 @@ public static class MapperExtension
         }
     }
 
+    /// <summary>
+    /// Метод для маппинга сущности Question в разные типы QuestionChekingDto.
+    /// </summary>
+    /// <param name="mapper"></param>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static ICheckQuestionDto MapQuestionCheckings(this IMapper mapper, Question question)
     {
         switch (question)

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations;
 
+/// <summary>
+/// Конфигурация сущности "Запись прохождения урока пользователем" (настройка таблицы в БД)
+/// </summary>
 public class LessonRecordConfiguration : IEntityTypeConfiguration<LessonRecord>
 {
     public void Configure(EntityTypeBuilder<LessonRecord> builder)

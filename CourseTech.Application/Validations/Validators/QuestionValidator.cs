@@ -2,10 +2,8 @@
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.OpenQuestionAnswer;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Get;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Validators;
@@ -15,6 +13,7 @@ namespace CourseTech.Application.Validations.Validators
 {
     public class QuestionValidator : IQuestionValidator
     {
+        /// <inheritdoc/>
         public BaseResult ValidateCorrectAnswersOnNull(IEnumerable<TestVariantDto> correctTestVariants, IEnumerable<OpenQuestionAnswerDto> openQuestionAnswers)
         {
             if (!correctTestVariants.Any())
@@ -32,6 +31,7 @@ namespace CourseTech.Application.Validations.Validators
             return BaseResult.Success();
         }
 
+        /// <inheritdoc/>
         public BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Lesson lesson)
         {
             if (userProfile == null)
@@ -47,6 +47,7 @@ namespace CourseTech.Application.Validations.Validators
             return BaseResult.Success();
         }
 
+        /// <inheritdoc/>
         public BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions,
                                             int userAnswersCount,
                                             LessonTypes currentLessonType)
@@ -62,6 +63,22 @@ namespace CourseTech.Application.Validations.Validators
             {
                 return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
                     ErrorMessage.InvalidLessonType);
+            }
+
+            return BaseResult.Success();
+        }
+
+        /// <inheritdoc/>
+        public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions)
+        {
+            if (lesson is null)
+            {
+                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+            }
+
+            if (!questions.Any())
+            {
+                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
             }
 
             return BaseResult.Success();

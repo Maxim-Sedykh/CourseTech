@@ -9,6 +9,9 @@ using System.Reflection;
 
 namespace CourseTech.DAL;
 
+/// <summary>
+/// Контекст основной базы данных, связанной с курсом
+/// </summary>
 public class CourseDbContext : DbContext
 {
     public CourseDbContext(DbContextOptions options) : base(options) { }

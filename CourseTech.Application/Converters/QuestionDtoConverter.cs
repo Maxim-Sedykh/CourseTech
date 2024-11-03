@@ -9,25 +9,27 @@ namespace CourseTech.Application.Converters
     {
         public override IQuestionDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // Реализация десериализации (при необходимости)
             throw new NotImplementedException();
         }
 
         public override void Write(Utf8JsonWriter writer, IQuestionDto value, JsonSerializerOptions options)
         {
-            // Запись JSON
+            ArgumentNullException.ThrowIfNull(value);
+
             writer.WriteStartObject();
 
-            // Общие свойства
-            writer.WriteNumber("Id", value.Id);
-            writer.WriteNumber("Number", value.Number);
-            writer.WriteString("DisplayQuestion", value.DisplayQuestion);
+            writer.WriteNumber(nameof(value.Id), value.Id);
+            writer.WriteNumber(nameof(value.Number), value.Number);
+            writer.WriteString(nameof(value.DisplayQuestion), value.DisplayQuestion);
 
-            // Специфичные свойства для TestQuestionDto
-            if (value is TestQuestionDto testQuestion)
+            switch (value)
             {
-                writer.WritePropertyName("TestVariants");
-                JsonSerializer.Serialize(writer, testQuestion.TestVariants, options);
+                case TestQuestionDto testQuestion:
+                    writer.WritePropertyName(nameof(TestQuestionDto.TestVariants));
+                    JsonSerializer.Serialize(writer, testQuestion.TestVariants, options);
+                    break;
+                default:
+                    throw new NotSupportedException($"Тип вопроса {value.GetType().Name} не поддерживается.");
             }
 
             writer.WriteEndObject();
