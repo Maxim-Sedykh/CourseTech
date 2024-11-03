@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Mapping
 {
+    /// <summary>
+    /// Настройка маппинга для сущности "Урок" в определённые DTO.
+    /// </summary>
     public class LessonMapping : Profile
     {
         public LessonMapping()

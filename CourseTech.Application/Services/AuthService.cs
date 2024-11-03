@@ -90,7 +90,7 @@ namespace CourseTech.Application.Services
                 {
                     user = await mediator.Send(new CreateUserCommand(dto.Login, dto.Password));
 
-                    await mediator.Send(new CreateUserProfileCommand(user.Id, dto.Name, dto.Surname, dto.DateOfBirth));
+                    await mediator.Send(new CreateUserProfileCommand(user.Id, dto.UserName, dto.Surname, dto.DateOfBirth));
 
                     var role = await mediator.Send(new GetRoleByNameQuery(nameof(Roles.User)));
 

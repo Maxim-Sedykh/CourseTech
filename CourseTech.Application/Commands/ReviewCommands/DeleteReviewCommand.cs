@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.Reviews
 {
+    /// <summary>
+    /// Удаление отзыва.
+    /// </summary>
+    /// <param name="Review"></param>
     public record DeleteReviewCommand(Review Review) : IRequest;
 }

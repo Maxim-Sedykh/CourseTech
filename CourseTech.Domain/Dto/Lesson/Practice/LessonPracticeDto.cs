@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Lesson.Test
 {
+    /// <summary>
+    /// Модель данных для отображения практической части урока пользователю.
+    /// </summary>
     public class LessonPracticeDto
     {
         public int LessonId { get; set; }

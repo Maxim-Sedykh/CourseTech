@@ -9,5 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserProfileQueries
 {
+    /// <summary>
+    /// Получить анализ пользователя по его идентификатору.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetAnalysByUserIdQuery(Guid UserId) : IRequest<UserAnalysDto>;
 }

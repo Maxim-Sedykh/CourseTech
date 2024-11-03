@@ -9,5 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
+    /// <summary>
+    /// Обновить пользователя
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetUpdateUserDtoByUserIdQuery(Guid UserId) : IRequest<UpdateUserDto>;
 }

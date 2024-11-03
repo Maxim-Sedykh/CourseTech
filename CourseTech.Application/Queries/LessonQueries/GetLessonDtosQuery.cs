@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.LessonQueries
 {
+    /// <summary>
+    /// Получение списка всех уроков в виде LessonDto.
+    /// </summary>
     public record GetLessonDtosQuery(): IRequest<List<LessonDto>>;
 }

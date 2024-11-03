@@ -17,10 +17,14 @@ using MediatR;
 namespace CourseTech.Application.DependencyInjection;
 
 /// <summary>
-/// Внедрение зависимостей слоя Application
+/// Класс для внедрения зависимостей слоя Application
 /// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Внедрение зависимостей слоя Application
+    /// </summary>
+    /// <param name="services"></param>
     public static void AddApplication(this IServiceCollection services)
     {
         services.InitAutoMapper();
@@ -36,6 +40,10 @@ public static class DependencyInjection
         services.AddScoped<IQuestionAnswerChecker, QuestionAnswerChecker>();
     }
 
+    /// <summary>
+    /// Зарегистрировать зависимости для сервисов слоя Application.
+    /// </summary>
+    /// <param name="services"></param>
     private static void InitServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
@@ -50,6 +58,10 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
     }
 
+    /// <summary>
+    /// Настройка AutoMapper.
+    /// </summary>
+    /// <param name="services"></param>
     private static void InitAutoMapper(this IServiceCollection services)
     {
         var mappingTypes = new List<Type>()
@@ -69,6 +81,10 @@ public static class DependencyInjection
         }
     }
 
+    /// <summary>
+    /// Настройка валидации с помощью библиотеки FluentValidation.
+    /// </summary>
+    /// <param name="services"></param>
     public static void InitFluentValidators(this IServiceCollection services)
     {
         var validatorsTypes = new List<Type>()
@@ -87,6 +103,10 @@ public static class DependencyInjection
         }
     }
 
+    /// <summary>
+    /// Настройка зависимостей валидаторов для сервисов.
+    /// </summary>
+    /// <param name="services"></param>
     public static void InitEntityValidators(this IServiceCollection services)
     {
         services.AddScoped<IAuthValidator, AuthValidator>();

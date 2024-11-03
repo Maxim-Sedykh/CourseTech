@@ -9,5 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.LessonRecordQueries
 {
+    /// <summary>
+    /// Получение записей о прохождении уроков в виде LessonRecordDto, для определённого пользователя по его идентификатору.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetLessonRecordDtosByUserIdQuery(Guid UserId) : IRequest<LessonRecordDto[]>;
 }

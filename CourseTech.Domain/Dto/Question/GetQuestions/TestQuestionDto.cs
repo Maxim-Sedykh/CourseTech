@@ -4,7 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace CourseTech.Domain.Dto.Question.Get
 {
-    [JsonDerivedType(typeof(IQuestionDto), typeDiscriminator: "base")]
+    /// <summary>
+    /// Модель данных для отображения вопроса тестового типа.
+    /// </summary>
     public class TestQuestionDto : IQuestionDto
     {
         public int Id { get; set; }

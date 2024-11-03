@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserProfileQueries
 {
+    /// <summary>
+    /// Получение UserProfileDto по идентификатору пользователя.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetUserProfileDtoByUserIdQuery(Guid UserId) : IRequest<UserProfileDto>;
 }

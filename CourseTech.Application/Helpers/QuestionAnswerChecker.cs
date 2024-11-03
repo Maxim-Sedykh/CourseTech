@@ -16,7 +16,7 @@ namespace CourseTech.Application.Helpers
 {
     public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
     {
-
+        ///<inheritdoc/>
         public async Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestionDtos, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade)
         {
             var correctAnswers = new List<ICorrectAnswerDto>();
@@ -39,6 +39,14 @@ namespace CourseTech.Application.Helpers
             return correctAnswers;
         }
 
+        /// <summary>
+        /// Проверить на правильность ответ пользователя, и получить за него оценку.
+        /// </summary>
+        /// <param name="userAnswer"></param>
+        /// <param name="checkQuestionDto"></param>
+        /// <param name="userGrade"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         private async Task<ICorrectAnswerDto> CheckAnswer(IUserAnswerDto userAnswer, ICheckQuestionDto checkQuestionDto, UserGradeDto userGrade)
         {
             return userAnswer switch
@@ -56,6 +64,13 @@ namespace CourseTech.Application.Helpers
             };
         }
 
+        /// <summary>
+        /// Проверить ответ на вопрос тестового типа.
+        /// </summary>
+        /// <param name="userAnswer"></param>
+        /// <param name="correctTestVariant"></param>
+        /// <param name="userGrade"></param>
+        /// <returns></returns>
         private ICorrectAnswerDto CheckTestQuestionAnswer(TestQuestionUserAnswerDto userAnswer, TestVariantDto correctTestVariant, UserGradeDto userGrade)
         {
             bool isCorrect = userAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber;
@@ -73,6 +88,13 @@ namespace CourseTech.Application.Helpers
             };
         }
 
+        /// <summary>
+        /// Проверить ответ на вопрос открытого типа.
+        /// </summary>
+        /// <param name="userAnswer"></param>
+        /// <param name="openQuestionAnswerVariants"></param>
+        /// <param name="userGrade"></param>
+        /// <returns></returns>
         private ICorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, UserGradeDto userGrade)
         {
             string normalizedUserAnswer = Regex.Replace(userAnswer.UserAnswer.ToLower().Trim(), @"s+", " ");
@@ -92,6 +114,14 @@ namespace CourseTech.Application.Helpers
             return correctAnswer;
         }
 
+        /// <summary>
+        /// Проверить ответ на вопрос практического типа.
+        /// </summary>
+        /// <param name="userAnswer"></param>
+        /// <param name="questionChecking"></param>
+        /// <param name="userGrade"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         private async Task<ICorrectAnswerDto> CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, UserGradeDto userGrade)
         {
             var correctAnswer = new PracticalQuestionCorrectAnswerDto
@@ -130,13 +160,26 @@ namespace CourseTech.Application.Helpers
 
             return correctAnswer;
         }
-
+        
+        /// <summary>
+        /// Равны ли 2 результата запрос в виде DataTable's.
+        /// </summary>
+        /// <param name="userResult"></param>
+        /// <param name="correctResult"></param>
+        /// <returns></returns>
         private bool IsResultsEqual(DataTable userResult, DataTable correctResult)
         {
             var comparer = new DataTableComparer();
             return comparer.Compare(userResult, correctResult) == 0;
         }
 
+        /// <summary>
+        /// Получить замечания для пользователя, и его оценку за ответ, исходя из его запроса.
+        /// </summary>
+        /// <param name="userCodeAnswer"></param>
+        /// <param name="keywords"></param>
+        /// <param name="practicalQuestionGrade"></param>
+        /// <returns></returns>
         private List<string> GetRemarks(string userCodeAnswer, List<string> keywords, out float practicalQuestionGrade)
         {
             queryGraphAnalyzer.CalculateUserQueryScore(userCodeAnswer, keywords, out practicalQuestionGrade, out List<string> remarks);

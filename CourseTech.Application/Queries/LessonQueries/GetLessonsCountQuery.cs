@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.LessonQueries
 {
+    /// <summary>
+    /// Получение количества уроков.
+    /// </summary>
     public class GetLessonsCountQuery : IRequest<int>;
 }

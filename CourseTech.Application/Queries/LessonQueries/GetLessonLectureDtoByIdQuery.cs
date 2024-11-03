@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.LessonQueries
 {
+    /// <summary>
+    /// Получение лекционной части урока по идентификатору урока.
+    /// </summary>
+    /// <param name="LessonId"></param>
     public record GetLessonLectureDtoByIdQuery(int LessonId) : IRequest<LessonLectureDto>;
 }

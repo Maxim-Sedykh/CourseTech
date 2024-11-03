@@ -1,5 +1,8 @@
 ﻿namespace CourseTech.Domain.Dto.User
 {
+    /// <summary>
+    /// Модель данных для отображения пользователя в AdminDashboard.
+    /// </summary>
     public class UserDto
     {
         public Guid Id { get; set; }

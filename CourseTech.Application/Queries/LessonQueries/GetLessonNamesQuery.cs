@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.LessonQueries
 {
+    /// <summary>
+    /// Получение названий всех уроков.
+    /// </summary>
     public record GetLessonNamesQuery() : IRequest<LessonNameDto[]>;
 }

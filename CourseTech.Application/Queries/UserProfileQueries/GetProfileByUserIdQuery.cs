@@ -9,5 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
+    /// <summary>
+    /// Получение профиля пользователя по идентификатору пользователя.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetProfileByUserIdQuery(Guid UserId) : IRequest<UserProfile>;
 }

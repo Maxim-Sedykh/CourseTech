@@ -8,5 +8,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserProfileCommands
 {
+    /// <summary>
+    /// Обновление профиля пользователя, когда он прошёл урок.
+    /// </summary>
+    /// <param name="UserProfile"></param>
+    /// <param name="UserGrade"></param>
     public record UpdateProfileCompletingLessonCommand(UserProfile UserProfile, float UserGrade) : IRequest;
 }

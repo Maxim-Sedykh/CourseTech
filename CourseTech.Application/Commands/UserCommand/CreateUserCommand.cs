@@ -8,5 +8,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserCommand
 {
+    /// <summary>
+    /// Создание пользователя при регистрации.
+    /// </summary>
+    /// <param name="Login"></param>
+    /// <param name="Password"></param>
     public record CreateUserCommand(string Login, string Password) : IRequest<User>;
 }

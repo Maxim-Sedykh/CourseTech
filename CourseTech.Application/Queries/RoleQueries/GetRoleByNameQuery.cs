@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.RoleQueries
 {
+    /// <summary>
+    /// Получить роль по её названию.
+    /// </summary>
+    /// <param name="Name"></param>
     public record GetRoleByNameQuery(string Name) : IRequest<Role>;
 }

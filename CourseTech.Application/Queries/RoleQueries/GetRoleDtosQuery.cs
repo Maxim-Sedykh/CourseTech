@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.RoleQueries
 {
+    /// <summary>
+    /// Получение всех ролей в виде RoleDto
+    /// </summary>
     public record GetRoleDtosQuery : IRequest<RoleDto[]>;
 }

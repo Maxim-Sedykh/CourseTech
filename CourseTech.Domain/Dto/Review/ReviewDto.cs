@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace CourseTech.Domain.Dto.Review
 {
+    /// <summary>
+    /// Модель данных для отображения отзыва.
+    /// </summary>
     public class ReviewDto
     {
         public long Id { get; set; }

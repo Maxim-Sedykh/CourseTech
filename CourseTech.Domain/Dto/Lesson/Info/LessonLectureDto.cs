@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace CourseTech.Domain.Dto.Lesson.LessonInfo
 {
     /// <summary>
-    /// DTO для передачи данных об уроке
-    /// С разметкой для лекции
+    /// Модель данных для передачи данных об уроке.
+    /// С разметкой для лекции.
     /// </summary>
     public class LessonLectureDto
     {

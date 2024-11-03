@@ -9,5 +9,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.LessonCommands
 {
+    /// <summary>
+    /// Обновление сущности "Урок".
+    /// </summary>
+    /// <param name="LessonLectureDto"></param>
+    /// <param name="Lesson"></param>
     public record UpdateLessonCommand(LessonLectureDto LessonLectureDto, Lesson Lesson) : IRequest;
 }

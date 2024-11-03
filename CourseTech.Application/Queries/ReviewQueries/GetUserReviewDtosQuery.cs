@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.Reviews
 {
+    /// <summary>
+    /// Получение отзывов определённого пользователя в виде ReviewDto.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetUserReviewDtosQuery(Guid UserId) : IRequest<ReviewDto[]>;
 }

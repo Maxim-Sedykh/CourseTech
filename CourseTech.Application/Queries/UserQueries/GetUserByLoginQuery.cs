@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
+    /// <summary>
+    /// Получение пользователя по его логину.
+    /// </summary>
+    /// <param name="Login"></param>
     public record GetUserByLoginQuery(string Login) : IRequest<User>;
 }

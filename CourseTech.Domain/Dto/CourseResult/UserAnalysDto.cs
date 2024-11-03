@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CourseTech.Domain.Dto.FinalResult
 {
     /// <summary>
-    /// DTO для анализа пользователя
+    /// Модель данных для анализа пользователя.
     /// </summary>
     public class UserAnalysDto
     {

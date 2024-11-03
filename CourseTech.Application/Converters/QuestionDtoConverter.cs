@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace CourseTech.Application.Converters
 {
+    /// <summary>
+    /// Конветор JSON для реализации полиморфизма для моделей данных для отображения вопросов.
+    /// </summary>
     public class QuestionDtoConverter : JsonConverter<IQuestionDto>
     {
         public override IQuestionDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

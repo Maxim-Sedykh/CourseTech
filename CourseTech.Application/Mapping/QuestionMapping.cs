@@ -13,6 +13,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CourseTech.Application.Mapping
 {
+    /// <summary>
+    /// Настройка маппинга для сущности "Вопрос" в определённые DTO.
+    /// </summary>
     public class QuestionMapping : Profile
     {
         public QuestionMapping()

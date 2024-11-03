@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Validations.FluentValidations.Review
 {
+    /// <summary>
+    /// Валидация создания отзыва пользователем.
+    /// </summary>
     public class CreateReviewValidator : AbstractValidator<CreateReviewDto>
     {
         public CreateReviewValidator()
         {
             RuleFor(review => review.ReviewText)
-            .NotEmpty().WithMessage("Введите отзыв")
-            .MaximumLength(1000).WithMessage("Длина отзыва должна быть меньше 1000 символов");
+                .NotEmpty().WithMessage("Введите отзыв")
+                .MaximumLength(1000).WithMessage("Длина отзыва должна быть меньше 1000 символов");
         }
     }
 }

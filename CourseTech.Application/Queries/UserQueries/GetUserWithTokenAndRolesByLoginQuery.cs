@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
+    /// <summary>
+    /// Получение пользователя с его токеном и ролями по его логину.
+    /// </summary>
+    /// <param name="Login"></param>
     public record GetUserWithTokenAndRolesByLoginQuery(string Login) : IRequest<User>;
 }

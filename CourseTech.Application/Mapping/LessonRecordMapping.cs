@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Mapping
 {
+    /// <summary>
+    /// Настройка маппинга для сущности "Запись о прохождения урока" в определённые DTO.
+    /// </summary>
     public class LessonRecordMapping : Profile
     {
         public LessonRecordMapping()

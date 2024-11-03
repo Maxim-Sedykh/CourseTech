@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserTokenQueries
 {
+    /// <summary>
+    /// Получение токена пользователя по идентификатору пользователя.
+    /// </summary>
+    /// <param name="UserId"></param>
     public record GetUserTokenByUserIdQuery(Guid UserId) : IRequest<UserToken>;
 }

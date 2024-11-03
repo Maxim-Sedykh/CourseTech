@@ -12,6 +12,9 @@ using System.Data;
 
 namespace CourseTech.Application.Converters
 {
+    /// <summary>
+    /// Конветор JSON для реализации полиморфизма для моделей правильных ответов.
+    /// </summary>
     public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
     {
         public override ICorrectAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

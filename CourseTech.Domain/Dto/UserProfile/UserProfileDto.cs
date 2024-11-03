@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace CourseTech.Domain.Dto.UserProfile
 {
+    /// <summary>
+    /// Модель данных для отображения профиля пользователю.
+    /// </summary>
     public class UserProfileDto
     {
         public long Id { get; set; }

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Question.Get
 {
+    /// <summary>
+    /// Модель данных для отображения вопроса практического типа.
+    /// </summary>
     public class PracticalQuestionDto : IQuestionDto
     {
         public int Id { get; set; }

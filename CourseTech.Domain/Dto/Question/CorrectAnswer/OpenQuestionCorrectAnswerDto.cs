@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Question.Pass
 {
+    /// <summary>
+    /// Модель данных для отображения правильного ответа на вопрос открытого типа.
+    /// </summary>
     public class OpenQuestionCorrectAnswerDto : ICorrectAnswerDto
     {
         public int Id { get; set; }

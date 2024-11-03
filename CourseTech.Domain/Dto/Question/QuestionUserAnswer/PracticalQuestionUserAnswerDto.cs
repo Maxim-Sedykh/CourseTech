@@ -2,6 +2,9 @@
 
 namespace CourseTech.Domain.Dto.Question.QuestionUserAnswer
 {
+    /// <summary>
+    /// Модель данных для ответа пользователя на вопрос практического типа.
+    /// </summary>
     public class PracticalQuestionUserAnswerDto : IUserAnswerDto
     {
         public int QuestionId { get; set; }

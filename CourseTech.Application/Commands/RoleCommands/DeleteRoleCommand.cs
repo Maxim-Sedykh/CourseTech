@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.RoleCommands
 {
+    /// <summary>
+    /// Удаление роли
+    /// </summary>
+    /// <param name="Role"></param>
     public record DeleteRoleCommand(Role Role) : IRequest;
 }

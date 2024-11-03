@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserCommand
 {
+    /// <summary>
+    /// Удаление пользователя.
+    /// </summary>
+    /// <param name="User"></param>
     public record DeleteUserCommand(User User) : IRequest;
 }

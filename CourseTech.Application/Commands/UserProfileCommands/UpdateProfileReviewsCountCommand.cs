@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserProfileCommands
 {
+    /// <summary>
+    /// Обновление профиля пользователя, когда пользователь создаёт отзыв.
+    /// </summary>
+    /// <param name="UserProfile"></param>
     public record UpdateProfileReviewsCountCommand(UserProfile UserProfile) : IRequest;
 }

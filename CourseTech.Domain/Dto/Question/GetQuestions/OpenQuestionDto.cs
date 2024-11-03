@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Question.Get
 {
+    /// <summary>
+    /// Модель данных для отображения вопроса открытого типа.
+    /// </summary>
     public class OpenQuestionDto : IQuestionDto
     {
         public int Id { get; set; }

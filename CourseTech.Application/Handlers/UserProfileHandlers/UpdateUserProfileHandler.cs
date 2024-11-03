@@ -20,7 +20,7 @@ namespace CourseTech.Application.Handlers.UserProfileHandlers
 
             var dateOfBirth = updateUserProfileDto.DateOfBirth;
 
-            profile.Name = updateUserProfileDto.Name;
+            profile.Name = updateUserProfileDto.UserName;
             profile.Surname = updateUserProfileDto.Surname;
             profile.DateOfBirth = dateOfBirth;
             profile.Age = dateOfBirth.GetYearsByDateToNow();

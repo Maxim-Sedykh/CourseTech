@@ -9,5 +9,8 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.UserQueries
 {
+    /// <summary>
+    /// Получение всех пользователей в виде коллекции UserDto.
+    /// </summary>
     public record GetUserDtosQuery : IRequest<UserDto[]>;
 }

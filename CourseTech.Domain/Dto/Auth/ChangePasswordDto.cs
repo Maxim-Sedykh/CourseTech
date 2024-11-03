@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CourseTech.Domain.Dto.Auth
 {
     /// <summary>
-    /// ДТО для смены пароля пользователя
+    /// Модель данных для смены пароля пользователя.
     /// </summary>
     public class ChangePasswordDto
     {

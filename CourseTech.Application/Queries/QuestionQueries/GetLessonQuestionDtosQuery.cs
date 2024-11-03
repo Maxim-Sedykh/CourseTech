@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Queries.QuestionQueries
 {
+    /// <summary>
+    /// Получение вопросов урока в виде QuestionDto
+    /// </summary>
+    /// <param name="LessonId"></param>
     public record GetLessonQuestionDtosQuery(int LessonId) : IRequest<List<IQuestionDto>>;
 }

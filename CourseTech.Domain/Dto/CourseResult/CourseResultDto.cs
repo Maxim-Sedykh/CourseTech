@@ -1,7 +1,7 @@
 ﻿namespace CourseTech.Domain.Dto.FinalResult
 {
     /// <summary>
-    /// DTO для показа результата прохождения курса
+    /// Модель данных для показа результата прохождения курса.
     /// </summary>
     public class CourseResultDto
     {

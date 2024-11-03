@@ -9,5 +9,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Commands.UserCommand
 {
+    /// <summary>
+    /// Обновление информации о пользователе.
+    /// </summary>
+    /// <param name="UpdateUserDto"></param>
+    /// <param name="User"></param>
     public record UpdateUserCommand(UpdateUserDto UpdateUserDto, User User) : IRequest;
 }

@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace CourseTech.Application.Converters
 {
+    /// <summary>
+    /// Конветор JSON для реализации полиморфизма для моделей данных для отображения ответов пользователей.
+    /// </summary>
     public class UserAnswerDtoConverter : JsonConverter<IUserAnswerDto>
     {
         public override IUserAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

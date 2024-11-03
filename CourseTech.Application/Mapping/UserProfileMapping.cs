@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Application.Mapping
 {
+    /// <summary>
+    /// Настройка маппинга для сущности "Профиль пользователя" в определённые DTO.
+    /// </summary>
     public class UserProfileMapping : Profile
     {
         public UserProfileMapping()

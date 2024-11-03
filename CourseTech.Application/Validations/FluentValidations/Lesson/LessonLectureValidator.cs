@@ -11,6 +11,9 @@ namespace CourseTech.Application.Validations.FluentValidations.Lesson
 {
     public class LessonLectureValidator : AbstractValidator<LessonLectureDto>
     {
+        /// <summary>
+        /// Валидация обновления информации об уроке.
+        /// </summary>
         public LessonLectureValidator()
         {
             RuleFor(x => x.Name)

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Dto.Question.Pass
 {
+    /// <summary>
+    /// Модель данных для отображения правильного ответа на вопрос практического типа.
+    /// </summary>
     public class PracticalQuestionCorrectAnswerDto : ICorrectAnswerDto
     {
         public int Id { get; set; }
