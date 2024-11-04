@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,7 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Id).ValueGeneratedOnAdd();
 
         builder.Property(u => u.Password).IsRequired();
-        builder.Property(u => u.Login).HasMaxLength(18).IsRequired();
+        builder.Property(u => u.Login).HasMaxLength(ValidationConstraints.LoginMaximumLength).IsRequired();
 
         builder.HasData(new User()
         {

@@ -1,131 +1,72 @@
-﻿using Asp.Versioning;
-using CourseTech.Application.Converters;
+﻿using CourseTech.Application.DependencyInjection;
+using CourseTech.DAL.DependencyInjection;
+using CourseTech.DAL.Extensions;
 using CourseTech.Domain.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
+using CourseTech.WebApi.Middlewares;
+using Prometheus;
+using Serilog;
 
 namespace CourseTech.WebApi;
 
 public static class Startup
 {
     /// <summary>
-    /// Подключение аутентификации и авторизации
+    /// Настройка сервисов
     /// </summary>
     /// <param name="services"></param>
-    public static void AddAuthenticationAndAuthorization(this IServiceCollection services, WebApplicationBuilder builder)
+    /// <param name="builder"></param>
+    public static void ConfigureServices(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddAuthorization();
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(o =>
-        {
-            var options = builder.Configuration.GetSection(JwtSettings.DefaultSection).Get<JwtSettings>();
-            var jwtKey = options.JwtKey;
-            var issuer = options.Issuer;
-            var audience = options.Audience;
-            o.Authority = options.Authority;
-            o.RequireHttpsMetadata = false;
-            o.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidIssuer = issuer,
-                ValidAudience = audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true
-            };
-        });
-    }
-
-    /// <summary>
-    /// Подключение Swagger
-    /// </summary>
-    /// <param name="services"></param>
-    public static void AddSwagger(this IServiceCollection services)
-    {
-        services.AddApiVersioning()
-        .AddApiExplorer(options =>
-        {
-            options.DefaultApiVersion = new ApiVersion(1, 0);
-            options.GroupNameFormat = "'v'VVV";
-            options.SubstituteApiVersionInUrl = true;
-            options.AssumeDefaultVersionWhenUnspecified = true;
-        });
+        services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
+        services.Configure<RedisSettings>(builder.Configuration.GetSection(nameof(RedisSettings)));
 
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo()
-            {
-                Version = "v1",
-                Title = "CourseTech.API",
-                Description = "This is version 1.0",
-                TermsOfService = new Uri("https://vk.com/selectfromusers"),
-                Contact = new OpenApiContact()
-                {
-                    Name = "Test contact",
-                    Url = new Uri("https://vk.com/selectfromusers")
-                }
-            });
+        services.UseHttpClientMetrics();
 
-            options.SwaggerDoc("v2", new OpenApiInfo()
-            {
-                Version = "v2",
-                Title = "CourseTech.API",
-                Description = "This is version 2.0",
-                TermsOfService = new Uri("https://vk.com/selectfromusers"),
-                Contact = new OpenApiContact()
-                {
-                    Name = "Test contact",
-                    Url = new Uri("https://vk.com/selectfromusers")
-                }
-            });
+        services.AddControllersAndJsonConvertors();
 
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-            {
-                In = ParameterLocation.Header,
-                Description = "Введите пожалуйста валидный токен",
-                Name = "Авторизация",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                Scheme = "Bearer"
-            });
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme()
-                    {
-                        Reference = new OpenApiReference()
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        },
-                        Name = "Bearer",
-                        In = ParameterLocation.Header
-                    },
-                    Array.Empty<string>()
-                }
-            });
-        });
+        services.AddAuthenticationAndAuthorization(builder);
+        services.AddSwagger();
+
+        builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
+        services.AddDataAccessLayer(builder.Configuration);
+        services.AddApplication();
     }
 
     /// <summary>
-    /// Добавление контроллеров и JSON-конверторов
+    /// Настройка middleware.
     /// </summary>
-    /// <param name="services"></param>
-    public static void AddControllersAndJsonConvertors(this IServiceCollection services)
+    /// <param name="app"></param>
+    public static void ConfigureMiddlewares(this WebApplication app)
     {
-        services.AddControllers().AddJsonOptions(options =>
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        if (app.Environment.IsDevelopment())
         {
-            options.JsonSerializerOptions.Converters.Add(new UserAnswerDtoConverter());
-            options.JsonSerializerOptions.Converters.Add(new QuestionDtoConverter());
-            options.JsonSerializerOptions.Converters.Add(new CorrectAnswerDtoConverter());
-        });
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CourseTech Swagger v1.0");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
+                c.RoutePrefix = string.Empty;
+            });
+            app.ApplyMigrations();
+        }
+
+        app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+        app.UseHttpsRedirection();
+
+        app.UseMetricServer();
+        app.UseHttpMetrics();
+
+        app.MapGet("/random-number", () => Results.Ok(Random.Shared.Next(0, 10)));
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapMetrics();
+        app.MapControllers();
     }
 }

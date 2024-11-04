@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +14,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(ValidationConstraints.RoleNameMaximumLength);
     }
 }

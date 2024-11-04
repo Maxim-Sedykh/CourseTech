@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities.QuestionEntities;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Entities.QuestionEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,10 +18,13 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 
         builder.HasIndex(x => new { x.Id, x.Number }).IsUnique();
 
-        builder.ToTable(x => x.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100"));
+        var lessonNumberPropertyName = nameof(Question.Number);
+
+        builder.ToTable(x => x.HasCheckConstraint($"CK_{x.Name}{lessonNumberPropertyName}",
+            $"{lessonNumberPropertyName} BETWEEN {ValidationConstraints.QuestionNumberMinValue} AND {ValidationConstraints.QuestionNumberMaxValue}"));
 
         builder.Property(q => q.LessonId).IsRequired();
-        builder.Property(q => q.DisplayQuestion).IsRequired().HasMaxLength(500);
+        builder.Property(q => q.DisplayQuestion).IsRequired().HasMaxLength(ValidationConstraints.QuestionDisplayQuestionMaximumLength);
 
         builder.HasOne(q => q.Lesson)
             .WithMany(l => l.Questions)

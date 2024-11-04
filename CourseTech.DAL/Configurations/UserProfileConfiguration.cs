@@ -1,5 +1,6 @@
 ﻿using Azure;
 using CourseTech.Domain.Constants.LearningProcess;
+using CourseTech.Domain.Constants.Validation;
 using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,8 +16,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
     {
         builder.Property(up => up.Id).ValueGeneratedOnAdd();
 
-        builder.Property(up => up.Name).HasMaxLength(50).IsRequired();
-        builder.Property(up => up.Surname).HasMaxLength(50).IsRequired();
+        builder.Property(up => up.Name).HasMaxLength(ValidationConstraints.UserNameMaximumLength).IsRequired();
+        builder.Property(up => up.Surname).HasMaxLength(ValidationConstraints.SurnameMaximumLength).IsRequired();
         builder.Property(up => up.Age).IsRequired();
         builder.Property(up => up.DateOfBirth).IsRequired();
         builder.Property(up => up.LessonsCompleted).IsRequired().HasDefaultValue(0);

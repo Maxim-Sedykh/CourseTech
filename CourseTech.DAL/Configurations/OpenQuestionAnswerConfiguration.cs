@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -19,7 +20,7 @@ namespace CourseTech.DAL.Configurations
             builder.Property(av => av.Id).ValueGeneratedOnAdd();
 
             builder.Property(av => av.OpenQuestionId).IsRequired();
-            builder.Property(av => av.AnswerText).IsRequired().HasMaxLength(500);
+            builder.Property(av => av.AnswerText).IsRequired().HasMaxLength(ValidationConstraints.OpenQuestionAnswerMaximumLength);
 
             builder.HasOne(av => av.OpenQuestion)
                 .WithMany(q => q.AnswerVariants)

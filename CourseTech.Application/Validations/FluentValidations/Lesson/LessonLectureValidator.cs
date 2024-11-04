@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Dto.Auth;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using FluentValidation;
 using System;
@@ -17,11 +18,11 @@ namespace CourseTech.Application.Validations.FluentValidations.Lesson
         public LessonLectureValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Введите название урока")
-                .MinimumLength(4).WithMessage("Название урока должен быть не менее 2 символов")
-                .MaximumLength(20).WithMessage("Название урока должен быть не более 50 символов");
+                .NotEmpty().WithMessage(ValidationErrorMessages.LessonNameNotEmptyMessage)
+                .MinimumLength(ValidationConstraints.LessonNameMinimumLength).WithMessage(ValidationErrorMessages.GetLessonNameMinimumLengthMessage())
+                .MaximumLength(ValidationConstraints.LessonNameMaximumLength).WithMessage(ValidationErrorMessages.GetLessonNameMaximumLengthMessage());
 
-            RuleFor(x => x.LessonMarkup).NotEmpty().WithMessage("Не указана разметка лекции");
+            RuleFor(x => x.LessonMarkup).NotEmpty().WithMessage(ValidationErrorMessages.LessonMarkupNotEmpty);
         }
     }
 }

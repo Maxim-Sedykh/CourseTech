@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Extensions
+namespace CourseTech.DAL.Extensions
 {
     /// <summary>
     /// Расширение IApplicationBuilder для запуска миграций Entity Framework Core из точки входа в приложение ( класс Program )

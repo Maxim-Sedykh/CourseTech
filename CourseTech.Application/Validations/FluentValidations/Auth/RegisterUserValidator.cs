@@ -1,11 +1,7 @@
-﻿using CourseTech.Domain.Dto.Auth;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Extensions;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.Validations.FluentValidations.Auth
 {
@@ -23,14 +19,14 @@ namespace CourseTech.Application.Validations.FluentValidations.Auth
             RuleFor(x => x.Surname).ValidateUserSurname();
 
             RuleFor(x => x.DateOfBirth)
-                .NotEmpty().WithMessage("Введите дату рождения")
-                .Must(BeValidDateOfBirth).WithMessage("Неверный формат даты рождения");
+                .NotEmpty().WithMessage(ValidationErrorMessages.DateOfBirthNotEmptyMessage)
+                .Must(x => BeValidDateOfBirth(x)).WithMessage(ValidationErrorMessages.ValidDateOfBirthMessage);
 
             RuleFor(x => x.Password).ValidatePassword();
 
             RuleFor(x => x.PasswordConfirm)
-                .NotEmpty().WithMessage("Подтвердите пароль")
-                .Equal(x => x.Password).WithMessage("Пароли не совпадают");
+                .NotEmpty().WithMessage(ValidationErrorMessages.PasswordConfirmNotEmptyMessage)
+                .Equal(x => x.Password).WithMessage(ValidationErrorMessages.PasswordConfirmNotEqualPasswordMessage);
         }
 
         private bool BeValidDateOfBirth(DateTime dateOfBirth) => dateOfBirth < DateTime.Now;

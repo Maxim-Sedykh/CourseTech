@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CourseTech.Domain.Constants.Validation;
+using FluentValidation;
 
 namespace CourseTech.Domain.Extensions
 {
@@ -10,38 +11,38 @@ namespace CourseTech.Domain.Extensions
         public static IRuleBuilderOptions<T, string> ValidateLogin<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .NotEmpty().WithMessage("Введите логин")
-                .MinimumLength(4).WithMessage("Логин должен быть не менее 4 символов")
-                .MaximumLength(20).WithMessage("Логин должен быть не более 20 символов");
+                .NotEmpty().WithMessage(ValidationErrorMessages.LoginNotEmptyMessage)
+                .MinimumLength(ValidationConstraints.LoginMinimumLength).WithMessage(ValidationErrorMessages.GetLoginMinimumLengthMessage())
+                .MaximumLength(ValidationConstraints.LoginMaximumLength).WithMessage(ValidationErrorMessages.GetLoginMaximumLengthMessage());
         }
 
         public static IRuleBuilderOptions<T, string> ValidatePassword<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .NotEmpty().WithMessage("Введите пароль")
-                .MinimumLength(8).WithMessage("Пароль должен быть не менее 8 символов");
+                .NotEmpty().WithMessage(ValidationErrorMessages.PasswordNotEmptyMessage)
+                .MinimumLength(ValidationConstraints.PasswordMinimumLength).WithMessage(ValidationErrorMessages.GetPasswordMinimumLengthMessage());
         }
 
         public static IRuleBuilderOptions<T, string> ValidateUserName<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .NotEmpty().WithMessage("Введите имя")
-                .Matches(@"^[А-Яа-я]+$").WithMessage("Имя должно содержать только русские буквы");
+                .NotEmpty().WithMessage(ValidationErrorMessages.UserNameNotEmptyMessage)
+                .MaximumLength(ValidationConstraints.UserNameMaximumLength).WithMessage(ValidationErrorMessages.GetUserNameMaximumLengthMessage());
         }
 
         public static IRuleBuilderOptions<T, string> ValidateUserSurname<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .NotEmpty().WithMessage("Введите фамилию")
-                .Matches(@"^[А-Яа-я]+$").WithMessage("Фамилия должна содержать только русские буквы");
+                .NotEmpty().WithMessage(ValidationErrorMessages.SurnameNotEmptyMessage)
+                .MaximumLength(ValidationConstraints.SurnameMaximumLength).WithMessage(ValidationErrorMessages.GetUserNameMaximumLengthMessage());
         }
 
         public static IRuleBuilderOptions<T, string> ValidateRoleName<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .NotEmpty().WithMessage("Введите имя роли")
-                .MinimumLength(2).WithMessage("Длина роли должна быть больше 2 символов")
-                .MaximumLength(50).WithMessage("Длина роли должна быть меньше 50 символов");
+                .NotEmpty().WithMessage(ValidationErrorMessages.RoleNameNotEmptyMessage)
+                .MinimumLength(ValidationConstraints.RoleNameMinimumLength).WithMessage(ValidationErrorMessages.GetRoleNameMinimumLengthMessage())
+                .MaximumLength(ValidationConstraints.RoleNameMaximumLength).WithMessage(ValidationErrorMessages.GetRoleNameMaximumLengthMessage());
         }
     }
 }

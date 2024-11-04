@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Constants.Validation;
+using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +14,6 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
     {
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.Word).HasMaxLength(50).IsRequired();
+        builder.Property(x => x.Word).HasMaxLength(ValidationConstraints.KeywordWordMaximumLength).IsRequired();
     }
 }
