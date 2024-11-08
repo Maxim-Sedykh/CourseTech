@@ -2,7 +2,9 @@
 using CourseTech.Application.Queries.LessonQueries;
 using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Domain.Dto.LessonRecord;
+using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +23,7 @@ namespace CourseTech.Application.Handlers.LessonRecordHandlers
             return await lessonRecordRepository.GetAll()
                         .Where(x => x.UserId == request.UserId)
                         .Include(x => x.Lesson)
-                        .Select(x => mapper.Map<LessonRecordDto>(x))
+                        .AsProjected<LessonRecord, LessonRecordDto>(mapper)
                         .ToArrayAsync(cancellationToken);
         }
     }

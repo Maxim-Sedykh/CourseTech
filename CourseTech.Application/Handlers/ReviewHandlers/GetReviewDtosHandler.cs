@@ -3,6 +3,7 @@ using CourseTech.Application.Queries.Reviews;
 using CourseTech.DAL.Repositories;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace CourseTech.Application.Handlers.ReviewHandlers
             return await reviewRepository.GetAll()
                     .AsNoTracking()
                     .Include(x => x.User)
-                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .AsProjected<Review, ReviewDto>(mapper)
                     .ToArrayAsync(cancellationToken);
         }
     }

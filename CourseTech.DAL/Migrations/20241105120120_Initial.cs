@@ -17,9 +17,7 @@ namespace CourseTech.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Word = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Word = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +30,7 @@ namespace CourseTech.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     LessonType = table.Column<int>(type: "int", nullable: false),
                     LectureMarkup = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -63,7 +61,7 @@ namespace CourseTech.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Login = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -85,13 +83,12 @@ namespace CourseTech.DAL.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    Notation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CorrectQueryCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Question", x => x.Id);
-                    table.CheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100");
+                    table.CheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
                     table.ForeignKey(
                         name: "FK_Question_Lesson_LessonId",
                         column: x => x.LessonId,
@@ -159,12 +156,12 @@ namespace CourseTech.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Age = table.Column<byte>(type: "tinyint", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsExamCompleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CurrentGrade = table.Column<float>(type: "float(3)", precision: 3, scale: 2, nullable: false, defaultValue: 0f),
                     LessonsCompleted = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Analys = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Analys = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "Анализ ещё не получен. вы ещё не прошли курс."),
                     IsEditAble = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CountOfReviews = table.Column<byte>(type: "tinyint", nullable: false, defaultValue: (byte)0),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -234,9 +231,7 @@ namespace CourseTech.DAL.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AnswerText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    OpenQuestionId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    OpenQuestionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -250,28 +245,24 @@ namespace CourseTech.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QueryWord",
+                name: "PracticalQuestionQueryKeyword",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
                     KeywordId = table.Column<int>(type: "int", nullable: false),
-                    PracticalQuestionId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    PracticalQuestionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QueryWord", x => x.Id);
+                    table.PrimaryKey("PK_PracticalQuestionQueryKeyword", x => new { x.Number, x.KeywordId, x.PracticalQuestionId });
                     table.ForeignKey(
-                        name: "FK_QueryWord_Keyword_KeywordId",
+                        name: "FK_PracticalQuestionQueryKeyword_Keyword_KeywordId",
                         column: x => x.KeywordId,
                         principalTable: "Keyword",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_QueryWord_Question_PracticalQuestionId",
+                        name: "FK_PracticalQuestionQueryKeyword_Question_PracticalQuestionId",
                         column: x => x.PracticalQuestionId,
                         principalTable: "Question",
                         principalColumn: "Id",
@@ -286,8 +277,8 @@ namespace CourseTech.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TestQuestionId = table.Column<int>(type: "int", nullable: false),
                     VariantNumber = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    IsRight = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Content = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -318,20 +309,20 @@ namespace CourseTech.DAL.Migrations
                 column: "OpenQuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QueryWord_KeywordId",
-                table: "QueryWord",
+                name: "IX_PracticalQuestionQueryKeyword_KeywordId",
+                table: "PracticalQuestionQueryKeyword",
                 column: "KeywordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QueryWord_Number",
-                table: "QueryWord",
-                column: "Number",
-                unique: true);
+                name: "IX_PracticalQuestionQueryKeyword_PracticalQuestionId",
+                table: "PracticalQuestionQueryKeyword",
+                column: "PracticalQuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QueryWord_PracticalQuestionId",
-                table: "QueryWord",
-                column: "PracticalQuestionId");
+                name: "IX_Question_Id_Number",
+                table: "Question",
+                columns: new[] { "Id", "Number" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Question_LessonId",
@@ -339,25 +330,14 @@ namespace CourseTech.DAL.Migrations
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Question_Number",
-                table: "Question",
-                column: "Number",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Review_UserId",
                 table: "Review",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestVariant_TestQuestionId",
+                name: "IX_TestVariant_TestQuestionId_VariantNumber",
                 table: "TestVariant",
-                column: "TestQuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestVariant_VariantNumber",
-                table: "TestVariant",
-                column: "VariantNumber",
+                columns: new[] { "TestQuestionId", "VariantNumber" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -388,7 +368,7 @@ namespace CourseTech.DAL.Migrations
                 name: "OpenQuestionAnswer");
 
             migrationBuilder.DropTable(
-                name: "QueryWord");
+                name: "PracticalQuestionQueryKeyword");
 
             migrationBuilder.DropTable(
                 name: "Review");

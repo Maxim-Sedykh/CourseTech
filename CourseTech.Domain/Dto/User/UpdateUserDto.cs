@@ -1,13 +1,9 @@
-﻿using CourseTech.Domain.Dto.Role;
-using CourseTech.Domain.Interfaces.Dtos.Validation;
-using System.ComponentModel.DataAnnotations;
-
-namespace CourseTech.Domain.Dto.User
+﻿namespace CourseTech.Domain.Dto.User
 {
     /// <summary>
     /// Модель данных для обновления пользователя.
     /// </summary>
-    public class UpdateUserDto : ILoginValidation, IUserNameValidation, ISurnameValidation
+    public class UpdateUserDto
     {
         public Guid Id { get; set; }
 

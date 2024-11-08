@@ -55,14 +55,14 @@ namespace CourseTech.Application.Services
         /// <inheritdoc/>
         public async Task<BaseResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto)
         {
-            var role = await mediator.Send(new GetRoleByNameQuery(dto.Name));
+            var role = await mediator.Send(new GetRoleByNameQuery(dto.RoleName));
 
             if (role != null)
             {
                 return BaseResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
             }
 
-            await mediator.Send(new CreateRoleCommand(dto.Name));
+            await mediator.Send(new CreateRoleCommand(dto.RoleName));
 
             await cacheService.RemoveAsync(CacheKeys.Roles);
 
@@ -96,7 +96,7 @@ namespace CourseTech.Application.Services
                 return BaseResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
             }
 
-            await mediator.Send(new UpdateRoleCommand(role, dto.Name));
+            await mediator.Send(new UpdateRoleCommand(role, dto.RoleName));
 
             await cacheService.RemoveAsync(CacheKeys.Roles);
 

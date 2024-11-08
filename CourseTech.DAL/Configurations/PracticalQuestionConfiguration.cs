@@ -21,12 +21,6 @@ namespace CourseTech.DAL.Configurations
             builder.HasBaseType<Question>();
 
             builder.Property(q => q.CorrectQueryCode).IsRequired();
-
-            builder.HasMany(x => x.Keywords)
-            .WithMany(x => x.PracticalQuestions)
-            .UsingEntity<PracticalQuestionQueryKeyword>(
-                x => x.HasOne<Keyword>().WithMany().HasForeignKey(x => x.KeywordId),
-                x => x.HasOne<PracticalQuestion>().WithMany().HasForeignKey(x => x.PracticalQuestionId));
         }
     }
 }

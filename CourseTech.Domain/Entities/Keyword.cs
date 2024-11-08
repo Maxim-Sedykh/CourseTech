@@ -18,5 +18,5 @@ public class Keyword : IEntityId<int>
     /// <summary>
     /// Практические вопросы, в ответе на которых используются данное ключевое слово.
     /// </summary>
-    public List<PracticalQuestion> PracticalQuestions { get; set; }
+    public List<PracticalQuestionQueryKeyword> PracticalQuestionQueryKeywords { get; set; }
 }

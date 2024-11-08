@@ -12,14 +12,14 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
     public class PracticalQuestion : Question
     {
         /// <summary>
-        /// Ключевые слова, из которых состоит правильный запрос.
-        /// </summary>
-        public List<Keyword> Keywords { get; set; }
-
-        /// <summary>
         /// Правильный запрос. Ответ на практический вопрос.
         /// Один из вариантов ответа, который даёт правильный результат.
         /// </summary>
         public string CorrectQueryCode { get; set; }
+
+        /// <summary>
+        /// Ключевые слова в корректном запросе данного практического вопроса.
+        /// </summary>
+        public List<PracticalQuestionQueryKeyword> PracticalQuestionQueryKeywords { get; set; }
     }
 }

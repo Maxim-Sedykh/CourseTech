@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Queries.Reviews;
-using CourseTech.DAL.Repositories;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.Handlers.ReviewHandlers
 {
@@ -22,7 +17,7 @@ namespace CourseTech.Application.Handlers.ReviewHandlers
                     .AsNoTracking()
                     .Where(x => x.UserId == request.UserId)
                     .Include(x => x.User)
-                    .Select(x => mapper.Map<ReviewDto>(x))
+                    .AsProjected<Review, ReviewDto>(mapper)
                     .ToArrayAsync(cancellationToken);
         }
     }

@@ -1,6 +1,12 @@
 ﻿using CourseTech.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 
 namespace CourseTech.DAL.Configurations;
 
@@ -11,6 +17,14 @@ public class PracticalQuestionQueryKeywordConfiguration : IEntityTypeConfigurati
 {
     public void Configure(EntityTypeBuilder<PracticalQuestionQueryKeyword> builder)
     {
-        builder.HasIndex(x => new { x.PracticalQuestionId, x.Number }).IsUnique();
+        builder.HasKey(x => new { x.Number, x.KeywordId, x.PracticalQuestionId });
+
+        builder.HasOne(x => x.Keyword)
+            .WithMany(x => x.PracticalQuestionQueryKeywords)
+            .HasForeignKey(x => x.KeywordId);
+
+        builder.HasOne(x => x.PracticalQuestion)
+            .WithMany(x => x.PracticalQuestionQueryKeywords)
+            .HasForeignKey(x => x.PracticalQuestionId);
     }
 }

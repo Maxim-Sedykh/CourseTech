@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mime;
+using static System.Net.Mime.MediaTypeNames;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.WebApi.Middlewares;

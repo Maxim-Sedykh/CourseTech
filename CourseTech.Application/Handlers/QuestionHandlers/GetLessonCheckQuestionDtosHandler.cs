@@ -24,8 +24,8 @@ namespace CourseTech.Application.Handlers.QuestionHandlers
                 .Where(q => q.LessonId == request.LessonId)
                 .Include(q => (q as TestQuestion).TestVariants)
                 .Include(q => (q as OpenQuestion).AnswerVariants)
-                .Include(q => (q as PracticalQuestion).QueryWords)
-                .ThenInclude(qw => qw.Keyword)
+                .Include(q => (q as PracticalQuestion).PracticalQuestionQueryKeywords)
+                .ThenInclude(q => q.Keyword)
                 .Select(x => mapper.MapQuestionCheckings(x))
                 .ToListAsync(cancellationToken);
         }

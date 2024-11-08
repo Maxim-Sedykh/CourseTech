@@ -6,7 +6,7 @@ namespace CourseTech.Domain.Extensions
     /// <summary>
     /// Расширение для IRuleBuilderInitial, в нём вынесены часто повторяющиеся правила валидации.
     /// </summary>
-    public static class RuleBuilderInitialExtensions
+    public static class RuleBuilderInitialExtension
     {
         public static IRuleBuilderOptions<T, string> ValidateLogin<T>(this IRuleBuilderInitial<T, string> ruleBuilder)
         {

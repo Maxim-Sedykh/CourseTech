@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
-using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Application.Queries.UserProfileQueries;
 using CourseTech.Domain.Dto.FinalResult;
-using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.Handlers.UserProfileHandlers
 {
@@ -21,7 +15,7 @@ namespace CourseTech.Application.Handlers.UserProfileHandlers
         {
             return await userProfileRepository.GetAll()
                         .Where(x => x.UserId == request.UserId)
-                        .Select(x => mapper.Map<UserAnalysDto>(x))
+                        .AsProjected<UserProfile, UserAnalysDto>(mapper)
                         .FirstOrDefaultAsync(cancellationToken);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
+
+namespace CourseTech.Domain.Entities;
 
 /// <summary>
 /// Ключевые слова корректных запросов для практического типа заданий.
@@ -17,7 +19,17 @@ public class PracticalQuestionQueryKeyword
     public int KeywordId { get; set; }
 
     /// <summary>
+    /// Ключевое слово.
+    /// </summary>
+    public Keyword Keyword { get; set; }
+
+    /// <summary>
     /// Идентификатор вопроса практического типа.
     /// </summary>
     public int PracticalQuestionId { get; set; }
+
+    /// <summary>
+    /// Вопрос практического типа.
+    /// </summary>
+    public PracticalQuestion PracticalQuestion { get; set; }
 }

@@ -112,5 +112,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthValidator, AuthValidator>();
         services.AddScoped<IQuestionValidator, QuestionValidator>();
         services.AddScoped<IRoleValidator, RoleValidator>();
+        services.AddScoped<IUserValidator, UserValidator>();
+        services.AddScoped<ILessonValidator, LessonValidator>();
+        services.AddScoped<ICourseResultValidator, CourseResultValidator>();
     }
 }

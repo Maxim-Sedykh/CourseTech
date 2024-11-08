@@ -1,11 +1,9 @@
-﻿using CourseTech.Domain.Interfaces.Dtos.Validation;
-
-namespace CourseTech.Domain.Dto.Auth
+﻿namespace CourseTech.Domain.Dto.Auth
 {
     /// <summary>
     /// Модель данных для авторизации пользователя.
     /// </summary>
-    public class LoginUserDto : ILoginValidation, IPasswordValidation
+    public class LoginUserDto
     {
         public string Login { get; set; }
 

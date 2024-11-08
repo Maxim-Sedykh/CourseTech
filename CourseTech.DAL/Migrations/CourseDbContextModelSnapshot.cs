@@ -128,33 +128,24 @@ namespace CourseTech.DAL.Migrations
                     b.ToTable("OpenQuestionAnswer");
                 });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QueryWord", b =>
+            modelBuilder.Entity("CourseTech.Domain.Entities.PracticalQuestionQueryKeyword", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("KeywordId")
+                    b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int>("Number")
+                    b.Property<int>("KeywordId")
                         .HasColumnType("int");
 
                     b.Property<int>("PracticalQuestionId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Number", "KeywordId", "PracticalQuestionId");
 
                     b.HasIndex("KeywordId");
 
                     b.HasIndex("PracticalQuestionId");
 
-                    b.HasIndex("Id", "Number")
-                        .IsUnique();
-
-                    b.ToTable("QueryWord");
+                    b.ToTable("PracticalQuestionQueryKeyword");
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.Question", b =>
@@ -196,7 +187,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.ToTable("Question", t =>
                         {
-                            t.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100");
+                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
                         });
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Question");
@@ -267,8 +258,8 @@ namespace CourseTech.DAL.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -306,8 +297,8 @@ namespace CourseTech.DAL.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasMaxLength(18)
-                        .HasColumnType("nvarchar(18)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -319,15 +310,6 @@ namespace CourseTech.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e"),
-                            CreatedAt = new DateTime(2024, 10, 19, 12, 9, 58, 192, DateTimeKind.Local).AddTicks(8922),
-                            Login = "maximka",
-                            Password = "----------------"
-                        });
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
@@ -342,7 +324,9 @@ namespace CourseTech.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Analys")
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Анализ ещё не получен. вы ещё не прошли курс.");
 
                     b.Property<byte>("CountOfReviews")
                         .ValueGeneratedOnAdd()
@@ -447,7 +431,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100");
+                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
                         });
 
                     b.HasDiscriminator().HasValue("OpenQuestion");
@@ -463,7 +447,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100");
+                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
                         });
 
                     b.HasDiscriminator().HasValue("PracticalQuestion");
@@ -475,7 +459,7 @@ namespace CourseTech.DAL.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Question_Number", "Number BETWEEN 0 AND 100");
+                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
                         });
 
                     b.HasDiscriminator().HasValue("TestQuestion");
@@ -511,16 +495,16 @@ namespace CourseTech.DAL.Migrations
                     b.Navigation("OpenQuestion");
                 });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QueryWord", b =>
+            modelBuilder.Entity("CourseTech.Domain.Entities.PracticalQuestionQueryKeyword", b =>
                 {
                     b.HasOne("CourseTech.Domain.Entities.Keyword", "Keyword")
-                        .WithMany("QueryWords")
+                        .WithMany("PracticalQuestionQueryKeywords")
                         .HasForeignKey("KeywordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.PracticalQuestion", "PracticalQuestion")
-                        .WithMany("QueryWords")
+                        .WithMany("PracticalQuestionQueryKeywords")
                         .HasForeignKey("PracticalQuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -602,7 +586,7 @@ namespace CourseTech.DAL.Migrations
 
             modelBuilder.Entity("CourseTech.Domain.Entities.Keyword", b =>
                 {
-                    b.Navigation("QueryWords");
+                    b.Navigation("PracticalQuestionQueryKeywords");
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.Lesson", b =>
@@ -630,7 +614,7 @@ namespace CourseTech.DAL.Migrations
 
             modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.PracticalQuestion", b =>
                 {
-                    b.Navigation("QueryWords");
+                    b.Navigation("PracticalQuestionQueryKeywords");
                 });
 
             modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", b =>

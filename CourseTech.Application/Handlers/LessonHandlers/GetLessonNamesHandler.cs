@@ -3,7 +3,9 @@ using CourseTech.Application.Queries.LessonQueries;
 using CourseTech.Application.Queries.LessonRecordQueries;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Dto.LessonRecord;
+using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +23,7 @@ namespace CourseTech.Application.Handlers.LessonHandlers
         public async Task<LessonNameDto[]> Handle(GetLessonNamesQuery request, CancellationToken cancellationToken)
         {
             return await lessonRepository.GetAll()
-                        .Select(x => mapper.Map<LessonNameDto>(x))
+                        .AsProjected<Lesson, LessonNameDto>(mapper)
                         .ToArrayAsync(cancellationToken);
         }
     }
