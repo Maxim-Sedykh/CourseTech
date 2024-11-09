@@ -25,14 +25,10 @@ namespace CourseTech.Application.Converters
             writer.WriteNumber(nameof(value.Number), value.Number);
             writer.WriteString(nameof(value.DisplayQuestion), value.DisplayQuestion);
 
-            switch (value)
+            if (value is TestQuestionDto testQuestion)
             {
-                case TestQuestionDto testQuestion:
-                    writer.WritePropertyName(nameof(TestQuestionDto.TestVariants));
-                    JsonSerializer.Serialize(writer, testQuestion.TestVariants, options);
-                    break;
-                default:
-                    throw new NotSupportedException($"Тип вопроса {value.GetType().Name} не поддерживается.");
+                writer.WritePropertyName(nameof(TestQuestionDto.TestVariants));
+                JsonSerializer.Serialize(writer, testQuestion.TestVariants, options);
             }
 
             writer.WriteEndObject();
