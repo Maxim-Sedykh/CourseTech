@@ -22,10 +22,10 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=25Feb!2002
       - DB_NAME=CourseTech
-    volumes:
-      - coursetech-db:/var/lib/sqlserver/data
     ports:
       - "5837:1433"
+    volumes:
+      - db_data:/var/opt/mssql
     networks:
       - coursetechnw
 
@@ -66,9 +66,9 @@ services:
     networks:
       - coursetechnw
 
-volumes:
-  coursetech-db:
-    driver: local
-
 networks:
   coursetechnw:
+
+volumes:
+  db_data:
+

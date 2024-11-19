@@ -29,7 +29,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [HttpPost(RouteConstants.PassLessonQuestions)]
         public async Task<ActionResult<BaseResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
         {
-            var response = await questionService.PassLessonQuestionsAsync(dto, AuthorizedUserId);
+            var response = await questionService.PassLessonQuestionsAsync(dto, new Guid("A002B50D-52B5-4D02-1DF0-08DD061EC8FC"));
             if (response.IsSuccess)
             {
                 return Ok(response);

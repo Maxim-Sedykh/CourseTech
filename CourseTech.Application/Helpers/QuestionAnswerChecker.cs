@@ -147,7 +147,7 @@ namespace CourseTech.Application.Helpers
                 {
                     correctAnswer.QueryResult = userResult;
 
-                    throw new InvalidOperationException("Ваш ответ не совпадает с правильным ответом.");
+                    throw new InvalidOperationException("Ваш ответ не совпадает с правильным ответом.");// To Do убрать хард код
                 }
             }
             catch (Exception ex)

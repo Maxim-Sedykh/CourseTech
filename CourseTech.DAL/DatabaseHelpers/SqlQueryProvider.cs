@@ -13,11 +13,6 @@ namespace CourseTech.Domain.Helpers
             var connectionString = config.GetConnectionString("FilmDbConnection");
             DataTable table = new();
 
-            if (!sqlQuery.Trim().StartsWith("select", StringComparison.OrdinalIgnoreCase))
-            {
-                return table;
-            }
-
             using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sqlQuery, connection))
             {
@@ -41,7 +36,7 @@ namespace CourseTech.Domain.Helpers
                 }
             }
 
-            return table;
+            return new DataTable();
         }
     }
 }
