@@ -18,6 +18,7 @@
 
 База данных имеет следующую диаграмму:
 ![image](https://github.com/user-attachments/assets/6cb98404-a1cc-4d11-988d-75307423338d)
+
 База данных для запросов пользователя имеет вот такую диаграмму
 ![image](https://github.com/user-attachments/assets/3ad4f864-34de-48f4-983d-da8a09d07dcc)
 
