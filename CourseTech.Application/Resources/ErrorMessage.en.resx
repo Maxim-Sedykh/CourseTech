@@ -207,14 +207,16 @@
   <data name="DeleteUserFailed" xml:space="preserve">
     <value>Failed to delete user</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UpdateRoleForUserFailed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="UpdateRoleForUserFailed" xml:space="preserve">
+    <value>Failed to update role for user</value>
   </data>
   <data name="CreateReviewFailed" xml:space="preserve">
     <value>Failed to create review</value>
   </data>
   <data name="PassLessonFailed" xml:space="preserve">
     <value>Failed to pass lesson</value>
+  </data>
+  <data name="InvalidUserQuery" xml:space="preserve">
+    <value>The result of your query does not match the task requirement.</value>
   </data>
 </root>

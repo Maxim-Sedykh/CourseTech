@@ -17,6 +17,6 @@ namespace CourseTech.Domain.Interfaces.Databases
         /// </summary>
         /// <param name="sqlQuery">SQL запрос пользователя в виде строки</param>
         /// <returns></returns>
-        Task<DataTable> ExecuteQueryAsync(string sqlQuery);
+        Task<List<dynamic>> ExecuteQueryAsync(string sqlQuery);
     }
 }

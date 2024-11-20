@@ -2,16 +2,12 @@
 using CourseTech.Application.Queries.LessonQueries;
 using CourseTech.Application.Queries.UserQueries;
 using CourseTech.Application.Resources;
-using CourseTech.Application.Validations.Validators;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
-using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Helpers;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
@@ -24,8 +20,7 @@ namespace CourseTech.Application.Services
         ICacheService cacheService,
         IMediator mediator,
         ILogger logger,
-        ILessonValidator lessonValidator,
-        ISqlQueryProvider sqlQueryProvider) : ILessonService
+        ILessonValidator lessonValidator) : ILessonService
     {
         /// <inheritdoc/>
         public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
@@ -45,9 +40,6 @@ namespace CourseTech.Application.Services
         /// <inheritdoc/>
         public async Task<CollectionResult<LessonNameDto>> GetLessonNamesAsync()
         {
-            var data = sqlQueryProvider.ExecuteQueryAsync("INSERT INTO [dbo].[Films] ([Name] ,[Description]) VALUES ('SOMEINJECTION', 'SOMEINJECTION')");
-
-
             var lessonNames = await cacheService.GetOrAddToCache(
                 CacheKeys.LessonNames,
                 async () => await mediator.Send(new GetLessonNamesQuery()));

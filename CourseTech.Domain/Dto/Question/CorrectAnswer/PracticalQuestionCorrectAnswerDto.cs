@@ -19,7 +19,7 @@ namespace CourseTech.Domain.Dto.Question.Pass
 
         public float QuestionUserGrade { get; set; }
 
-        public DataTable QueryResult { get; set; }
+        public List<dynamic> QueryResult { get; set; }
 
         public List<string> Remarks { get; set; }
 

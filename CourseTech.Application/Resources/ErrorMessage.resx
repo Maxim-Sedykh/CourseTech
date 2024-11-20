@@ -208,12 +208,15 @@
     <value>Не удалось удалить пользователя</value>
   </data>
   <data name="UpdateRoleForUserFailed" xml:space="preserve">
-    <value />
+    <value>Не удалось обновить роль для пользователя</value>
   </data>
   <data name="CreateReviewFailed" xml:space="preserve">
     <value>Не удалось создать отзыв</value>
   </data>
   <data name="PassLessonFailed" xml:space="preserve">
     <value>Не удалось пройти урок</value>
+  </data>
+  <data name="InvalidUserQuery" xml:space="preserve">
+    <value>Результат вашего запроса не совпадает с требованием задания</value>
   </data>
 </root>

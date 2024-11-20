@@ -124,6 +124,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат вашего запроса не совпадает с требованием задания.
+        /// </summary>
+        internal static string InvalidUserQuery {
+            get {
+                return ResourceManager.GetString("InvalidUserQuery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Урок не найден.
         /// </summary>
         internal static string LessonNotFound {
@@ -295,7 +304,7 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на .
+        ///   Ищет локализованную строку, похожую на Не удалось обновить роль для пользователя.
         /// </summary>
         internal static string UpdateRoleForUserFailed {
             get {

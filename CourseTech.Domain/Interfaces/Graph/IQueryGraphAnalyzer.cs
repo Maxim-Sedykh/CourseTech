@@ -1,11 +1,4 @@
-﻿using QuickGraph;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CourseTech.Domain.Interfaces.Graph
+﻿namespace CourseTech.Domain.Interfaces.Graph
 {
     /// <summary>
     /// Сервис для работы с графами принятия решений ( Для оценки запроса пользователя, на его корректность ).

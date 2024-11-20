@@ -1,5 +1,5 @@
-﻿using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CourseTech.WebApi.Attributes
 {
@@ -7,7 +7,7 @@ namespace CourseTech.WebApi.Attributes
     /// Атрибут, для того чтобы передавать массив ролей
     /// Если пользователь имеет хоть одну роль из списка, то валидация проходит
     /// </summary>
-    public class AllowRolesAttribute : AuthorizationFilterAttribute
+    public class AllowRolesAttribute : Attribute, IAuthorizationFilter
     {
         private readonly HashSet<string> _roles;
 
@@ -16,19 +16,21 @@ namespace CourseTech.WebApi.Attributes
             _roles = new HashSet<string>(roles);
         }
 
-        public override void OnAuthorization(HttpActionContext actionContext)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var user = actionContext.RequestContext.Principal;
+            var user = context.HttpContext.User;
 
-            if (user?.Identity.IsAuthenticated != true)
+            // Проверяем, аутентифицирован ли пользователь
+            if (!user.Identity.IsAuthenticated)
             {
-                actionContext.Response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized);
+                context.Result = new UnauthorizedResult();
                 return;
             }
 
+            // Проверяем, есть ли у пользователя хотя бы одна из разрешенных ролей
             if (!_roles.Any(user.IsInRole))
             {
-                actionContext.Response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.Forbidden);
+                context.Result = new ForbidResult();
             }
         }
     }

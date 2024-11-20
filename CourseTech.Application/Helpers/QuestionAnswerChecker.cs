@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Constants.LearningProcess;
+﻿using CourseTech.Domain.Comparers;
+using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Pass;
@@ -136,7 +137,7 @@ namespace CourseTech.Application.Helpers
                 var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer);
                 var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode);
 
-                if (IsResultsEqual(userResult, correctResult))
+                if (DynamicListComparer.AreListsOfDynamicEqual(userResult, correctResult))
                 {
                     correctAnswer.AnswerCorrectness = true;
                     correctAnswer.QueryResult = userResult;
@@ -147,7 +148,7 @@ namespace CourseTech.Application.Helpers
                 {
                     correctAnswer.QueryResult = userResult;
 
-                    throw new InvalidOperationException("Ваш ответ не совпадает с правильным ответом.");// To Do убрать хард код
+                    throw new InvalidOperationException("Результат вашего запроса не совпадает с требованием задания");// To Do убрать хард код
                 }
             }
             catch (Exception ex)
