@@ -1,24 +1,20 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.LessonQueries;
-using CourseTech.Application.Queries.LessonRecordQueries;
-using CourseTech.Application.Queries.UserProfileQueries;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
+using CourseTech.Application.Queries.Dtos.LessonRecordDtoQueries;
+using CourseTech.Application.Queries.Dtos.UserProfileDtoQuery;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
-using CourseTech.Application.Validations.Validators;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
-using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.LessonRecord;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
-using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {

@@ -9,7 +9,7 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
     /// <summary>
     /// Вопрос практического типа.
     /// </summary>
-    public class PracticalQuestion : Question
+    public class PracticalQuestion : BaseQuestion
     {
         /// <summary>
         /// Правильный запрос. Ответ на практический вопрос.

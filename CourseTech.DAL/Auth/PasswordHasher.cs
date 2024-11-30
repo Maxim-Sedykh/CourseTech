@@ -1,36 +1,35 @@
 ﻿using CourseTech.Domain.Interfaces.Helpers;
 using System.Security.Cryptography;
 
-namespace CourseTech.DAL.Auth
+namespace CourseTech.DAL.Auth;
+
+public sealed class PasswordHasher : IPasswordHasher
 {
-    public sealed class PasswordHasher : IPasswordHasher
+    private const int SaltSize = 16;
+    private const int HashSize = 32;
+    private const int Iterations = 100000;
+
+    private static readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
+
+    /// <inheritdoc/>
+    public string Hash(string password)
     {
-        private const int SaltSize = 16;
-        private const int HashSize = 32;
-        private const int Iterations = 100000;
+        byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
 
-        private static readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
+        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
+    }
 
-        /// <inheritdoc/>
-        public string Hash(string password)
-        {
-            byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
-            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
+    /// <inheritdoc/>
+    public bool Verify(string enteredPassword, string passwordHash)
+    {
+        string[] parts = passwordHash.Split('-');
 
-            return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
-        }
+        byte[] hash = Convert.FromHexString(parts[0]);
+        byte[] salt = Convert.FromHexString(parts[1]);
 
-        /// <inheritdoc/>
-        public bool Verify(string enteredPassword, string passwordHash)
-        {
-            string[] parts = passwordHash.Split('-');
+        byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(enteredPassword, salt, Iterations, Algorithm, HashSize);
 
-            byte[] hash = Convert.FromHexString(parts[0]);
-            byte[] salt = Convert.FromHexString(parts[1]);
-
-            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(enteredPassword, salt, Iterations, Algorithm, HashSize);
-
-            return CryptographicOperations.FixedTimeEquals(hash, inputHash);
-        }
+        return CryptographicOperations.FixedTimeEquals(hash, inputHash);
     }
 }

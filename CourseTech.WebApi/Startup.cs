@@ -51,7 +51,7 @@ public static class Startup
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "CourseTech Swagger v2.0");
                 c.RoutePrefix = string.Empty;
             });
-            //app.ApplyMigrations();
+            app.ApplyMigrations();
         }
 
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

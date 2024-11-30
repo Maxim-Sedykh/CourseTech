@@ -9,7 +9,7 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
     /// <summary>
     /// Вопрос тестового типа.
     /// </summary>
-    public class TestQuestion : Question
+    public class TestQuestion : BaseQuestion
     {
         /// <summary>
         /// Варианты ответа на тестовый вопрос.

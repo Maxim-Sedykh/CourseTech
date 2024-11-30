@@ -115,6 +115,15 @@ namespace CourseTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Неизвестный тип вопроса.
+        /// </summary>
+        internal static string InvalidQuestionType {
+            get {
+                return ResourceManager.GetString("InvalidQuestionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инвалидный токен.
         /// </summary>
         internal static string InvalidToken {

@@ -16,7 +16,7 @@ public class QueryGraphAnalyzer : IQueryGraphAnalyzer
             return;
 
         var decisionGraph = CreateDecisionGraph(questionKeywords);
-        var gradePerCategory = (float)Math.Round(QuestionGrades.PracticalQuestionGrade / (questionKeywords.Count + 2), 2);
+        var gradePerCategory = (float)Math.Round((decimal)102 / (questionKeywords.Count + 2), 2);
 
         var words = sqlQuery.Split(QueryAnalyzeRemarks.SqlQuerySplitters, StringSplitOptions.RemoveEmptyEntries);
         var keywordPresence = new Dictionary<string, bool>();

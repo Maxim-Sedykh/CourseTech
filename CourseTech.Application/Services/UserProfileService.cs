@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.UserProfileQueries;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.UserProfileDtoQuery;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.UserProfile;

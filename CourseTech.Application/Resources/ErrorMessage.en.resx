@@ -219,4 +219,7 @@
   <data name="InvalidUserQuery" xml:space="preserve">
     <value>The result of your query does not match the task requirement.</value>
   </data>
+  <data name="InvalidQuestionType" xml:space="preserve">
+    <value>Invalid question type</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using CourseTech.DAL.Interceptors;
+using CourseTech.DAL.Views;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
@@ -14,6 +15,8 @@ namespace CourseTech.DAL;
 /// </summary>
 public class CourseDbContext : DbContext
 {
+    public DbSet<QuestionTypeGrade> QuestionTypeGrades { get; set; }
+
     public CourseDbContext(DbContextOptions options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

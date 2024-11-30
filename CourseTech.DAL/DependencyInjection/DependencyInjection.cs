@@ -1,12 +1,13 @@
 ﻿using CourseTech.DAL.Auth;
 using CourseTech.DAL.Cache;
+using CourseTech.DAL.DatabaseHelpers;
 using CourseTech.DAL.Graph;
 using CourseTech.DAL.Interceptors;
 using CourseTech.DAL.Repositories;
+using CourseTech.DAL.Views;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
-using CourseTech.Domain.Helpers;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Graph;
@@ -46,15 +47,16 @@ public static class DependencyInjection
 
         services.InitCaching(configuration);
 
-        services.InitRepositories();
+        services.InitEntityRepositories();
+        services.InitViewRepositories();
         services.InitUnitOfWork();
     }
-    
+
     /// <summary>
-    /// Внедрение зависимостей для репозиториев
+    /// Внедрение зависимостей репозиториев для сущностей
     /// </summary>
     /// <param name="services"></param>
-    private static void InitRepositories(this IServiceCollection services)
+    private static void InitEntityRepositories(this IServiceCollection services)
     {
         var types = new List<Type>()
         {
@@ -70,7 +72,7 @@ public static class DependencyInjection
             typeof(Lesson),
             typeof(LessonRecord),
             typeof(Keyword),
-            typeof(Question),
+            typeof(BaseQuestion),
             typeof(OpenQuestion),
             typeof(TestQuestion),
             typeof(PracticalQuestion)
@@ -82,6 +84,15 @@ public static class DependencyInjection
             var implementationType = typeof(BaseRepository<>).MakeGenericType(type);
             services.AddScoped(interfaceType, implementationType);
         }
+    }
+
+    /// <summary>
+    /// Внедрение зависимостей репозиториев для представлений
+    /// </summary>
+    /// <param name="services"></param>
+    private static void InitViewRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IViewRepository<QuestionTypeGrade>, ViewRepository<QuestionTypeGrade>>();
     }
 
     /// <summary>

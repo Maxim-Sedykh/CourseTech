@@ -14,6 +14,6 @@ namespace CourseTech.Domain.Interfaces.Dtos.Question
         /// <summary>
         /// Идентификатор вопроса.
         /// </summary>
-        public int QuestionId { get; set; }
+        int QuestionId { get; set; }
     }
 }

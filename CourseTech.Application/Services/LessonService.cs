@@ -1,6 +1,7 @@
 ﻿using CourseTech.Application.Commands.LessonCommands;
-using CourseTech.Application.Queries.LessonQueries;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
+using CourseTech.Application.Queries.Entities.LessonQueries;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;

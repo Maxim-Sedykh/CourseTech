@@ -1,14 +1,8 @@
-﻿using CourseTech.Application.Queries.LessonQueries;
-using CourseTech.Domain.Constants.Cache;
+﻿using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Enum;
 using CourseTech.UnitTests.Configurations;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CourseTech.UnitTests.Tests.ServiceTests.LessonServiceTests

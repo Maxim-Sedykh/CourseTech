@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Dto.Question;
+﻿using CourseTech.DAL.Views;
+using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain.Interfaces.Helpers
@@ -15,6 +16,6 @@ namespace CourseTech.Domain.Interfaces.Helpers
         /// <param name="userAnswers">Ответы пользователя.</param>
         /// <param name="userGrade">Итоговая оценка пользователя за пройденные вопросы.</param>
         /// <returns></returns>
-        Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestions, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade);
+        Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestions, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade, List<QuestionTypeGrade> questionTypeGrades);
     }
 }

@@ -29,7 +29,7 @@ public class Lesson : IEntityId<int>, IAuditable
     /// <summary>
     /// Вопросы практической части урока.
     /// </summary>
-    public List<Question> Questions { get; set; }
+    public List<BaseQuestion> Questions { get; set; }
 
     /// <summary>
     /// Записи прохождений пользователями урока.

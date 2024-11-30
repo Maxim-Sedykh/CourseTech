@@ -32,6 +32,8 @@ namespace CourseTech.Domain.Constants.Validation
 
         public const byte KeywordWordMaximumLength = 50;
 
+        public const byte QuestionTypeNameMaximumLength = 50;
+
         public const int OpenQuestionAnswerMaximumLength = 500;
 
         public const int QuestionDisplayQuestionMaximumLength = 500;

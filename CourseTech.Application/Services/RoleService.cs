@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Commands.RoleCommands;
-using CourseTech.Application.Queries.RoleQueries;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.RoleDtoQueries;
+using CourseTech.Application.Queries.Entities.RoleQueries;
+using CourseTech.Application.Queries.Entities.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Role;
@@ -13,6 +14,7 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
+using System.Data;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
@@ -137,7 +139,7 @@ namespace CourseTech.Application.Services
                 return BaseResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
             }
 
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
+            using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
             {
                 try
                 {

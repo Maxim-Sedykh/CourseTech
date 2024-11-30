@@ -1,5 +1,5 @@
 ﻿using CourseTech.Application.Commands.LessonCommands;
-using CourseTech.Application.Queries.LessonQueries;
+using CourseTech.Application.Queries.Entities.LessonQueries;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;

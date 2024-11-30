@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using CourseTech.UnitTests.Configurations;
-using CourseTech.Application.Queries.UserQueries;
 using Moq;
-using CourseTech.Application.Queries.LessonQueries;
 using CourseTech.Domain.Enum;
+using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
 
 namespace CourseTech.UnitTests.Tests.ServiceTests.LessonServiceTests
 {

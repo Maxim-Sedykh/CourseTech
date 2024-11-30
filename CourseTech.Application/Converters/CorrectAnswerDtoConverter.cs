@@ -52,16 +52,13 @@ namespace CourseTech.Application.Converters
             SerializeQueryResult(writer, correctAnswer.QueryResult, options);
         }
 
-        private void SerializeQueryResult(Utf8JsonWriter writer, DataTable dataTable, JsonSerializerOptions options)
+        private void SerializeQueryResult(Utf8JsonWriter writer, List<dynamic> dynamicLists, JsonSerializerOptions options)
         {
-            if (dataTable != null)
+            if (dynamicLists != null)
             {
-                var dataTableJsonFormat = dataTable.AsEnumerable()
-                    .Select(row => dataTable.Columns.Cast<DataColumn>()
-                    .ToDictionary(col => col.ColumnName, col => row[col]))
-                    .ToList();
+                var dynamicListJsonFormat = JsonSerializer.Serialize(dynamicLists, options);
 
-                JsonSerializer.Serialize(writer, dataTableJsonFormat, options);
+                JsonSerializer.Serialize(writer, dynamicListJsonFormat, options);
             }
             else
             {

@@ -1,25 +1,49 @@
-﻿using CourseTech.Domain.Comparers;
-using CourseTech.Domain.Constants.LearningProcess;
+﻿using CourseTech.Application.Resources;
+using CourseTech.DAL.Views;
+using CourseTech.Domain.Comparers;
 using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Pass;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Dto.TestVariant;
-using CourseTech.Domain.Helpers;
+using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
-using System.Data;
 using System.Text.RegularExpressions;
 
 namespace CourseTech.Application.Helpers
 {
     public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
     {
-        ///<inheritdoc/>
-        public async Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestionDtos, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade)
+        /// <summary>
+        /// Оценка за тестовое задание
+        /// </summary>
+        private float _testQuestionGrade;
+
+        /// <summary>
+        /// Оценка за задание открытого типа
+        /// </summary>
+        private float _openQuestionGrade;
+
+        /// <summary>
+        /// Оценка за задание практического типа
+        /// </summary>
+        private float _practicalQuestionGrade;
+
+        ///<inheritdoc/> 
+        public async Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestionDtos,
+            List<IUserAnswerDto> userAnswers,
+            UserGradeDto userGrade,
+            List<QuestionTypeGrade> questionTypeGrade)
         {
+            var questionTypeGrades = questionTypeGrade.ToDictionary(x => x.QuestionTypeName, x => x.Grade);
+
+            _testQuestionGrade = questionTypeGrades.GetValueOrDefault(nameof(TestQuestion), default);
+            _openQuestionGrade = questionTypeGrades.GetValueOrDefault(nameof(OpenQuestion), default);
+            _practicalQuestionGrade = questionTypeGrades.GetValueOrDefault(nameof(PracticalQuestion), default);
+
             var correctAnswers = new List<ICorrectAnswerDto>();
             userGrade.Grade = 0;
 
@@ -61,7 +85,7 @@ namespace CourseTech.Application.Helpers
                 PracticalQuestionUserAnswerDto practicalUserAnswer =>
                     await CheckPracticalQuestionAnswer(practicalUserAnswer, checkQuestionDto as PracticalQuestionCheckingDto, userGrade),
 
-                _ => throw new ArgumentException("Неизвестный тип ответа")
+                _ => throw new ArgumentException(ErrorMessage.InvalidQuestionType)
             };
         }
 
@@ -78,7 +102,7 @@ namespace CourseTech.Application.Helpers
 
             if (isCorrect)
             {
-                userGrade.Grade += QuestionGrades.TestQuestionGrade;
+                userGrade.Grade += _testQuestionGrade;
             }
 
             return new TestQuestionCorrectAnswerDto
@@ -109,7 +133,7 @@ namespace CourseTech.Application.Helpers
 
             if (correctAnswer.AnswerCorrectness)
             {
-                userGrade.Grade += QuestionGrades.OpenQuestionGrade;
+                userGrade.Grade += _openQuestionGrade;
             }
 
             return correctAnswer;
@@ -142,13 +166,13 @@ namespace CourseTech.Application.Helpers
                     correctAnswer.AnswerCorrectness = true;
                     correctAnswer.QueryResult = userResult;
 
-                    userGrade.Grade += QuestionGrades.PracticalQuestionGrade;
+                    userGrade.Grade += _practicalQuestionGrade;
                 }
                 else
                 {
                     correctAnswer.QueryResult = userResult;
 
-                    throw new InvalidOperationException("Результат вашего запроса не совпадает с требованием задания");// To Do убрать хард код
+                    throw new InvalidOperationException(ErrorMessage.InvalidUserQuery);
                 }
             }
             catch (Exception ex)
@@ -160,18 +184,6 @@ namespace CourseTech.Application.Helpers
             }
 
             return correctAnswer;
-        }
-        
-        /// <summary>
-        /// Равны ли 2 результата запрос в виде DataTable's.
-        /// </summary>
-        /// <param name="userResult"></param>
-        /// <param name="correctResult"></param>
-        /// <returns></returns>
-        private bool IsResultsEqual(DataTable userResult, DataTable correctResult)
-        {
-            var comparer = new DataTableComparer();
-            return comparer.Compare(userResult, correctResult) == 0;
         }
 
         /// <summary>

@@ -3,9 +3,9 @@ using CourseTech.Application.Commands.RoleCommands;
 using CourseTech.Application.Commands.UserCommand;
 using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Commands.UserTokenCommands;
-using CourseTech.Application.Queries.RoleQueries;
-using CourseTech.Application.Queries.UserQueries;
-using CourseTech.Application.Queries.UserTokenQueries;
+using CourseTech.Application.Queries.Entities.RoleQueries;
+using CourseTech.Application.Queries.Entities.UserQueries;
+using CourseTech.Application.Queries.Entities.UserTokenQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
@@ -20,6 +20,7 @@ using CourseTech.Domain.Result;
 using CourseTech.Domain.Settings;
 using MediatR;
 using Microsoft.Extensions.Options;
+using System.Data;
 using ILogger = Serilog.ILogger;
 using Roles = CourseTech.Domain.Constants.Roles;
 
@@ -84,7 +85,7 @@ namespace CourseTech.Application.Services
                 return BaseResult<UserDto>.Failure((int)validateRegisterResult.Error.Code, validateRegisterResult.Error.Message);
             }
 
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
+            using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
             {
                 try
                 {

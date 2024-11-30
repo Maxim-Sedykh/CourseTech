@@ -219,4 +219,7 @@
   <data name="InvalidUserQuery" xml:space="preserve">
     <value>Результат вашего запроса не совпадает с требованием задания</value>
   </data>
+  <data name="InvalidQuestionType" xml:space="preserve">
+    <value>Неизвестный тип вопроса</value>
+  </data>
 </root>

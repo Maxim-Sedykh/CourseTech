@@ -19,7 +19,7 @@ public static class MapperExtension
     /// <param name="question"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static IQuestionDto MapQuestion(this IMapper mapper, Question question)
+    public static IQuestionDto MapQuestion(this IMapper mapper, BaseQuestion question)
     {
         switch (question)
         {
@@ -41,7 +41,7 @@ public static class MapperExtension
     /// <param name="question"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static ICheckQuestionDto MapQuestionCheckings(this IMapper mapper, Question question)
+    public static ICheckQuestionDto MapQuestionCheckings(this IMapper mapper, BaseQuestion question)
     {
         switch (question)
         {

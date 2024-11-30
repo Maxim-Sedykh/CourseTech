@@ -1,11 +1,11 @@
 ﻿using CourseTech.Application.Commands.LessonRecordCommands;
 using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.LessonQueries;
-using CourseTech.Application.Queries.QuestionQueries;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.QuestionDtoQueries;
+using CourseTech.Application.Queries.Entities.LessonQueries;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.Queries.Views;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
-using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.Question;
@@ -76,7 +76,9 @@ namespace CourseTech.Application.Services
                 Grade = profile.CurrentGrade
             };
 
-            var correctAnswers = await questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, userGrade);
+            var questionTypeGrades = await mediator.Send(new GetQuestionTypeGradeQuery());
+
+            var correctAnswers = await questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, userGrade, questionTypeGrades);
 
             if (correctAnswers.Any())
             {

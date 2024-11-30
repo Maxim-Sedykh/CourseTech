@@ -1,7 +1,8 @@
 ﻿using CourseTech.Application.Commands.Reviews;
 using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.Reviews;
-using CourseTech.Application.Queries.UserQueries;
+using CourseTech.Application.Queries.Dtos.ReviewDtoQueries;
+using CourseTech.Application.Queries.Entities.ReviewQueries;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;

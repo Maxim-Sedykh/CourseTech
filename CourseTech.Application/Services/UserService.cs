@@ -1,8 +1,10 @@
 ﻿using CourseTech.Application.Commands.UserCommand;
 using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Commands.UserTokenCommands;
-using CourseTech.Application.Queries.UserQueries;
-using CourseTech.Application.Queries.UserTokenQueries;
+using CourseTech.Application.Queries.Dtos.UserDtoQueries;
+using CourseTech.Application.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.Queries.Entities.UserQueries;
+using CourseTech.Application.Queries.Entities.UserTokenQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
@@ -13,6 +15,7 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
+using System.Data;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
@@ -38,7 +41,7 @@ namespace CourseTech.Application.Services
 
             var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
 
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
+            using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
             {
                 try
                 {

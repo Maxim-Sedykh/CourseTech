@@ -14,16 +14,16 @@ namespace CourseTech.Domain.Interfaces.Dtos.Question
        /// <summary>
        /// Идентификатор вопроса.
        /// </summary>
-        public int Id { get; set; }
+        int Id { get; set; }
 
         /// <summary>
         /// Правильный ответ.
         /// </summary>
-        public string CorrectAnswer { get; set; }
+        string CorrectAnswer { get; set; }
 
         /// <summary>
         /// Правильный ли ответ у пользователя?
         /// </summary>
-        public bool AnswerCorrectness { get; set; }
+        bool AnswerCorrectness { get; set; }
     }
 }

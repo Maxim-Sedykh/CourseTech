@@ -1,8 +1,5 @@
-﻿using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
-using CourseTech.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 namespace CourseTech.Domain.Interfaces.Databases;
 
@@ -15,5 +12,5 @@ public interface IUnitOfWork : IStateSaveChanges
     /// Создание транзакции.
     /// </summary>
     /// <returns></returns>
-    Task<IDbContextTransaction> BeginTransactionAsync();
+    Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 }
