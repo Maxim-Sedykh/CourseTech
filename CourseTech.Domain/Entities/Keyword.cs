@@ -13,7 +13,7 @@ public class Keyword : IEntityId<int>
     /// <summary>
     /// Ключевое слово.
     /// </summary>
-    public string Word { get; set; }
+    public string Content { get; set; }
 
     /// <summary>
     /// Практические вопросы, в ответе на которых используются данное ключевое слово.

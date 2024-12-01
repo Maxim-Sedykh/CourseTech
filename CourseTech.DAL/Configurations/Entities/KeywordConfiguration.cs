@@ -14,6 +14,6 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
     {
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.Word).HasMaxLength(ValidationConstraints.KeywordWordMaximumLength).IsRequired();
+        builder.Property(x => x.Content).HasMaxLength(ValidationConstraints.KeywordWordMaximumLength).IsRequired();
     }
 }

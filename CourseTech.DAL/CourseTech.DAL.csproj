@@ -27,4 +27,8 @@
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DbViews\" />
+  </ItemGroup>
+
 </Project>

@@ -23,7 +23,7 @@ namespace CourseTech.UnitTests.Configurations
             LoggerMock = new Mock<ILogger>();
             LessonValidatorMock = new Mock<ILessonValidator>();
 
-            LessonService = new LessonService(CacheServiceMock.Object, MediatorMock.Object, LoggerMock.Object, LessonValidatorMock.Object, null);
+            LessonService = new LessonService(CacheServiceMock.Object, MediatorMock.Object, LoggerMock.Object, LessonValidatorMock.Object);
         }
 
         public void Dispose() { }
