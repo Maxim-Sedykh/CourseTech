@@ -19,6 +19,12 @@ public class PracticalQuestionQueryKeyword
     public int KeywordId { get; set; }
 
     /// <summary>
+    /// Если данное ключевое слово не указано в запросе пользователя,
+    /// то ему автоматически задача не засчитывается
+    /// </summary>
+    public bool IsStopWord { get; set; }
+
+    /// <summary>
     /// Ключевое слово.
     /// </summary>
     public Keyword Keyword { get; set; }

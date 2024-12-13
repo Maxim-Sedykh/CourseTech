@@ -19,9 +19,9 @@ using MediatR;
 namespace CourseTech.Application.Services
 {
     public class CourseResultService(
-        IMapper mapper,
         ICacheService cacheService,
         IMediator mediator,
+        IMapper mapper,
         ICourseResultValidator courseResultValidator) : ICourseResultService
     {
 

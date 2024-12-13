@@ -7,7 +7,7 @@ namespace CourseTech.WebApi.Attributes
     /// Атрибут, для того чтобы передавать массив ролей
     /// Если пользователь имеет хоть одну роль из списка, то валидация проходит
     /// </summary>
-    public class AllowRolesAttribute : Attribute, IAuthorizationFilter
+    public class AllowRolesAttribute : Attribute, IAsyncAuthorizationFilter
     {
         private readonly HashSet<string> _roles;
 
@@ -16,7 +16,7 @@ namespace CourseTech.WebApi.Attributes
             _roles = new HashSet<string>(roles);
         }
 
-        public void OnAuthorization(AuthorizationFilterContext context)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var user = context.HttpContext.User;
 
@@ -32,6 +32,8 @@ namespace CourseTech.WebApi.Attributes
             {
                 context.Result = new ForbidResult();
             }
+
+            await Task.CompletedTask;
         }
     }
 }

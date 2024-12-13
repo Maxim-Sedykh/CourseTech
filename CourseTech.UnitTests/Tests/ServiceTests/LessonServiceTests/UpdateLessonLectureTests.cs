@@ -3,7 +3,7 @@ using CourseTech.Application.Queries.Entities.LessonQueries;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations;
+using CourseTech.UnitTests.Configurations.Fixture;
 using Microsoft.AspNetCore.Html;
 using Moq;
 using System;

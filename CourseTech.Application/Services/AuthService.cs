@@ -27,12 +27,12 @@ using Roles = CourseTech.Domain.Constants.Roles;
 namespace CourseTech.Application.Services
 {
     public class AuthService(
+            IMediator mediator,
             IMapper mapper,
             ITokenService tokenService,
             IUnitOfWork unitOfWork,
             IAuthValidator authValidator,
             ICacheService cacheService,
-            IMediator mediator,
             ILogger logger,
             IOptions<JwtSettings> jwtOptions) : IAuthService
     {

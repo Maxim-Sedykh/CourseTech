@@ -1,6 +1,6 @@
 ﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations;
+using CourseTech.UnitTests.Configurations.Fixture;
 using Moq;
 using Xunit;
 

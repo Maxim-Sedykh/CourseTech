@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using CourseTech.UnitTests.Configurations;
 using Moq;
 using CourseTech.Domain.Enum;
 using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
 using CourseTech.Application.Queries.Entities.UserProfileQueries;
+using CourseTech.UnitTests.Configurations.Fixture;
 
 namespace CourseTech.UnitTests.Tests.ServiceTests.LessonServiceTests
 {

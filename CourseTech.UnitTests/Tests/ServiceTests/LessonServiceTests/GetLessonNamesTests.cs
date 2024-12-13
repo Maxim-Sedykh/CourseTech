@@ -1,7 +1,7 @@
 ﻿using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations;
+using CourseTech.UnitTests.Configurations.Fixture;
 using Moq;
 using Xunit;
 
@@ -15,7 +15,8 @@ namespace CourseTech.UnitTests.Tests.ServiceTests.LessonServiceTests
         public async Task GetLessonNamesAsync_LessonsNotExists_ReturnsFailure()
         {
             // Arrange
-            _fixture.CacheServiceMock.Setup(c => c.GetOrAddToCache(It.Is<string>(s => s == CacheKeys.LessonNames), It.IsAny<Func<Task<IEnumerable<LessonNameDto>>>>())).ReturnsAsync(Enumerable.Empty<LessonNameDto>());
+            _fixture.CacheServiceMock.Setup(c => c.GetOrAddToCache(It.Is<string>(s => s == CacheKeys.LessonNames),
+                It.IsAny<Func<Task<IEnumerable<LessonNameDto>>>>())).ReturnsAsync([]);
 
             // Act
             var result = await _fixture.LessonService.GetLessonNamesAsync();

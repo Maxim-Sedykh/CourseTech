@@ -17,9 +17,9 @@ using ILogger = Serilog.ILogger;
 namespace CourseTech.Application.Services;
 
 public class ReviewService(
-    IUnitOfWork unitOfWork,
     ICacheService cacheService,
     IMediator mediator,
+    IUnitOfWork unitOfWork,
     ILogger logger) : IReviewService
 {
     /// <inheritdoc/>

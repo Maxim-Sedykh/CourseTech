@@ -23,11 +23,11 @@ using ILogger = Serilog.ILogger;
 namespace CourseTech.Application.Services
 {
     public class QuestionService(
+        ICacheService cacheService,
+        IMediator mediator,
         IUnitOfWork unitOfWork,
         IQuestionAnswerChecker questionAnswerChecker,
         IQuestionValidator questionValidator,
-        ICacheService cacheService,
-        IMediator mediator,
         ILogger logger) : IQuestionService
     {
         /// <inheritdoc/>
