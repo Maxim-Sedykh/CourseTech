@@ -20,11 +20,11 @@ using ILogger = Serilog.ILogger;
 namespace CourseTech.Application.Services
 {
     public class RoleService(
+        ICacheService cacheService,
+        IMediator mediator,
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IRoleValidator roleValidator,
-        ICacheService cacheService,
-        IMediator mediator,
         ILogger logger) : IRoleService
     {
         /// <inheritdoc/>

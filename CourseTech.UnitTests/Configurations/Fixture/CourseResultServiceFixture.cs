@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Services;
 using CourseTech.Domain.Interfaces.Cache;
+using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
 using Moq;
@@ -14,7 +15,7 @@ namespace CourseTech.UnitTests.Configurations.Fixture
         public Mock<IMapper> MapperMock { get; }
         public Mock<ICourseResultValidator> CourseResultValidatorMock { get; }
 
-        public CourseResultService CourseResultService { get; }
+        public ICourseResultService CourseResultService { get; }
 
         public CourseResultServiceFixture()
         {

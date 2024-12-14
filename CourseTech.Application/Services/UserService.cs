@@ -21,9 +21,9 @@ using ILogger = Serilog.ILogger;
 namespace CourseTech.Application.Services
 {
     public class UserService(
-        IUnitOfWork unitOfWork,
         ICacheService cacheService,
         IMediator mediator,
+        IUnitOfWork unitOfWork,
         ILogger logger,
         IUserValidator userValidator) : IUserService
     {

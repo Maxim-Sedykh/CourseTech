@@ -2,15 +2,11 @@
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
+using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
 using Moq;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.UnitTests.Configurations.Fixture
 {
@@ -28,7 +24,7 @@ namespace CourseTech.UnitTests.Configurations.Fixture
 
         public Mock<ILogger> LoggerMock { get; }
 
-        public QuestionService QuestionService { get; }
+        public IQuestionService QuestionService { get; }
 
         public QuestionServiceFixture()
         {

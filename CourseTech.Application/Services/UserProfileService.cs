@@ -16,8 +16,8 @@ namespace CourseTech.Application.Services
 {
     public class UserProfileService(
         ICacheService cacheService,
-        IDatabase redisDatabase,
         IMediator mediator,
+        IDatabase redisDatabase,
         ILogger logger) : IUserProfileService
     {
         /// <inheritdoc/>

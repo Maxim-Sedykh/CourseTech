@@ -1,5 +1,6 @@
 ﻿using CourseTech.Application.Services;
 using CourseTech.Domain.Interfaces.Cache;
+using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
 using Moq;
@@ -17,7 +18,7 @@ namespace CourseTech.UnitTests.Configurations.Fixture
 
         public Mock<ILessonValidator> LessonValidatorMock { get; }
 
-        public LessonService LessonService { get; }
+        public ILessonService LessonService { get; }
 
         public LessonServiceFixture()
         {

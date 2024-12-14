@@ -1,13 +1,8 @@
 ﻿using CourseTech.Application.Services;
 using CourseTech.Domain.Interfaces.Cache;
-using CourseTech.Domain.Interfaces.Validators;
+using CourseTech.Domain.Interfaces.Services;
 using MediatR;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.UnitTests.Configurations.Fixture
 {
@@ -17,7 +12,7 @@ namespace CourseTech.UnitTests.Configurations.Fixture
 
         public Mock<IMediator> MediatorMock { get; }
 
-        public LessonRecordService LessonRecordService { get; }
+        public ILessonRecordService LessonRecordService { get; }
 
         public LessonRecordServiceFixture()
         {

@@ -24,7 +24,7 @@ namespace CourseTech.Application.Services
         private readonly string _issuer;
         private readonly string _audience;
 
-        public TokenService(IOptions<JwtSettings> options, IMediator mediator)
+        public TokenService(IMediator mediator, IOptions<JwtSettings> options)
         {
             _jwtKey = options.Value.JwtKey;
             _issuer = options.Value.Issuer;

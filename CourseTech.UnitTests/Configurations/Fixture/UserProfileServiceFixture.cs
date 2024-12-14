@@ -1,12 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Application.Services;
+using CourseTech.Domain.Interfaces.Cache;
+using CourseTech.Domain.Interfaces.Services;
+using MediatR;
+using Moq;
+using Serilog;
+using StackExchange.Redis;
 
 namespace CourseTech.UnitTests.Configurations.Fixture
 {
-    internal class UserProfileServiceFixture
+    public class UserProfileServiceFixture : IDisposable
     {
+        public Mock<ICacheService> CacheServiceMock { get; }
+
+        public Mock<IMediator> MediatorMock { get; }
+
+        public Mock<IDatabase> RedisDatabaseMock { get; }
+
+        public Mock<ILogger> LoggerMock { get; }
+
+        public IUserProfileService UserProfileService { get; }
+
+        public UserProfileServiceFixture()
+        {
+            CacheServiceMock = new Mock<ICacheService>();
+            MediatorMock = new Mock<IMediator>();
+            RedisDatabaseMock = new Mock<IDatabase>();
+            LoggerMock = new Mock<ILogger>();
+
+            UserProfileService = new UserProfileService(CacheServiceMock.Object,
+                MediatorMock.Object,
+                RedisDatabaseMock.Object,
+                LoggerMock.Object);
+        }
+
+        public void Dispose() { }
     }
 }
