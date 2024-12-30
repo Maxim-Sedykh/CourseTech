@@ -33,10 +33,8 @@
   <ItemGroup>
     <Folder Include="Tests\ServiceTests\AuthServiceTests\" />
     <Folder Include="Tests\ServiceTests\CourseResultServiceTests\" />
-    <Folder Include="Tests\ServiceTests\ReviewServiceTests\" />
     <Folder Include="Tests\ServiceTests\CacheServiceTests\" />
     <Folder Include="Tests\ServiceTests\LessonRecordServiceTests\" />
-    <Folder Include="Tests\ServiceTests\QuestionServiceTests\" />
     <Folder Include="Tests\ServiceTests\RoleServiceTests\" />
     <Folder Include="Tests\ServiceTests\TokenServiceTests\" />
     <Folder Include="Tests\ServiceTests\UserProfileServiceTests\" />
