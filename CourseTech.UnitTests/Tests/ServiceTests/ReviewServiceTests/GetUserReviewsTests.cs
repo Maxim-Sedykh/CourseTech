@@ -1,20 +1,13 @@
-﻿using CourseTech.Domain.Dto.Review;
+﻿using CourseTech.Application.Queries.Dtos.ReviewDtoQueries;
+using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Enum;
 using CourseTech.UnitTests.Configurations.Fixture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Sdk;
-using Xunit;
-using CourseTech.Application.Queries.Dtos.ReviewDtoQueries;
 using Moq;
-using CourseTech.Application.Queries.Entities.LessonQueries;
+using Xunit;
 
 namespace CourseTech.UnitTests.Tests.ServiceTests.ReviewServiceTests
 {
-    public class GetUserReviewsTests
+    public class GetUserReviewsTests : IClassFixture<ReviewServiceFixture>
     {
         private readonly ReviewServiceFixture _fixture;
 
