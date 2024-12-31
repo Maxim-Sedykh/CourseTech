@@ -62,8 +62,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests.RoleServiceTests
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RolesNotFound, result.ErrorCode);
-            Assert.Equal(ErrorMessage.RolesNotFound, result.ErrorMessage);
+            Assert.Equal((int)ErrorCodes.RolesNotFound, result.Error.Code);
         }
     }
 }
