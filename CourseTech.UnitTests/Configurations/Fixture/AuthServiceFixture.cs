@@ -15,14 +15,23 @@ namespace CourseTech.UnitTests.Configurations.Fixture
     public class AuthServiceFixture : IDisposable
     {
         public Mock<IMediator> MediatorMock { get; }
+
         public Mock<IMapper> MapperMock { get; }
+
         public Mock<ITokenService> TokenServiceMock { get; }
+
         public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+
         public Mock<IAuthValidator> AuthValidatorMock { get; }
+
         public Mock<ICacheService> CacheServiceMock { get; }
+
         public Mock<ILogger> LoggerMock { get; }
+
         public JwtSettings JwtSettings { get; }
+
         public IAuthService AuthService { get; }
+
 
         public AuthServiceFixture()
         {

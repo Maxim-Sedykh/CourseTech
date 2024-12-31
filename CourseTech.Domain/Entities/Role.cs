@@ -3,7 +3,7 @@
 namespace CourseTech.Domain.Entities;
 
 /// <summary>
-/// Роль.
+/// Роли, которые есть у пользователя
 /// </summary>
 public class Role : IEntityId<long>, IAuditable
 {

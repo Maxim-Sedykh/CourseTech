@@ -7,7 +7,7 @@
     /// <param name="Name"></param>
     public class RoleDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string RoleName { get; set; }
     }
