@@ -35,10 +35,8 @@
     <Folder Include="Tests\ServiceTests\AuthServiceTests\" />
     <Folder Include="Tests\ServiceTests\CourseResultServiceTests\" />
     <Folder Include="Tests\ServiceTests\CacheServiceTests\" />
-    <Folder Include="Tests\ServiceTests\LessonRecordServiceTests\" />
     <Folder Include="Tests\ServiceTests\TokenServiceTests\" />
     <Folder Include="Tests\ServiceTests\UserProfileServiceTests\" />
-    <Folder Include="Tests\ServiceTests\UserServiceTests\" />
     <Folder Include="Tests\QuestionHelpersTests\QuestionAnswerCheckerTests\" />
     <Folder Include="Tests\QuestionHelpersTests\QueryGraphAnalyzerTests\" />
     <Folder Include="Tests\QuestionHelpersTests\" />
