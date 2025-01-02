@@ -5,7 +5,7 @@ using CourseTech.UnitTests.Configurations.Fixture;
 using Moq;
 using Xunit;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests.LessonRecordServiceTests
+namespace CourseTech.UnitTests.Tests.ServiceTests
 {
     public class LessonRecordServiceTests : IClassFixture<LessonRecordServiceFixture>
     {
