@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Serilog;
 
-namespace CourseTech.UnitTests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture
 {
     public class AuthServiceFixture : IDisposable
     {

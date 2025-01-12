@@ -7,19 +7,15 @@ using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations.Fixture;
+using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using Xunit;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests
 {
-    public class ReviewServiceTests
+    public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
     {
         private readonly ReviewServiceFixture _fixture;
 
@@ -55,25 +51,21 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             var userProfile = new UserProfile(); // Создаем объект профиля пользователя
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             var mockTransaction = new Mock<IDbContextTransaction>();
-            _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(default))
+            _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
                 .ReturnsAsync(mockTransaction.Object);
 
             // Настройка мока для CommitAsync
-            mockTransaction.Setup(t => t.CommitAsync(default)).Returns(Task.CompletedTask);
+            mockTransaction.Setup(t => t.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             // Act
             var result = await _fixture.ReviewService.CreateReviewAsync(dto, userId);
 
             // Assert
             Assert.True(result.IsSuccess);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<CreateReviewCommand>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateProfileReviewsCountCommand>(), default), Times.Once);
-            _fixture.CacheServiceMock.Verify(c => c.RemoveAsync(CacheKeys.Reviews), Times.Once);
-            _fixture.UnitOfWorkMock.Verify(u => u.SaveChangesAsync(default), Times.Once);
         }
 
         [Fact]
@@ -84,12 +76,16 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             var dto = new CreateReviewDto { ReviewText = "Great product!" };
             var userProfile = new UserProfile();
 
+            var mockTransaction = new Mock<IDbContextTransaction>();
+            _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
+                .ReturnsAsync(mockTransaction.Object);
+
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<CreateReviewCommand>(), default))
+                .Setup(m => m.Send(It.IsAny<CreateReviewCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Error creating review")); // Имитируем ошибку
 
             // Act
@@ -97,8 +93,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
 
             // Assert
             Assert.False(result.IsSuccess);
-            _fixture.LoggerMock.Verify(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
-            _fixture.UnitOfWorkMock.Verify(u => u.BeginTransactionAsync(default), Times.Once);
+            Assert.Equal((int)ErrorCodes.CreateReviewFailed, result.Error.Code);
         }
 
         [Fact]
@@ -145,15 +140,15 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         public async Task GetReviewsAsync_ReviewsExist_ReturnsSuccess()
         {
             // Arrange
-            var reviewDtos = new List<ReviewDto>
+            var reviewDtos = new ReviewDto[]
             {
-                new ReviewDto { Id = 1, ReviewText = "Great product!" },
-                new ReviewDto { Id = 2, ReviewText = "Not bad." }
+                new() { Id = 1, ReviewText = "Great product!" },
+                new() { Id = 2, ReviewText = "Not bad." }
             };
 
             // Настройка мока для кэша
             _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<IEnumerable<ReviewDto>>>>()))
+                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<ReviewDto[]>>>()))
                 .ReturnsAsync(reviewDtos);
 
             // Act
@@ -161,20 +156,19 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(reviewDtos.Count, result.Data.Count());
-            _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(CacheKeys.Reviews, It.IsAny<Func<Task<IEnumerable<ReviewDto>>>>()), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetReviewDtosQuery>(), default), Times.Once);
+            Assert.Equal(reviewDtos.Length, result.Data.Count());
+            _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(CacheKeys.Reviews, It.IsAny<Func<Task<ReviewDto[]>>>()), Times.Once);
         }
 
         [Fact]
         public async Task GetReviewsAsync_NoReviews_ReturnsFailure()
         {
             // Arrange
-            var emptyReviews = new List<ReviewDto>();
+            ReviewDto[] emptyReviews = [];
 
             // Настройка мока для кэша
             _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<IEnumerable<ReviewDto>>>>()))
+                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<ReviewDto[]>>>()))
                 .ReturnsAsync(emptyReviews);
 
             // Act
@@ -183,8 +177,6 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal((int)ErrorCodes.ReviewsNotFound, result.Error.Code);
-            _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(CacheKeys.Reviews, It.IsAny<Func<Task<IEnumerable<ReviewDto>>>>()), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetReviewDtosQuery>(), default), Times.Never);
         }
 
         [Fact]

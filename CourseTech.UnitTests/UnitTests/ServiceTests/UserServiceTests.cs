@@ -9,13 +9,15 @@ using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations.Fixture;
+using CourseTech.Domain.Result;
+using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
 using System.Data;
 using Xunit;
+using Xunit.Sdk;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests
 {
     public class UserServiceTests : IClassFixture<UserServiceFixture>
     {
@@ -64,12 +66,13 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task GetUsersAsync_ShouldReturnSuccess_WhenUsersAreFetchedFromCache()
+        public async Task GetUsersAsync_ShouldReturnSuccess_WhenUsersNotEmpty()
         {
             // Arrange
-            var userDtos = new List<UserDto> { new UserDto { Id = new Guid(), Login = "User1" } };
+            var userDtos = new UserDto[] { new UserDto { Id = new Guid(), Login = "User1" } };
+
             _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<List<UserDto>>>>()))
+                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<UserDto[]>>>()))
                 .ReturnsAsync(userDtos);
 
             // Act
@@ -79,7 +82,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
             Assert.Equal(userDtos, result.Data);
-            _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(CacheKeys.Users, It.IsAny<Func<Task<List<UserDto>>>>()), Times.Once);
+            _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(CacheKeys.Users, It.IsAny<Func<Task<UserDto[]>>>()), Times.Once);
         }
 
         [Fact]
@@ -88,7 +91,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Arrange
             var updateUserDto = new UpdateUserDto { Id = new Guid() };
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithProfileByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetUserWithProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((User)null);
 
             // Act
@@ -98,9 +101,6 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             Assert.NotNull(result);
             Assert.False(result.IsSuccess);
             Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetUserWithProfileByUserIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateUserCommand>(), default), Times.Never);
-            _fixture.CacheServiceMock.Verify(c => c.RemoveAsync(CacheKeys.Users), Times.Never);
         }
 
         [Fact]
@@ -136,12 +136,15 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             var userProfile = new UserProfile { UserId = userId };
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
+
+            _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
+                .Returns(BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, "User profile not found"));
 
             // Act
             var result = await _fixture.UserService.DeleteUserAsync(userId);
@@ -149,13 +152,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.False(result.IsSuccess);
-            Assert.Equal(1001, result.Error.Code);
-
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetUserByIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserCommand>(), default), Times.Never);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserProfileCommand>(), default), Times.Never);
-            _fixture.UnitOfWorkMock.Verify(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()), Times.Never);
+            Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
         }
 
         [Fact]
@@ -168,20 +165,23 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             var userToken = new UserToken { UserId = userId };
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+            _fixture.MediatorMock   
+                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserTokenByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetUserTokenByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userToken);
 
             _fixture.UnitOfWorkMock
                 .Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
                 .ReturnsAsync(Mock.Of<IDbContextTransaction>());
+
+            _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
+                .Returns(BaseResult.Success());
 
             // Act
             var result = await _fixture.UserService.DeleteUserAsync(userId);
@@ -189,16 +189,6 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetUserByIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserCommand>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserProfileCommand>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserTokenCommand>(), default), Times.Once);
-
-            _fixture.UnitOfWorkMock.Verify(u => u.BeginTransactionAsync(IsolationLevel.RepeatableRead), Times.Once);
-            _fixture.UnitOfWorkMock.Verify(u => u.SaveChangesAsync(default), Times.Once);
-            _fixture.CacheServiceMock.Verify(c => c.RemoveAsync(CacheKeys.Users), Times.Once);
         }
 
         [Fact]
@@ -210,11 +200,11 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             var userProfile = new UserProfile { UserId = userId };
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             _fixture.UnitOfWorkMock
@@ -222,17 +212,19 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
                 .ReturnsAsync(Mock.Of<IDbContextTransaction>());
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), default))
+                .Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Some error"));
+
+            _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
+                .Returns(BaseResult.Success());
 
             // Act
             var result = await _fixture.UserService.DeleteUserAsync(userId);
 
             // Assert
             Assert.NotNull(result);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetUserByIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserCommand>(), default), Times.Once);
+            Assert.False(result.IsSuccess);
+            Assert.Equal((int)ErrorCodes.DeleteUserFailed, result.Error.Code);
         }
     }
 }

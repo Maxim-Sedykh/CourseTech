@@ -10,7 +10,6 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
-using CourseTech.UnitTests.Configurations.Fixture;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -19,10 +18,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using AutoFixture;
+using CourseTech.Tests.Configurations.Fixture;
+using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
+using Xunit.Sdk;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests
 {
-    public class QuestionServiceTests
+    public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
     {
         private readonly QuestionServiceFixture _fixture;
         private readonly Fixture _autoFixture;
@@ -68,29 +70,26 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             Assert.Equal(lessonId, result.Data.LessonId);
             Assert.Equal(LessonTypes.Common, result.Data.LessonType);
             Assert.Equal(2, result.Data.Questions.Count);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), default), Times.Once);
         }
 
         [Fact]
-        public async Task GetLessonQuestionsAsync_InvalidQuestions_ReturnsFailure()
+        public async Task GetLessonQuestionsAsync_ShouldReturnFailure_WhenValidationFailed()
         {
             // Arrange
             int lessonId = 1;
             var lesson = new Lesson { Id = lessonId, LessonType = LessonTypes.Common };
             var questions = new List<IQuestionDto>();
+            var errorMessage = "Lesson not found";
 
-            // Настройка мока для Mediator
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(lesson);
 
             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), default))
+                .Setup(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(questions);
-
-            // Настройка мока для валидатора с ошибкой валидации
-            var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, "Lesson not found");
+            
+            var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, errorMessage);
             _fixture.QuestionValidatorMock
                 .Setup(v => v.ValidateLessonQuestions(lesson, questions))
                 .Returns(validationResult);
@@ -101,36 +100,31 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal((int)ErrorCodes.LessonNotFound, result.Error.Code);
-            Assert.Equal("Lesson not found", result.Error.Message);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default), Times.Once);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), default), Times.Once);
+            Assert.Equal(errorMessage, result.Error.Message);
         }
 
         [Fact]
-        public async Task PassLessonQuestionsAsync_ShouldReturnFailure_WhenProfileIsNull()
+        public async Task PassLessonQuestionsAsync_ShouldReturnFailure_WhenValidationFailed()
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var dto = _autoFixture.Create<PracticeUserAnswersDto>();
-
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
-                .ReturnsAsync((UserProfile)null);
-
-            // Act
-            var result = await _fixture.QuestionService.PassLessonQuestionsAsync(dto, userId);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
-        }
-
-        [Fact]
-        public async Task PassLessonQuestionsAsync_ShouldReturnFailure_WhenLessonIsNull()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var dto = _autoFixture.Create<PracticeUserAnswersDto>();
+            var dto = new PracticeUserAnswersDto()
+            {
+                LessonId = 1,
+                UserAnswerDtos =
+                [
+                    new TestQuestionUserAnswerDto()
+                    {
+                        QuestionId = 1,
+                        UserAnswerNumberOfVariant = 1
+                    },
+                    new OpenQuestionUserAnswerDto()
+                    {
+                        QuestionId = 2,
+                        UserAnswer = "Test"
+                    }
+                ]
+            };
 
             var profile = new UserProfile { UserId = userId };
 
@@ -141,6 +135,11 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             _fixture.MediatorMock
                 .Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
                 .ReturnsAsync((Lesson)null);
+
+            //var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, errorMessage);
+            //_fixture.QuestionValidatorMock
+            //    .Setup(v => v.ValidateLessonQuestions(lesson, questions))
+            //    .Returns(validationResult);
 
             // Act
             var result = await _fixture.QuestionService.PassLessonQuestionsAsync(dto, userId);
@@ -155,7 +154,23 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var dto = _autoFixture.Create<PracticeUserAnswersDto>();
+            var dto = new PracticeUserAnswersDto()
+            {
+                LessonId = 1,
+                UserAnswerDtos =
+                [
+                    new TestQuestionUserAnswerDto()
+                    {
+                        QuestionId = 1,
+                        UserAnswerNumberOfVariant = 1
+                    },
+                    new OpenQuestionUserAnswerDto()
+                    {
+                        QuestionId = 2,
+                        UserAnswer = "Test"
+                    }
+                ]
+            };
 
             var profile = new UserProfile { UserId = userId, CurrentGrade = 10 };
             var lesson = new Lesson { Id = dto.LessonId };

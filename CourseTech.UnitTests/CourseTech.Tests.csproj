@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -29,17 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CourseTech.Application\CourseTech.Application.csproj" />
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Tests\ServiceTests\AuthServiceTests\" />
-    <Folder Include="Tests\ServiceTests\CourseResultServiceTests\" />
-    <Folder Include="Tests\ServiceTests\CacheServiceTests\" />
-    <Folder Include="Tests\ServiceTests\TokenServiceTests\" />
-    <Folder Include="Tests\ServiceTests\UserProfileServiceTests\" />
-    <Folder Include="Tests\QuestionHelpersTests\QuestionAnswerCheckerTests\" />
-    <Folder Include="Tests\QuestionHelpersTests\QueryGraphAnalyzerTests\" />
-    <Folder Include="Tests\QuestionHelpersTests\" />
   </ItemGroup>
 
 </Project>

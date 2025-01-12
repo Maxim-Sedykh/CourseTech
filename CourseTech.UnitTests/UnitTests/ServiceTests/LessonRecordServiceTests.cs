@@ -1,11 +1,11 @@
 ﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;
-using CourseTech.UnitTests.Configurations.Fixture;
+using CourseTech.Tests.Configurations.Fixture;
 using Moq;
 using Xunit;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests
 {
     public class LessonRecordServiceTests : IClassFixture<LessonRecordServiceFixture>
     {
@@ -21,14 +21,14 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var lessonRecords = new List<LessonRecordDto>
+            var lessonRecords = new LessonRecordDto[]
             {
                 new LessonRecordDto { LessonName = "test1" },
                 new LessonRecordDto { LessonName = "test2" }
             };
 
             _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<List<LessonRecordDto>>>>()))
+                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<LessonRecordDto[]>>>()))
                 .ReturnsAsync(lessonRecords);
 
             // Act
@@ -37,7 +37,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
             // Assert
             _fixture.CacheServiceMock.Verify(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<LessonRecordDto[]>>>()));
             Assert.True(result.IsSuccess);
-            Assert.Equal(lessonRecords.Count, result.Data.ToList().Count);
+            Assert.Equal(lessonRecords.Length, result.Data.ToList().Count);
         }
 
         [Fact]
@@ -45,10 +45,10 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var emptyRecords = new List<LessonRecordDto>();
+            LessonRecordDto[] emptyRecords = [];
 
             _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<List<LessonRecordDto>>>>()))
+                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<LessonRecordDto[]>>>()))
                 .ReturnsAsync(emptyRecords);
 
             // Act

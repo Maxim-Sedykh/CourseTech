@@ -4,7 +4,7 @@ using CourseTech.Domain.Interfaces.Services;
 using MediatR;
 using Moq;
 
-namespace CourseTech.UnitTests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture
 {
     public class LessonRecordServiceFixture : IDisposable
     {

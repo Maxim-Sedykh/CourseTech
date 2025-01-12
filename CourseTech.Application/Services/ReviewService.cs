@@ -50,6 +50,8 @@ public class ReviewService(
                 logger.Error(ex, ex.Message);
 
                 await transaction.RollbackAsync();
+
+                return BaseResult.Failure((int)ErrorCodes.CreateReviewFailed, ErrorMessage.CreateReviewFailed);
             }
         }
 

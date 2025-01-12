@@ -17,8 +17,8 @@ namespace CourseTech.Domain.Interfaces.Validators
         /// Валидация удаления пользователя
         /// </summary>
         /// <param name="userProfile"></param>
-        /// <param name="lesson"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        BaseResult ValidateDeletingUser(UserProfile userProfile, User lesson);
+        BaseResult ValidateDeletingUser(UserProfile userProfile, User user);
     }
 }

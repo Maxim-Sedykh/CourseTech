@@ -6,7 +6,7 @@ using Moq;
 using Serilog;
 using StackExchange.Redis;
 
-namespace CourseTech.UnitTests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture
 {
     public class UserProfileServiceFixture : IDisposable
     {

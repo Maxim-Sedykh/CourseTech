@@ -6,7 +6,7 @@ using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
 using Moq;
 
-namespace CourseTech.UnitTests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture
 {
     public class CourseResultServiceFixture : IDisposable
     {

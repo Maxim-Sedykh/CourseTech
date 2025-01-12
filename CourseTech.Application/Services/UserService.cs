@@ -64,6 +64,8 @@ namespace CourseTech.Application.Services
                     logger.Error(ex, ex.Message);
 
                     await transaction.RollbackAsync();
+
+                    return BaseResult.Failure((int)ErrorCodes.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
                 }
             }
 

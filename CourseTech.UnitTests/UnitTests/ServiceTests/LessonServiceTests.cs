@@ -8,12 +8,12 @@ using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
-using CourseTech.UnitTests.Configurations.Fixture;
+using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.AspNetCore.Html;
 using Moq;
 using Xunit;
 
-namespace CourseTech.UnitTests.Tests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests
 {
     public class LessonServiceTests : IClassFixture<LessonServiceFixture>
     {
@@ -41,7 +41,7 @@ namespace CourseTech.UnitTests.Tests.ServiceTests
         {
             // Arrange
             var lessonId = 1;
-            _fixture.CacheServiceMock.Setup(cs => cs.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<LessonLectureDto?>>>()))
+            _fixture.CacheServiceMock.Setup(cs => cs.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<LessonLectureDto>>>()))
                 .ReturnsAsync(null as LessonLectureDto);
 
             // Act

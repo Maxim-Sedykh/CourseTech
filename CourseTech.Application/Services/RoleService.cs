@@ -157,6 +157,8 @@ namespace CourseTech.Application.Services
                     logger.Error(ex, ex.Message);
 
                     await transaction.RollbackAsync();
+
+                    return BaseResult<UserRoleDto>.Failure((int)ErrorCodes.UpdateRoleForUserFailed, ErrorMessage.UpdateRoleForUserFailed);
                 }
             }
 
