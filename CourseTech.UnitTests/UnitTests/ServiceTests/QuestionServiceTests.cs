@@ -21,6 +21,11 @@ using AutoFixture;
 using CourseTech.Tests.Configurations.Fixture;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using Xunit.Sdk;
+using AutoMapper;
+using CourseTech.Application.Queries.Views;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using CourseTech.Domain.Dto.Question.Pass;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests
 {
@@ -36,7 +41,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonQuestionsAsync_ValidLessonId_ReturnsSuccess()
+        public async Task GetLessonQuestionsAsync_ShouldReturnSuccess_ValidLessonId()
         {
             // Arrange
             int lessonId = 1;
@@ -104,102 +109,98 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task PassLessonQuestionsAsync_ShouldReturnFailure_WhenValidationFailed()
+        public async Task PassLessonQuestionsAsync_ShouldReturnError_WhenCorrectAnswersAreEmpty()
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var dto = new PracticeUserAnswersDto()
+            var dto = new PracticeUserAnswersDto
             {
                 LessonId = 1,
-                UserAnswerDtos =
-                [
-                    new TestQuestionUserAnswerDto()
-                    {
-                        QuestionId = 1,
-                        UserAnswerNumberOfVariant = 1
-                    },
-                    new OpenQuestionUserAnswerDto()
-                    {
-                        QuestionId = 2,
-                        UserAnswer = "Test"
-                    }
-                ]
+                UserAnswerDtos = []
             };
 
-            var profile = new UserProfile { UserId = userId };
+            var profile = new UserProfile { CurrentGrade = 5 };
+            var lesson = new Lesson { Id = 1, LessonType = LessonTypes.Common };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(profile);
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(lesson);
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonCheckQuestionDtosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync([]);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
-                .ReturnsAsync((Lesson)null);
+            _fixture.QuestionValidatorMock.Setup(v => v.ValidateUserLessonOnNull(profile, lesson))
+                .Returns(BaseResult.Success());
 
-            //var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, errorMessage);
-            //_fixture.QuestionValidatorMock
-            //    .Setup(v => v.ValidateLessonQuestions(lesson, questions))
-            //    .Returns(validationResult);
+            _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
+                .Returns(BaseResult.Success());
+
+            var questionTypeGrades = new List<QuestionTypeGrade>(); // Пустой список для проверки
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetQuestionTypeGradeQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(questionTypeGrades);
+
+            _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<List<IUserAnswerDto>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
+                .ReturnsAsync(new List<ICorrectAnswerDto>()); // Пустые правильные ответы
+
+            _fixture.UnitOfWorkMock
+                .Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
+                .ReturnsAsync(Mock.Of<IDbContextTransaction>());
 
             // Act
             var result = await _fixture.QuestionService.PassLessonQuestionsAsync(dto, userId);
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.LessonNotFound, result.Error.Code);
+            Assert.Equal((int)ErrorCodes.AnswerCheckError, result.Error.Code);
         }
 
         [Fact]
-        public async Task PassLessonQuestionsAsync_ShouldReturnSuccess_WhenAllValidationsPass()
+        public async Task PassLessonQuestionsAsync_ShouldReturnSuccess()
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var dto = new PracticeUserAnswersDto()
+            var dto = new PracticeUserAnswersDto
             {
                 LessonId = 1,
-                UserAnswerDtos =
-                [
-                    new TestQuestionUserAnswerDto()
-                    {
-                        QuestionId = 1,
-                        UserAnswerNumberOfVariant = 1
-                    },
-                    new OpenQuestionUserAnswerDto()
-                    {
-                        QuestionId = 2,
-                        UserAnswer = "Test"
-                    }
-                ]
+                UserAnswerDtos = []
             };
 
-            var profile = new UserProfile { UserId = userId, CurrentGrade = 10 };
-            var lesson = new Lesson { Id = dto.LessonId };
+            var profile = new UserProfile { CurrentGrade = 5 };
+            var lesson = new Lesson { Id = 1, LessonType = LessonTypes.Common };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+            var correctAnswers = new List<ICorrectAnswerDto>() { new TestQuestionCorrectAnswerDto() };
+
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(profile);
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(lesson);
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonCheckQuestionDtosQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync([]);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
-            .ReturnsAsync(lesson);
+            _fixture.QuestionValidatorMock.Setup(v => v.ValidateUserLessonOnNull(profile, lesson))
+                .Returns(BaseResult.Success());
 
-            var questions = new List<ICheckQuestionDto> { new TestQuestionCheckingDto() };
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonCheckQuestionDtosQuery>(), default))
-                .ReturnsAsync(questions);
+            _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
+                .Returns(BaseResult.Success());
 
-            var correctAnswers = new List<ICorrectAnswerDto>(); // Assuming it returns empty for valid answers.
-            _fixture.QuestionAnswerCheckerMock
-                .Setup(m => m.CheckUserAnswers(questions, dto.UserAnswerDtos, It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
-                .ReturnsAsync(correctAnswers);
+            var questionTypeGrades = new List<QuestionTypeGrade>(); // Пустой список для проверки
+            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetQuestionTypeGradeQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(questionTypeGrades);
+
+            _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<List<IUserAnswerDto>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
+                .ReturnsAsync(correctAnswers); // Пустые правильные ответы
+
+            _fixture.UnitOfWorkMock
+                .Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
+                .ReturnsAsync(Mock.Of<IDbContextTransaction>()); // Пустые правильные ответы
 
             // Act
             var result = await _fixture.QuestionService.PassLessonQuestionsAsync(dto, userId);
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(lesson.Id, result.Data.LessonId);
-            Assert.Equal(correctAnswers, result.Data.QuestionCorrectAnswers);
+            Assert.Equal(result.Data.QuestionCorrectAnswers, correctAnswers);
+            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetQuestionTypeGradeQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

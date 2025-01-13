@@ -20,7 +20,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         private readonly LessonServiceFixture _fixture = new();
 
         [Fact]
-        public async Task GetLessonLectureAsync_LessonExists_ReturnsSuccessResult()
+        public async Task GetLessonLectureAsync_ShouldReturnSuccess_LessonExists()
         {
             // Arrange
             var lessonId = 1;
@@ -37,7 +37,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonLectureAsync_LessonDoesNotExist_ReturnsFailureResult()
+        public async Task GetLessonLectureAsync_ShouldReturnFailure_LessonDoesNotExist()
         {
             // Arrange
             var lessonId = 1;
@@ -53,7 +53,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonNamesAsync_LessonsNotExists_ReturnsFailure()
+        public async Task GetLessonNamesAsync_ShouldReturnFailure_LessonsNotExists()
         {
             // Arrange
             _fixture.CacheServiceMock.Setup(c => c.GetOrAddToCache(It.Is<string>(s => s == CacheKeys.LessonNames),
@@ -68,7 +68,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonNamesAsync_LessonsExists_ReturnsSuccess()
+        public async Task GetLessonNamesAsync_ShouldReturnSuccess_LessonsExists()
         {
             // Arrange
             LessonNameDto[] lessonNames = [new LessonNameDto() { Name = "Название урока" }];
@@ -115,7 +115,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonsForUserAsync_InvalidUserProfile_ReturnsFailure()
+        public async Task GetLessonsForUserAsync_ShouldReturnFailure_InvalidUserProfile()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -144,7 +144,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetLessonsForUserAsync_LessonsNotExists_ReturnsFailure()
+        public async Task GetLessonsForUserAsync_ShouldReturnFailure_LessonsNotExists()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -170,7 +170,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateLessonLectureAsync_LessonExists_UpdatesSuccessfully()
+        public async Task UpdateLessonLectureAsync_ShouldReturnASuccess_LessonExists()
         {
             // Arrange
             var dto = new LessonLectureDto { Id = 1, Name = "Updated Lesson" };
@@ -193,7 +193,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
 
 
         [Fact]
-        public async Task UpdateLessonLectureAsync_LessonDoesNotExist_ReturnsFailure()
+        public async Task UpdateLessonLectureAsync_ShouldReturnFailure_LessonDoesNotExist()
         {
             // Arrange
             var dto = new LessonLectureDto { Id = 1, Name = "Updated Lesson" };
@@ -211,7 +211,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateLessonLectureAsync_NoChanges_ReturnsFailure()
+        public async Task UpdateLessonLectureAsync_ShouldReturnFailure_NoChanges()
         {
             // Arrange
             string testMarkup = "<div>test</div>";

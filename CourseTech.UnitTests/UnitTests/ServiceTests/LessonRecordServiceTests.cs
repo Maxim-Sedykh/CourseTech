@@ -17,7 +17,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetUserLessonRecordsAsync_ReturnsSuccess_WhenRecordsFound()
+        public async Task GetUserLessonRecordsAsync_ShouldReturnSuccess_WhenRecordsFound()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -41,7 +41,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
         }
 
         [Fact]
-        public async Task GetUserLessonRecordsAsync_ReturnsFailure_WhenNoRecordsFound()
+        public async Task GetUserLessonRecordsAsync_ShouldReturnFailure_WhenNoRecordsFound()
         {
             // Arrange
             var userId = Guid.NewGuid();

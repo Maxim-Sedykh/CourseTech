@@ -80,7 +80,7 @@ namespace CourseTech.Application.Services
 
             var correctAnswers = await questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, userGrade, questionTypeGrades);
 
-            if (correctAnswers.Any())
+            if (!correctAnswers.Any())
             {
                 return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
             }
