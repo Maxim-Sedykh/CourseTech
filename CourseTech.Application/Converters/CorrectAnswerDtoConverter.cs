@@ -45,8 +45,8 @@ namespace CourseTech.Application.Converters
             writer.WritePropertyName(nameof(correctAnswer.QuestionUserGrade));
             JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
 
-            writer.WritePropertyName(nameof(correctAnswer.Remarks));
-            JsonSerializer.Serialize(writer, correctAnswer.Remarks, options);
+            writer.WritePropertyName(nameof(correctAnswer.UserQueryAnalys));
+            JsonSerializer.Serialize(writer, correctAnswer.UserQueryAnalys, options);
 
             writer.WritePropertyName(nameof(correctAnswer.QueryResult));
             SerializeQueryResult(writer, correctAnswer.QueryResult, options);

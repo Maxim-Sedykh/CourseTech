@@ -1,4 +1,5 @@
 ﻿using CourseTech.Application.DependencyInjection;
+using CourseTech.ChatGptApi.DependencyInjection;
 using CourseTech.DAL.DependencyInjection;
 using CourseTech.DAL.Extensions;
 using CourseTech.Domain.Settings;
@@ -11,7 +12,7 @@ namespace CourseTech.WebApi;
 public static class Startup
 {
     /// <summary>
-    /// Настройка сервисов
+    /// Настройка сервисов.
     /// </summary>
     /// <param name="services"></param>
     /// <param name="builder"></param>
@@ -19,6 +20,7 @@ public static class Startup
     {
         services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
         services.Configure<RedisSettings>(builder.Configuration.GetSection(nameof(RedisSettings)));
+        services.Configure<ChatGptSettings>(builder.Configuration.GetSection(nameof(ChatGptSettings)));
 
         services.AddEndpointsApiExplorer();
         services.UseHttpClientMetrics();
@@ -32,6 +34,8 @@ public static class Startup
 
         services.AddDataAccessLayer(builder.Configuration);
         services.AddApplication();
+
+        services.AddChatGpt();
     }
 
     /// <summary>

@@ -21,7 +21,7 @@ namespace CourseTech.Domain.Dto.Question.Pass
 
         public List<dynamic> QueryResult { get; set; }
 
-        public List<string> Remarks { get; set; }
+        public string UserQueryAnalys { get; set; }
 
         public bool AnswerCorrectness { get; set; }
     }

@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CourseTech.ChatGptServices\CourseTech.ChatGptApi.csproj" />
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
   </ItemGroup>
 

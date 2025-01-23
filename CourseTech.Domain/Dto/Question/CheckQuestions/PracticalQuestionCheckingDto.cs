@@ -15,7 +15,5 @@ namespace CourseTech.Domain.Dto.Question.CheckQuestions
         public int QuestionId { get; set; }
 
         public string CorrectQueryCode { get; set; }
-
-        public List<string> PracticalQuestionKeywords { get; set; }
     }
 }

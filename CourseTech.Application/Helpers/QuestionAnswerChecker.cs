@@ -9,13 +9,13 @@ using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Dtos.Question;
-using CourseTech.Domain.Interfaces.Graph;
 using CourseTech.Domain.Interfaces.Helpers;
+using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
 using System.Text.RegularExpressions;
 
 namespace CourseTech.Application.Helpers
 {
-    public class QuestionAnswerChecker(IQueryGraphAnalyzer queryGraphAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
+    public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
     {
         /// <summary>
         /// Оценка за тестовое задание
@@ -96,7 +96,7 @@ namespace CourseTech.Application.Helpers
         /// <param name="correctTestVariant"></param>
         /// <param name="userGrade"></param>
         /// <returns></returns>
-        private ICorrectAnswerDto CheckTestQuestionAnswer(TestQuestionUserAnswerDto userAnswer, TestVariantDto correctTestVariant, UserGradeDto userGrade)
+        private TestQuestionCorrectAnswerDto CheckTestQuestionAnswer(TestQuestionUserAnswerDto userAnswer, TestVariantDto correctTestVariant, UserGradeDto userGrade)
         {
             bool isCorrect = userAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber;
 
@@ -120,7 +120,7 @@ namespace CourseTech.Application.Helpers
         /// <param name="openQuestionAnswerVariants"></param>
         /// <param name="userGrade"></param>
         /// <returns></returns>
-        private ICorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, UserGradeDto userGrade)
+        private OpenQuestionCorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, UserGradeDto userGrade)
         {
             string normalizedUserAnswer = Regex.Replace(userAnswer.UserAnswer.ToLower().Trim(), @"s+", " ");
 
@@ -147,7 +147,7 @@ namespace CourseTech.Application.Helpers
         /// <param name="userGrade"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        private async Task<ICorrectAnswerDto> CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, UserGradeDto userGrade)
+        private async Task<PracticalQuestionCorrectAnswerDto> CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, UserGradeDto userGrade)
         {
             var correctAnswer = new PracticalQuestionCorrectAnswerDto
             {
@@ -155,6 +155,8 @@ namespace CourseTech.Application.Helpers
                 CorrectAnswer = questionChecking.CorrectQueryCode,
                 AnswerCorrectness = false
             };
+
+            userAnswer.UserCodeAnswer = Regex.Replace(userAnswer.UserCodeAnswer.ToLower().Trim(), @"s+", " ");
 
             try
             {
@@ -177,26 +179,15 @@ namespace CourseTech.Application.Helpers
             }
             catch (Exception ex)
             {
-                var remarks = GetRemarks(userAnswer.UserCodeAnswer.ToLower(), questionChecking.PracticalQuestionKeywords, out float practicalQuestionGrade);
-                remarks.Insert(0, ex.Message);
-                correctAnswer.QuestionUserGrade = practicalQuestionGrade;
-                userGrade.Grade += practicalQuestionGrade;
+                var userQueryChatGptAnalysDto = await chatGptQueryAnalyzer.AnalyzeUserQuery(ex.Message, userAnswer.UserCodeAnswer, questionChecking.CorrectQueryCode, _practicalQuestionGrade);
+
+                correctAnswer.QuestionUserGrade = userQueryChatGptAnalysDto.UserQueryGrade;
+                correctAnswer.UserQueryAnalys = userQueryChatGptAnalysDto.UserQueryAnalys;
+
+                userGrade.Grade += userQueryChatGptAnalysDto.UserQueryGrade;
             }
 
             return correctAnswer;
-        }
-
-        /// <summary>
-        /// Получить замечания для пользователя, и его оценку за ответ, исходя из его запроса.
-        /// </summary>
-        /// <param name="userCodeAnswer"></param>
-        /// <param name="keywords"></param>
-        /// <param name="practicalQuestionGrade"></param>
-        /// <returns></returns>
-        private List<string> GetRemarks(string userCodeAnswer, List<string> keywords, out float practicalQuestionGrade)
-        {
-            queryGraphAnalyzer.CalculateUserQueryScore(userCodeAnswer, keywords, out practicalQuestionGrade, out List<string> remarks);
-            return remarks;
         }
     }
 }

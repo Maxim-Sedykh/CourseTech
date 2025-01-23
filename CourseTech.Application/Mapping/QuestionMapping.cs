@@ -48,11 +48,6 @@ namespace CourseTech.Application.Mapping
                 .ForMember(dest => dest.OpenQuestionsAnswers, opt => opt.MapFrom(src => src.AnswerVariants.Select(x => x.AnswerText)));
 
             CreateMap<PracticalQuestion, PracticalQuestionDto>();
-
-            CreateMap<PracticalQuestion, PracticalQuestionCheckingDto>()
-                .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.PracticalQuestionKeywords, opt => 
-                opt.MapFrom(src => src.PracticalQuestionQueryKeywords.Select(x => x.Keyword.Content).ToList()));
         }
     }
 }
