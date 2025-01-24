@@ -147,7 +147,9 @@ namespace CourseTech.Application.Helpers
         /// <param name="userGrade"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        private async Task<PracticalQuestionCorrectAnswerDto> CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer, PracticalQuestionCheckingDto questionChecking, UserGradeDto userGrade)
+        private async Task<PracticalQuestionCorrectAnswerDto> CheckPracticalQuestionAnswer(PracticalQuestionUserAnswerDto userAnswer,
+            PracticalQuestionCheckingDto questionChecking,
+            UserGradeDto userGrade)
         {
             var correctAnswer = new PracticalQuestionCorrectAnswerDto
             {
@@ -156,7 +158,7 @@ namespace CourseTech.Application.Helpers
                 AnswerCorrectness = false
             };
 
-            userAnswer.UserCodeAnswer = Regex.Replace(userAnswer.UserCodeAnswer.ToLower().Trim(), @"s+", " ");
+            userAnswer.UserCodeAnswer = userAnswer.UserCodeAnswer.ToLower().Trim();
 
             try
             {

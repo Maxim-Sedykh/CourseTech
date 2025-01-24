@@ -2,12 +2,12 @@
 using CourseTech.ChatGptApi.Interfaces;
 using CourseTech.ChatGptApi.Models.RequestModels;
 using CourseTech.Domain.Settings;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json;
 
 namespace CourseTech.ChatGptApi
 {
@@ -27,16 +27,18 @@ namespace CourseTech.ChatGptApi
 
         public async Task<string> SendMessageToChatGPT(string prompt)
         {
-            var requestBody = new ChatGptRequest
+            var requestBody = new
             {
-                Model = _chatGptSettings.ChatGptModel,
-                Messages =
-                [
-                    new Message { Role = _chatGptSettings.Role, Content = prompt }
-                ]
+                model = _chatGptSettings.ChatGptModel,
+                messages = new[]
+                {
+                    new { role = "user", content = prompt }
+                }
             };
 
-            var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, MediaTypeNames.Application.Json);
+
+            string json = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = null;
             try
@@ -63,7 +65,7 @@ namespace CourseTech.ChatGptApi
 
         private string ParseChatGptResponse(string responseBody)
         {
-            using JsonDocument jsonDocument = JsonDocument.Parse(responseBody);
+            using System.Text.Json.JsonDocument jsonDocument = System.Text.Json.JsonDocument.Parse(responseBody);
 
             return jsonDocument.RootElement.GetProperty(ChatGptReponsePropertyConstants.FirstLevelResponseProperty)[0]
                 .GetProperty(ChatGptReponsePropertyConstants.SecondLevelResponseProperty)
