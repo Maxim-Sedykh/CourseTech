@@ -1,11 +1,10 @@
 ﻿using CourseTech.ChatGptApi.Constants;
 using CourseTech.ChatGptApi.Interfaces;
-using CourseTech.ChatGptApi.Models.RequestModels;
 using CourseTech.Domain.Settings;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
 
@@ -36,7 +35,6 @@ namespace CourseTech.ChatGptApi
                 }
             };
 
-
             string json = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -65,11 +63,12 @@ namespace CourseTech.ChatGptApi
 
         private string ParseChatGptResponse(string responseBody)
         {
-            using System.Text.Json.JsonDocument jsonDocument = System.Text.Json.JsonDocument.Parse(responseBody);
+            JObject jsonObject = JObject.Parse(responseBody);
 
-            return jsonDocument.RootElement.GetProperty(ChatGptReponsePropertyConstants.FirstLevelResponseProperty)[0]
-                .GetProperty(ChatGptReponsePropertyConstants.SecondLevelResponseProperty)
-                .GetProperty(ChatGptReponsePropertyConstants.ThirdLevelResponseProperty).GetString();
+            return jsonObject[ChatGptReponsePropertyConstants.FirstLevelResponseProperty][0]
+                [ChatGptReponsePropertyConstants.SecondLevelResponseProperty]
+                [ChatGptReponsePropertyConstants.ThirdLevelResponseProperty].ToString();
+
         }
     }
 }

@@ -16,10 +16,5 @@ namespace CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities
         /// Один из вариантов ответа, который даёт правильный результат.
         /// </summary>
         public string CorrectQueryCode { get; set; }
-
-        /// <summary>
-        /// Ключевые слова в корректном запросе данного практического вопроса.
-        /// </summary>
-        public List<PracticalQuestionQueryKeyword> PracticalQuestionQueryKeywords { get; set; }
     }
 }

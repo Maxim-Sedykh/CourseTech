@@ -181,7 +181,10 @@ namespace CourseTech.Application.Helpers
             }
             catch (Exception ex)
             {
-                var userQueryChatGptAnalysDto = await chatGptQueryAnalyzer.AnalyzeUserQuery(ex.Message, userAnswer.UserCodeAnswer, questionChecking.CorrectQueryCode, _practicalQuestionGrade);
+                var userQueryChatGptAnalysDto = await chatGptQueryAnalyzer.AnalyzeUserQuery(ex.Message,
+                    userAnswer.UserCodeAnswer,
+                    questionChecking.CorrectQueryCode,
+                    _practicalQuestionGrade);
 
                 correctAnswer.QuestionUserGrade = userQueryChatGptAnalysDto.UserQueryGrade;
                 correctAnswer.UserQueryAnalys = userQueryChatGptAnalysDto.UserQueryAnalys;

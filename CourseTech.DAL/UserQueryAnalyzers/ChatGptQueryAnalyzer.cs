@@ -1,5 +1,4 @@
 ﻿using CourseTech.ChatGptApi.Interfaces;
-using CourseTech.Domain.Constants.ChatGptConstants;
 using CourseTech.Domain.Dto.Analyzer;
 using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
 using System.Text.Json;
