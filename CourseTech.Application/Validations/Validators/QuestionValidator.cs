@@ -1,5 +1,5 @@
 ﻿using CourseTech.Application.Resources;
-using CourseTech.Domain.Dto.Lesson.Test;
+using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.OpenQuestionAnswer;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.TestVariant;

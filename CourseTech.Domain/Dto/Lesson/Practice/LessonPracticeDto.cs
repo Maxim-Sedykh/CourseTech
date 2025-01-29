@@ -1,13 +1,7 @@
-﻿using CourseTech.Domain.Dto.Question;
-using CourseTech.Domain.Enum;
+﻿using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Dto.Lesson.Test
+namespace CourseTech.Domain.Dto.Lesson.Practice
 {
     /// <summary>
     /// Модель данных для отображения практической части урока пользователю.

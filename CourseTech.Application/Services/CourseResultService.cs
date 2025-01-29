@@ -7,6 +7,7 @@ using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
+using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;

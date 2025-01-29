@@ -2,7 +2,7 @@ export interface RegisterUserDto {
     login: string;
     userName: string;
     surname: string;
-    dateOfBirth: Date; // Можно использовать строку, если дата приходит в формате ISO
+    dateOfBirth: Date;
     password: string;
     passwordConfirm: string;
 }

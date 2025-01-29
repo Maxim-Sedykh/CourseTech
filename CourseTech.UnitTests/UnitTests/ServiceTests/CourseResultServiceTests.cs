@@ -18,6 +18,7 @@ using CourseTech.Domain.Result;
 using CourseTech.Application.Queries.Dtos.LessonRecordDtoQueries;
 using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Tests.Configurations.Fixture;
+using CourseTech.Domain.Dto.CourseResult;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests
 {

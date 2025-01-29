@@ -1,5 +1,5 @@
 ﻿using CourseTech.DAL.Cache;
-using CourseTech.Domain.Dto.FinalResult;
+using CourseTech.Domain.Dto.CourseResult;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using System;

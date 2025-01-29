@@ -13,5 +13,8 @@
     <Folder Include="src\hooks\" />
     <Folder Include="src\styles\" />
     <Folder Include="src\modals\" />
+    <Folder Include="src\types\dto\lessonRecord\" />
+    <Folder Include="src\types\dto\userProfile\" />
+    <Folder Include="src\types\dto\courseResult\" />
   </ItemGroup>
 </Project>

@@ -18,8 +18,6 @@ public static class Startup
     /// <param name="builder"></param>
     public static void ConfigureServices(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        builder.WebHost.UseUrls("http://+:80");
-
         services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
         services.Configure<RedisSettings>(builder.Configuration.GetSection(nameof(RedisSettings)));
         services.Configure<ChatGptSettings>(builder.Configuration.GetSection(nameof(ChatGptSettings)));

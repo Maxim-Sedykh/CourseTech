@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CourseTech.Application.Queries.Dtos.UserProfileDtoQuery;
-using CourseTech.Domain.Dto.FinalResult;
+using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Repositories;

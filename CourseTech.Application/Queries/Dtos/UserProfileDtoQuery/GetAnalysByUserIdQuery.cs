@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Dto.FinalResult;
+﻿using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Entities;
 using MediatR;
 using System;

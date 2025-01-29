@@ -1,3 +1,3 @@
 export interface LessonNameDto {
-    name: string,
+    name: string;
 }
