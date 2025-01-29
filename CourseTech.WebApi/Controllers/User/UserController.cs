@@ -40,7 +40,7 @@ namespace CourseTech.WebApi.Controllers.Admin
         }
 
         [HttpGet(RouteConstants.GetUserById)]
-        public async Task<ActionResult<BaseResult<UpdateUserDto>>> GetUserByIdAsync(Guid userId)
+        public async Task<ActionResult<DataResult<UpdateUserDto>>> GetUserByIdAsync(Guid userId)
         {
             var response = await userService.GetUserByIdAsync(userId);
             if (response.IsSuccess)
@@ -51,7 +51,7 @@ namespace CourseTech.WebApi.Controllers.Admin
         }
 
         [HttpPut(RouteConstants.UpdateUser)]
-        public async Task<ActionResult<BaseResult<UpdateUserDto>>> UpdateUserAsync([FromBody] UpdateUserDto dto)
+        public async Task<ActionResult<DataResult<UpdateUserDto>>> UpdateUserAsync([FromBody] UpdateUserDto dto)
         {
             var validationResult = await updateUserValidator.ValidateAsync(dto);
 

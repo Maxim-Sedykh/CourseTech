@@ -13,7 +13,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId);
+        Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId);
 
         /// <summary>
         /// Обновление профиля пользовател.

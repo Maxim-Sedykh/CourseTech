@@ -17,8 +17,7 @@ namespace CourseTech.Application.Mapping
     {
         public LessonMapping()
         {
-            CreateMap<Lesson, LessonLectureDto>()
-                .ForMember(dest => dest.LessonMarkup, opt => opt.MapFrom(src => new HtmlString(src.LectureMarkup))).ReverseMap();
+            CreateMap<Lesson, LessonLectureDto>().ReverseMap();
 
             CreateMap<Lesson, LessonNameDto>();
 

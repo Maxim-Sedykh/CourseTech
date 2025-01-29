@@ -26,7 +26,7 @@ namespace CourseTech.Application.Services
     {
 
         /// <inheritdoc/>
-        public async Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
+        public async Task<DataResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
             var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
@@ -34,7 +34,7 @@ namespace CourseTech.Application.Services
             var validationResult = courseResultValidator.ValidateUserCourseResult(profile, lessonsCount);
             if (!validationResult.IsSuccess)
             {
-                return BaseResult<CourseResultDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
+                return DataResult<CourseResultDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
             var userLessonRecords = await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId));
@@ -45,11 +45,11 @@ namespace CourseTech.Application.Services
 
             await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{profile.UserId}");
 
-            return BaseResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
+            return DataResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId)
+        public async Task<DataResult<UserAnalysDto>> GetUserAnalys(Guid userId)
         {
             var userAnalys = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.UserAnalys}{userId}",
@@ -57,10 +57,10 @@ namespace CourseTech.Application.Services
 
             if (userAnalys == null)
             {
-                return BaseResult<UserAnalysDto>.Failure((int)ErrorCodes.UserAnalysNotFound, ErrorMessage.UserAnalysNotFound);
+                return DataResult<UserAnalysDto>.Failure((int)ErrorCodes.UserAnalysNotFound, ErrorMessage.UserAnalysNotFound);
             }
 
-            return BaseResult<UserAnalysDto>.Success(userAnalys);
+            return DataResult<UserAnalysDto>.Success(userAnalys);
         }
 
         /// <summary>

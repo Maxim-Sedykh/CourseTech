@@ -33,12 +33,12 @@ namespace CourseTech.Application.Validations.Validators
         {
             if (enteredPassword != enteredPasswordConfirm)
             {
-                return BaseResult<UserDto>.Failure((int)ErrorCodes.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
+                return DataResult<UserDto>.Failure((int)ErrorCodes.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
             }
 
             if (user != null)
             {
-                return BaseResult<UserDto>.Failure((int)ErrorCodes.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
+                return DataResult<UserDto>.Failure((int)ErrorCodes.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
             }
 
             return BaseResult.Success();

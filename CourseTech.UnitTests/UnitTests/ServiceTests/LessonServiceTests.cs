@@ -83,6 +83,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
             Assert.Equal(lessonNames, result.Data.ToArray());
         }
 
+        [Fact]
         public async Task GetLessonsForUserAsync_ValidUser_ReturnsSuccess()
         {
             // Arrange
@@ -130,7 +131,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
             _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonDtosQuery>(), default))
                 .ReturnsAsync(lessons);
 
-            var validationResult = BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, "UserProfile not found");
+            var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, "UserProfile not found");
             _fixture.LessonValidatorMock.Setup(v => v.ValidateLessonsForUser(null, lessons))
                 .Returns(validationResult);
 
@@ -156,7 +157,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
             _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonDtosQuery>(), default))
                 .ReturnsAsync(lessons);
 
-            var validationResult = BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, "UserProfile not found");
+            var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, "UserProfile not found");
             _fixture.LessonValidatorMock.Setup(v => v.ValidateLessonsForUser(profile, lessons))
                 .Returns(validationResult);
 
@@ -218,7 +219,7 @@ namespace CourseTech.Tests.UnitTests.ServiceTests
             string lessonName = "Name of lesson";
             LessonTypes lessonType = LessonTypes.Common;
 
-            var dto = new LessonLectureDto { Name = lessonName, LessonType = lessonType, LessonMarkup = new HtmlString(testMarkup) };
+            var dto = new LessonLectureDto { Name = lessonName, LessonType = lessonType, LectureMarkup = testMarkup };
             var currentLesson = new Lesson { Name = lessonName, LessonType = lessonType, LectureMarkup = testMarkup };
 
             _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))

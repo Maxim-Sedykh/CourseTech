@@ -20,7 +20,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
     {
         [AllowRoles(Roles.Moderator, Roles.Admin)]
         [HttpPut(RouteConstants.UpdateLessonLecture)]
-        public async Task<ActionResult<BaseResult<LessonLectureDto>>> UpdateLessonLectureAsync([FromBody] LessonLectureDto dto)
+        public async Task<ActionResult<DataResult<LessonLectureDto>>> UpdateLessonLectureAsync([FromBody] LessonLectureDto dto)
         {
             var validationResult = await lessonLectureValidator.ValidateAsync(dto);
 
@@ -38,7 +38,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         }
 
         [HttpGet(RouteConstants.GetLessonLecture)]
-        public async Task<ActionResult<BaseResult<LessonLectureDto>>> GetLessonLectureAsync(int lessonId)
+        public async Task<ActionResult<DataResult<LessonLectureDto>>> GetLessonLectureAsync(int lessonId)
         {
             var response = await lessonService.GetLessonLectureAsync(lessonId);
             if (response.IsSuccess)
@@ -50,7 +50,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
 
         [AllowAnonymous]
         [HttpGet(RouteConstants.GetLessonNames)]
-        public async Task<ActionResult<BaseResult<LessonNameDto>>> GetLessonNamesAsync()
+        public async Task<ActionResult<CollectionResult<LessonNameDto>>> GetLessonNamesAsync()
         {
             var response = await lessonService.GetLessonNamesAsync();
             if (response.IsSuccess)
@@ -61,7 +61,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         }
 
         [HttpGet(RouteConstants.GetLessonsForUser)]
-        public async Task<ActionResult<BaseResult<UserLessonsDto>>> GetLessonsForUserAsync()
+        public async Task<ActionResult<DataResult<UserLessonsDto>>> GetLessonsForUserAsync()
         {
             var response = await lessonService.GetLessonsForUserAsync(AuthorizedUserId);
             if (response.IsSuccess)

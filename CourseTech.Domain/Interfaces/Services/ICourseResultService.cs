@@ -14,13 +14,13 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<CourseResultDto>> GetCourseResultAsync(Guid userId);
+        Task<DataResult<CourseResultDto>> GetCourseResultAsync(Guid userId);
 
         /// <summary>
         /// Получение анализа прохождения курса пользователем по его идентификатору.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<UserAnalysDto>> GetUserAnalys(Guid userId);
+        Task<DataResult<UserAnalysDto>> GetUserAnalys(Guid userId);
     }
 }

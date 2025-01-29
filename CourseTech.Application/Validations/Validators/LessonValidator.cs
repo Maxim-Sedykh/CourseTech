@@ -16,14 +16,14 @@ namespace CourseTech.Application.Validations.Validators
         {
             if (profile == null)
             {
-                return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+                return DataResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
             if (!lessons.Any())
             {
                 logger.Error(ErrorMessage.LessonsNotFound);
 
-                return BaseResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
+                return DataResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
             }
 
             return BaseResult.Success();

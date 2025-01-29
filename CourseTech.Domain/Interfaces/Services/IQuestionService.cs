@@ -19,7 +19,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="lessonId"></param>
         /// <returns></returns>
-        Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
+        Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
 
         /// <summary>
         /// Завершение прохождения тестирования.
@@ -27,6 +27,6 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <param name="dto"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId);
+        Task<DataResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId);
     }
 }

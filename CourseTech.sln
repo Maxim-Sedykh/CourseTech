@@ -30,6 +30,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseTech.ChatGptApi", "CourseTech.ChatGptServices\CourseTech.ChatGptApi.csproj", "{0DA0EEAB-85A5-4DC5-93BC-315C4D9EF842}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "coursetech.client", "courseTech.client\coursetech.client.esproj", "{32AFD67F-F907-49DB-9E84-5AA2BD158500}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,12 @@ Global
 		{0DA0EEAB-85A5-4DC5-93BC-315C4D9EF842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DA0EEAB-85A5-4DC5-93BC-315C4D9EF842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DA0EEAB-85A5-4DC5-93BC-315C4D9EF842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +84,7 @@ Global
 		{62B3CDF4-FD3B-47CA-9B5B-CC4AB917826E} = {6442B39E-9412-4AE8-A4A1-472D7FD2E800}
 		{B86F6551-E790-45D2-A8B3-9C3323F420CE} = {29B840D9-FA25-44F1-ACB1-84F2E1B805F8}
 		{0DA0EEAB-85A5-4DC5-93BC-315C4D9EF842} = {B728F920-879A-41A4-BAF6-5CB852D21F04}
+		{32AFD67F-F907-49DB-9E84-5AA2BD158500} = {6442B39E-9412-4AE8-A4A1-472D7FD2E800}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32356B9B-8670-43AC-8028-68C4282CB9B9}

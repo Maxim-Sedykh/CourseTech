@@ -31,7 +31,7 @@ namespace CourseTech.Application.Services
         ILogger logger) : IQuestionService
     {
         /// <inheritdoc/>
-        public async Task<BaseResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
+        public async Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
         {
             var lesson = await mediator.Send(new GetLessonByIdQuery(lessonId));
             var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lessonId));
@@ -39,10 +39,10 @@ namespace CourseTech.Application.Services
             var lessonQuestionsValidationResult = questionValidator.ValidateLessonQuestions(lesson, questions);
             if (!lessonQuestionsValidationResult.IsSuccess)
             {
-                return BaseResult<LessonPracticeDto>.Failure((int)lessonQuestionsValidationResult.Error.Code, lessonQuestionsValidationResult.Error.Message);
+                return DataResult<LessonPracticeDto>.Failure((int)lessonQuestionsValidationResult.Error.Code, lessonQuestionsValidationResult.Error.Message);
             }
 
-            return BaseResult<LessonPracticeDto>.Success(new LessonPracticeDto()
+            return DataResult<LessonPracticeDto>.Success(new LessonPracticeDto()
             {
                 LessonId = lesson.Id,
                 LessonType = lesson.LessonType,
@@ -51,7 +51,7 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId)
+        public async Task<DataResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
@@ -60,7 +60,7 @@ namespace CourseTech.Application.Services
             var validationResult = questionValidator.ValidateUserLessonOnNull(profile, lesson);
             if (!validationResult.IsSuccess)
             {
-                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
+                return DataResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
             }
 
             var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id));
@@ -68,7 +68,7 @@ namespace CourseTech.Application.Services
             var questionValidationResult = questionValidator.ValidateQuestions(questions, dto.UserAnswerDtos.Count, lesson.LessonType);
             if (!questionValidationResult.IsSuccess)
             {
-                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)questionValidationResult.Error.Code, questionValidationResult.Error.Message);
+                return DataResult<PracticeCorrectAnswersDto>.Failure((int)questionValidationResult.Error.Code, questionValidationResult.Error.Message);
             }
 
             var userGrade = new UserGradeDto()
@@ -82,12 +82,12 @@ namespace CourseTech.Application.Services
 
             if (!correctAnswers.Any())
             {
-                return BaseResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
+                return DataResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
             }
 
             await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade);
 
-            return BaseResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
+            return DataResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
             {
                 LessonId = lesson.Id,
                 QuestionCorrectAnswers = correctAnswers

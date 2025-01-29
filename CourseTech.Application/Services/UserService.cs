@@ -73,16 +73,16 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
+        public async Task<DataResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
         {
             var user = await mediator.Send(new GetUpdateUserDtoByUserIdQuery(userId));
 
             if (user is null)
             {
-                return BaseResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+                return DataResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
-            return BaseResult<UpdateUserDto>.Success(user);
+            return DataResult<UpdateUserDto>.Success(user);
         }
 
         /// <inheritdoc/>
@@ -96,20 +96,20 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
+        public async Task<DataResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
         {
             var user = await mediator.Send(new GetUserWithProfileByUserIdQuery(dto.Id));
 
             if (user is null)
             {
-                return BaseResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+                return DataResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
             await mediator.Send(new UpdateUserCommand(dto, user));
 
             await cacheService.RemoveAsync(CacheKeys.Users);
 
-            return BaseResult<UpdateUserDto>.Success(dto);
+            return DataResult<UpdateUserDto>.Success(dto);
         }
     }
 }

@@ -25,14 +25,14 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto);
+        Task<DataResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto);
 
         /// <summary>
         /// Удаление роли по идентификатору.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<BaseResult<RoleDto>> DeleteRoleAsync(long id);
+        Task<DataResult<RoleDto>> DeleteRoleAsync(long id);
 
         /// <summary>
         /// Обновление роли.
@@ -46,20 +46,20 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto);
+        Task<DataResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto);
 
         /// <summary>
         /// Удаление роли у пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto);
+        Task<DataResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto);
 
         /// <summary>
         /// Обновление роли у пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto);
+        Task<DataResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto);
     }
 }

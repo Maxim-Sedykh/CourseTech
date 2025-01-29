@@ -28,7 +28,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<TokenDto>> RefreshToken(TokenDto dto);
+        Task<DataResult<TokenDto>> RefreshToken(TokenDto dto);
 
         /// <summary>
         /// Получение основных клаймов из пользователя.

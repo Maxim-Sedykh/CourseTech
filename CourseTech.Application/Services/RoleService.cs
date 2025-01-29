@@ -28,13 +28,13 @@ namespace CourseTech.Application.Services
         ILogger logger) : IRoleService
     {
         /// <inheritdoc/>
-        public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto)
+        public async Task<DataResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto)
         {
             var user = await mediator.Send(new GetUserWithRolesByLoginQuery(dto.Login));
 
             if (user == null)
             {
-                return BaseResult<UserRoleDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+                return DataResult<UserRoleDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
             }
 
             var roles = user.Roles.Select(x => x.Name).ToArray();
@@ -43,49 +43,49 @@ namespace CourseTech.Application.Services
                 var role = await mediator.Send(new GetRoleByNameQuery(dto.RoleName));
                 if (role == null)
                 {
-                    return BaseResult<UserRoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                    return DataResult<UserRoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
                 }
 
                 await mediator.Send(new CreateUserRoleCommand(role.Id, user.Id));
 
-                return BaseResult<UserRoleDto>.Success(new UserRoleDto(user.Login, role.Name));
+                return DataResult<UserRoleDto>.Success(new UserRoleDto(user.Login, role.Name));
             }
 
-            return BaseResult<UserRoleDto>.Failure((int)ErrorCodes.UserAlreadyExistThisRole, ErrorMessage.UserAlreadyExistThisRole);
+            return DataResult<UserRoleDto>.Failure((int)ErrorCodes.UserAlreadyExistThisRole, ErrorMessage.UserAlreadyExistThisRole);
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto)
+        public async Task<DataResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto)
         {
             var role = await mediator.Send(new GetRoleByNameQuery(dto.RoleName));
 
             if (role != null)
             {
-                return BaseResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                return DataResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
             }
 
             await mediator.Send(new CreateRoleCommand(dto.RoleName));
 
             await cacheService.RemoveAsync(CacheKeys.Roles);
 
-            return BaseResult<RoleDto>.Success(mapper.Map<RoleDto>(role));
+            return DataResult<RoleDto>.Success(mapper.Map<RoleDto>(role));
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<RoleDto>> DeleteRoleAsync(long id)
+        public async Task<DataResult<RoleDto>> DeleteRoleAsync(long id)
         {
             var role = await mediator.Send(new GetRoleByIdQuery(id));
 
             if (role == null)
             {
-                return BaseResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                return DataResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
             }
 
             await mediator.Send(new DeleteRoleCommand(role));
 
             await cacheService.RemoveAsync(CacheKeys.Roles);
 
-            return BaseResult<RoleDto>.Success(mapper.Map<RoleDto>(role));
+            return DataResult<RoleDto>.Success(mapper.Map<RoleDto>(role));
         }
 
         /// <inheritdoc/>
@@ -95,7 +95,7 @@ namespace CourseTech.Application.Services
 
             if (role == null)
             {
-                return BaseResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                return DataResult<RoleDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
             }
 
             await mediator.Send(new UpdateRoleCommand(role, dto.RoleName));
@@ -106,7 +106,7 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto)
+        public async Task<DataResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto)
         {
             var user = await mediator.Send(new GetUserWithRolesByLoginQuery(dto.Login));
 
@@ -115,18 +115,18 @@ namespace CourseTech.Application.Services
             var validateRoleForUserResult = roleValidator.ValidateRoleForUser(user, role);
             if (!validateRoleForUserResult.IsSuccess)
             {
-                return BaseResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
+                return DataResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
             }
 
             var userRole = await mediator.Send(new GetUserRoleByIdsQuery(role.Id, user.Id));
 
             await mediator.Send(new DeleteUserRoleCommand(userRole));
 
-            return BaseResult<UserRoleDto>.Success(new UserRoleDto(user.Login, role.Name));
+            return DataResult<UserRoleDto>.Success(new UserRoleDto(user.Login, role.Name));
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto)
+        public async Task<DataResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto)
         {
             var user = await mediator.Send(new GetUserWithRolesByLoginQuery(dto.Login));
 
@@ -136,7 +136,7 @@ namespace CourseTech.Application.Services
             var validateRoleForUserResult = roleValidator.ValidateRoleForUser(user, role, newRoleForUser);
             if (!validateRoleForUserResult.IsSuccess)
             {
-                return BaseResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
+                return DataResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
             }
 
             using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
@@ -158,12 +158,12 @@ namespace CourseTech.Application.Services
 
                     await transaction.RollbackAsync();
 
-                    return BaseResult<UserRoleDto>.Failure((int)ErrorCodes.UpdateRoleForUserFailed, ErrorMessage.UpdateRoleForUserFailed);
+                    return DataResult<UserRoleDto>.Failure((int)ErrorCodes.UpdateRoleForUserFailed, ErrorMessage.UpdateRoleForUserFailed);
                 }
             }
 
 
-            return BaseResult<UserRoleDto>.Success(new UserRoleDto(user.Login, newRoleForUser.Name));
+            return DataResult<UserRoleDto>.Success(new UserRoleDto(user.Login, newRoleForUser.Name));
         }
 
         /// <inheritdoc/>

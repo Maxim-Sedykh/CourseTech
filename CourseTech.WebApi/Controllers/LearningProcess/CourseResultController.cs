@@ -15,7 +15,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
     public class CourseResultController(ICourseResultService courseResultService) : BaseApiController
     {
         [HttpGet(RouteConstants.GetCouserResult)]
-        public async Task<ActionResult<BaseResult<CourseResultDto>>> GetCourseResult()
+        public async Task<ActionResult<DataResult<CourseResultDto>>> GetCourseResult()
         {
             var response = await courseResultService.GetCourseResultAsync(AuthorizedUserId);
             if (response.IsSuccess)
@@ -26,7 +26,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         }
 
         [HttpGet(RouteConstants.GetUserAnalys)]
-        public async Task<ActionResult<BaseResult<UserAnalysDto>>> GetUserAnalys()
+        public async Task<ActionResult<DataResult<UserAnalysDto>>> GetUserAnalys()
         {
             var response = await courseResultService.GetUserAnalys(AuthorizedUserId);
             if (response.IsSuccess)

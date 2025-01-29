@@ -21,7 +21,7 @@ namespace CourseTech.Application.Services
         ILogger logger) : IUserProfileService
     {
         /// <inheritdoc/>
-        public async Task<BaseResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
+        public async Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
         {
             var profileDto = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.UserProfile}{userId}",
@@ -29,10 +29,10 @@ namespace CourseTech.Application.Services
 
             if (profileDto is null)
             {
-                return BaseResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+                return DataResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
             }
 
-            return BaseResult<UserProfileDto>.Success(profileDto);
+            return DataResult<UserProfileDto>.Success(profileDto);
         }
 
         /// <inheritdoc/>

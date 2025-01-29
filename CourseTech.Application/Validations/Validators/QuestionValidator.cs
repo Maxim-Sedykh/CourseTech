@@ -73,12 +73,12 @@ namespace CourseTech.Application.Validations.Validators
         {
             if (lesson is null)
             {
-                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+                return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
             if (!questions.Any())
             {
-                return BaseResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
+                return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
             }
 
             return BaseResult.Success();

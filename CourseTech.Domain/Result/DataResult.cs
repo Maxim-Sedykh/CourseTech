@@ -18,7 +18,7 @@ public class BaseResult
     public static BaseResult Success() => new BaseResult();
 
     public static BaseResult Failure(int errorCode, string errorMessage) =>
-        new BaseResult(new Error(errorMessage, errorCode));
+        new(new Error(errorMessage, errorCode));
 }
 
 /// <summary>
@@ -27,9 +27,9 @@ public class BaseResult
 /// Имеет свойство Data
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class BaseResult<T> : BaseResult
+public class DataResult<T> : BaseResult
 {
-    protected BaseResult(T data, Error error = null)
+    protected DataResult(T data, Error error = null)
         : base(error)
     {
         Data = data;
@@ -37,9 +37,9 @@ public class BaseResult<T> : BaseResult
 
     public T Data { get; }
 
-    public static BaseResult<T> Success(T data) =>
-        new BaseResult<T>(data);
+    public static DataResult<T> Success(T data) =>
+        new(data);
 
-    public static new BaseResult<T> Failure(int errorCode, string errorMessage) =>
-        new BaseResult<T>(default, new Error(errorMessage, errorCode));
+    public static new DataResult<T> Failure(int errorCode, string errorMessage) =>
+        new(default, new Error(errorMessage, errorCode));
 }

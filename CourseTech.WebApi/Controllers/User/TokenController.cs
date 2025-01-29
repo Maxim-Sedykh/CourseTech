@@ -22,7 +22,7 @@ namespace CourseTech.WebApi.Controllers.User
         /// 
         [Route(RouteConstants.RefreshToken)]
         [HttpPost]
-        public async Task<ActionResult<BaseResult<TokenDto>>> RefreshToken([FromBody] TokenDto dto)
+        public async Task<ActionResult<DataResult<TokenDto>>> RefreshToken([FromBody] TokenDto dto)
         {
             var response = await tokenService.RefreshToken(dto);
             if (response.IsSuccess)

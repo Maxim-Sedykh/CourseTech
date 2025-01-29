@@ -24,7 +24,7 @@ namespace CourseTech.Application.Services
         ILessonValidator lessonValidator) : ILessonService
     {
         /// <inheritdoc/>
-        public async Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
+        public async Task<DataResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
         {
             var lesson = await cacheService.GetOrAddToCache(
                 $"{CacheKeys.LessonLecture}{lessonId}",
@@ -32,10 +32,10 @@ namespace CourseTech.Application.Services
 
             if (lesson is null)
             {
-                return BaseResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+                return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
-            return BaseResult<LessonLectureDto>.Success(lesson);
+            return DataResult<LessonLectureDto>.Success(lesson);
         }
 
         /// <inheritdoc/>
@@ -56,7 +56,7 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId)
+        public async Task<DataResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId)
         {
             var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
@@ -65,10 +65,10 @@ namespace CourseTech.Application.Services
             var validateLessonsForUserResult = lessonValidator.ValidateLessonsForUser(profile, lessons);
             if (!validateLessonsForUserResult.IsSuccess)
             {
-                return BaseResult<UserLessonsDto>.Failure((int)validateLessonsForUserResult.Error.Code, validateLessonsForUserResult.Error.Message);
+                return DataResult<UserLessonsDto>.Failure((int)validateLessonsForUserResult.Error.Code, validateLessonsForUserResult.Error.Message);
             }
 
-            return BaseResult<UserLessonsDto>.Success(new UserLessonsDto()
+            return DataResult<UserLessonsDto>.Success(new UserLessonsDto()
             {
                 LessonNames = lessons,
                 LessonsCompleted = profile.LessonsCompleted
@@ -76,12 +76,12 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto)
+        public async Task<DataResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto)
         {
             var currentLesson = await mediator.Send(new GetLessonByIdQuery(dto.Id));
             if (currentLesson == null)
             {
-                return BaseResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+                return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
             }
 
             if (HasChanges(currentLesson, dto))
@@ -91,7 +91,7 @@ namespace CourseTech.Application.Services
                 await RemoveOldCacheAsync(currentLesson, dto);
             }
 
-            return BaseResult<LessonLectureDto>.Success(dto);
+            return DataResult<LessonLectureDto>.Success(dto);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace CourseTech.Application.Services
         {
             return lesson.Name != dto.Name ||
                    lesson.LessonType != dto.LessonType ||
-                   lesson.LectureMarkup != dto.LessonMarkup.ToString();
+                   lesson.LectureMarkup != dto.LectureMarkup;
         }
 
         /// <summary>

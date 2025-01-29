@@ -15,7 +15,7 @@ namespace CourseTech.WebApi.Controllers.User
     public class UserProfileController(IUserProfileService userProfileService) : BaseApiController
     {
         [HttpGet(RouteConstants.GetUserProfile)]
-        public async Task<ActionResult<BaseResult<UserProfileDto>>> GetUserProfileAsync()
+        public async Task<ActionResult<DataResult<UserProfileDto>>> GetUserProfileAsync()
         {
             var response = await userProfileService.GetUserProfileAsync(AuthorizedUserId);
             if (response.IsSuccess)

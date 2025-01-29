@@ -20,7 +20,7 @@ namespace CourseTech.WebApi.Controllers.User
     public class RoleController(IRoleService roleService, CreateRoleValidator createRoleValidation, UpdateRoleValidator updateRoleValidator) : ControllerBase
     {
         [HttpPost(RouteConstants.CreateRole)]
-        public async Task<ActionResult<BaseResult<Role>>> CreateRole([FromBody] CreateRoleDto dto)
+        public async Task<ActionResult<DataResult<Role>>> CreateRole([FromBody] CreateRoleDto dto)
         {
             var validationResult = await createRoleValidation.ValidateAsync(dto);
 
@@ -38,7 +38,7 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPut(RouteConstants.UpdateRole)]
-        public async Task<ActionResult<BaseResult<Role>>> UpdateRole([FromBody] RoleDto dto)
+        public async Task<ActionResult<DataResult<Role>>> UpdateRole([FromBody] RoleDto dto)
         {
             var validationResult = await updateRoleValidator.ValidateAsync(dto);
 
@@ -56,7 +56,7 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpDelete(RouteConstants.DeleteRoleById)]
-        public async Task<ActionResult<BaseResult<Role>>> DeleteRole(long id)
+        public async Task<ActionResult<DataResult<Role>>> DeleteRole(long id)
         {
             var response = await roleService.DeleteRoleAsync(id);
             if (response.IsSuccess)
@@ -67,7 +67,7 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPost(RouteConstants.AddRoleForUser)]
-        public async Task<ActionResult<BaseResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
+        public async Task<ActionResult<DataResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
         {
             var response = await roleService.AddRoleForUserAsync(dto);
             if (response.IsSuccess)
@@ -78,7 +78,7 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpDelete(RouteConstants.DeleteRoleForUser)]
-        public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] DeleteUserRoleDto dto)
+        public async Task<ActionResult<DataResult<Role>>> DeleteRoleForUser([FromBody] DeleteUserRoleDto dto)
         {
             var response = await roleService.DeleteRoleForUserAsync(dto);
             if (response.IsSuccess)
@@ -89,7 +89,7 @@ namespace CourseTech.WebApi.Controllers.User
         }
 
         [HttpPut(RouteConstants.UpdateRoleForUser)]
-        public async Task<ActionResult<BaseResult<Role>>> UpdateRoleForUser([FromBody] UpdateUserRoleDto dto)
+        public async Task<ActionResult<DataResult<Role>>> UpdateRoleForUser([FromBody] UpdateUserRoleDto dto)
         {
             var response = await roleService.UpdateRoleForUserAsync(dto);
             if (response.IsSuccess)

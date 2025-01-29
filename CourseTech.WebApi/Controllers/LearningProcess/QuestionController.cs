@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.LearningProcess
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class QuestionController(IQuestionService questionService) : BaseApiController
     {
         [HttpGet(RouteConstants.GetLessonQuestions)]
-        public async Task<ActionResult<BaseResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
+        public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
         {
             var response = await questionService.GetLessonQuestionsAsync(lessonId);
             if (response.IsSuccess)
@@ -27,9 +27,9 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         }
 
         [HttpPost(RouteConstants.PassLessonQuestions)]
-        public async Task<ActionResult<BaseResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
+        public async Task<ActionResult<DataResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
         {
-            var response = await questionService.PassLessonQuestionsAsync(dto, new Guid("3C3AF900-4B48-481C-B58D-08DD0BB4EFCA"));
+            var response = await questionService.PassLessonQuestionsAsync(dto, AuthorizedUserId);
             if (response.IsSuccess)
             {
                 return Ok(response);

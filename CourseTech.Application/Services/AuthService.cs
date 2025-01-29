@@ -41,14 +41,14 @@ namespace CourseTech.Application.Services
 
 
         /// <inheritdoc/>
-        public async Task<BaseResult<TokenDto>> Login(LoginUserDto dto)
+        public async Task<DataResult<TokenDto>> Login(LoginUserDto dto)
         {
             var user = await mediator.Send(new GetUserWithRolesByLoginQuery(dto.Login));
 
             var validateLoginResult = authValidator.ValidateLogin(user, enteredPassword: dto.Password);
             if (!validateLoginResult.IsSuccess)
             {
-                return BaseResult<TokenDto>.Failure((int)validateLoginResult.Error.Code, validateLoginResult.Error.Message);
+                return DataResult<TokenDto>.Failure((int)validateLoginResult.Error.Code, validateLoginResult.Error.Message);
             }
 
             var claims = tokenService.GetClaimsFromUser(user);
@@ -67,7 +67,7 @@ namespace CourseTech.Application.Services
                 await mediator.Send(new UpdateUserTokenCommand(userToken, refreshToken));
             }
 
-            return BaseResult<TokenDto>.Success(new TokenDto()
+            return DataResult<TokenDto>.Success(new TokenDto()
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
@@ -75,14 +75,14 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<UserDto>> Register(RegisterUserDto dto)
+        public async Task<DataResult<UserDto>> Register(RegisterUserDto dto)
         {
             var user = await mediator.Send(new GetUserByLoginQuery(dto.Login));
 
             var validateRegisterResult = authValidator.ValidateRegister(user, enteredPassword: dto.Password, enteredPasswordConfirm: dto.PasswordConfirm);
             if (!validateRegisterResult.IsSuccess)
             {
-                return BaseResult<UserDto>.Failure((int)validateRegisterResult.Error.Code, validateRegisterResult.Error.Message);
+                return DataResult<UserDto>.Failure((int)validateRegisterResult.Error.Code, validateRegisterResult.Error.Message);
             }
 
             using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
@@ -97,7 +97,7 @@ namespace CourseTech.Application.Services
 
                     if (role == null)
                     {
-                        return BaseResult<UserDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                        return DataResult<UserDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
                     }
 
                     await mediator.Send(new CreateUserRoleCommand(role.Id, user.Id));
@@ -113,11 +113,11 @@ namespace CourseTech.Application.Services
                     await transaction.RollbackAsync();
 
                     logger.Error(ex, ex.Message);
-                    return BaseResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, ErrorMessage.RegistrationFailed);
+                    return DataResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, ErrorMessage.RegistrationFailed);
                 }
             }
 
-            return BaseResult<UserDto>.Success(mapper.Map<UserDto>(user));
+            return DataResult<UserDto>.Success(mapper.Map<UserDto>(user));
         }
     }
 }

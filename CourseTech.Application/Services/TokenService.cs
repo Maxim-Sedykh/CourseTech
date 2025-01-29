@@ -76,7 +76,7 @@ namespace CourseTech.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseResult<TokenDto>> RefreshToken(TokenDto dto)
+        public async Task<DataResult<TokenDto>> RefreshToken(TokenDto dto)
         {
             string accessToken = dto.AccessToken;
             string refreshToken = dto.RefreshToken;
@@ -89,7 +89,7 @@ namespace CourseTech.Application.Services
             if (user == null || user.UserToken.RefreshToken != refreshToken ||
                 user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
             {
-                return BaseResult<TokenDto>.Failure((int)ErrorCodes.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
+                return DataResult<TokenDto>.Failure((int)ErrorCodes.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
             }
 
             var newClaims = GetClaimsFromUser(user);
@@ -99,7 +99,7 @@ namespace CourseTech.Application.Services
 
             await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
 
-            return BaseResult<TokenDto>.Success(new TokenDto()
+            return DataResult<TokenDto>.Success(new TokenDto()
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,

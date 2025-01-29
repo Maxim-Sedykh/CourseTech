@@ -22,7 +22,7 @@ namespace CourseTech.Application.Validations.FluentValidations.Lesson
                 .MinimumLength(ValidationConstraints.LessonNameMinimumLength).WithMessage(ValidationErrorMessages.GetLessonNameMinimumLengthMessage())
                 .MaximumLength(ValidationConstraints.LessonNameMaximumLength).WithMessage(ValidationErrorMessages.GetLessonNameMaximumLengthMessage());
 
-            RuleFor(x => x.LessonMarkup).NotEmpty().WithMessage(ValidationErrorMessages.LessonMarkupNotEmpty);
+            RuleFor(x => x.LectureMarkup).NotEmpty().WithMessage(ValidationErrorMessages.LessonMarkupNotEmpty);
         }
     }
 }

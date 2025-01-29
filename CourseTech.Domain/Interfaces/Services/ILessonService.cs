@@ -17,14 +17,14 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="lessonId"></param>
         /// <returns></returns>
-        Task<BaseResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId);
+        Task<DataResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId);
 
         /// <summary>
         /// Обновление урока с разметкой лекции.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto);
+        Task<DataResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto);
 
         /// <summary>
         /// Получение названий уроков.
@@ -38,6 +38,6 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId);
+        Task<DataResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId);
     }
 }

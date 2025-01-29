@@ -27,13 +27,13 @@ namespace CourseTech.Domain.Interfaces.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<BaseResult<UpdateUserDto>> GetUserByIdAsync(Guid userId);
+        Task<DataResult<UpdateUserDto>> GetUserByIdAsync(Guid userId);
 
         /// <summary>
         /// Обновление данных пользователя.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto);
+        Task<DataResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto);
     }
 }

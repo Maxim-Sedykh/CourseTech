@@ -20,6 +20,6 @@ namespace CourseTech.Domain.Dto.Lesson.LessonInfo
 
         public LessonTypes LessonType { get; set; }
 
-        public HtmlString LessonMarkup { get; set; }
+        public string LectureMarkup { get; set; }
     }
 }
