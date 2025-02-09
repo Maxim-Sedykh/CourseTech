@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.LearningProcess
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -17,7 +17,8 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [HttpGet(RouteConstants.GetLessonsRecords)]
         public async Task<ActionResult<CollectionResult<LessonRecordDto>>> GetLessonsRecords()
         {
-            var response = await lessonRecordService.GetUserLessonRecordsAsync(AuthorizedUserId);
+            //var response = await lessonRecordService.GetUserLessonRecordsAsync(AuthorizedUserId);
+            var response = await lessonRecordService.GetUserLessonRecordsAsync(new Guid("3C3AF900-4B48-481C-B58D-08DD0BB4EFCA"));
             if (response.IsSuccess)
             {
                 return Ok(response);

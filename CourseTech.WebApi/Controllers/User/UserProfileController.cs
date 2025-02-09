@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class UserProfileController(IUserProfileService userProfileService) : BaseApiController
     {
         [HttpGet(RouteConstants.GetUserProfile)]
-        public async Task<ActionResult<DataResult<UserProfileDto>>> GetUserProfileAsync()
+        public async Task<ActionResult<DataResult<UserProfileDto>>> GetUserProfileAsync([FromQuery] string userId)
         {
-            var response = await userProfileService.GetUserProfileAsync(AuthorizedUserId);
+            var response = await userProfileService.GetUserProfileAsync(new Guid(userId));
             if (response.IsSuccess)
             {
                 return Ok(response);

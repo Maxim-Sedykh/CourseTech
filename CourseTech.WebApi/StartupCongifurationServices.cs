@@ -87,31 +87,30 @@ namespace CourseTech.WebApi
                     }
                 });
 
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
-                    Description = "Введите пожалуйста валидный токен",
-                    Name = "Авторизация",
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
+
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
                 {
-                    new OpenApiSecurityScheme()
                     {
-                        Reference = new OpenApiReference()
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
                         },
-                        Name = "Bearer",
-                        In = ParameterLocation.Header
-                    },
-                    Array.Empty<string>()
-                }
-            });
+                        new string[] {}
+                    }
+                });
             });
         }
 

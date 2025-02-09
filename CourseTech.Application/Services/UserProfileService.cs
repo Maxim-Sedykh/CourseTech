@@ -9,16 +9,12 @@ using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
-using StackExchange.Redis;
-using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services
 {
     public class UserProfileService(
         ICacheService cacheService,
-        IMediator mediator,
-        IDatabase redisDatabase,
-        ILogger logger) : IUserProfileService
+        IMediator mediator) : IUserProfileService
     {
         /// <inheritdoc/>
         public async Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
@@ -47,23 +43,11 @@ namespace CourseTech.Application.Services
 
             await mediator.Send(new UpdateUserProfileCommand(dto, profile));
 
-            // Создаем транзакцию Redis для того, чтобы гарантировать атомарность операций кэширования,
-            // связанных с обновлением профиля пользователя.
-            var redisTransaction = redisDatabase.CreateTransaction();
-
             var userProfileKey = $"{CacheKeys.UserProfile}:{userId}";
 
             await cacheService.RemoveAsync(userProfileKey);
+
             await cacheService.SetObjectAsync(userProfileKey, profile);
-
-            bool committed = await redisTransaction.ExecuteAsync();
-
-            if (!committed)
-            {
-                logger.Error(ErrorMessage.RedisTransactionFailed);
-
-                return BaseResult.Failure((int)ErrorCodes.RedisTransactionFailed, ErrorMessage.RedisTransactionFailed);
-            }
 
             return BaseResult.Success();
         }

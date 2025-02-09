@@ -12,8 +12,8 @@ export class UserProfileService {
         this.apiClient = new ApiClient(baseUrl);
     }
 
-    public async getUserProfileAsync(): Promise<DataResult<UserProfileDto>> {
-        return this.apiClient.get<DataResult<UserProfileDto>>(RouteConstants.GET_USER_PROFILE);
+    public async getUserProfileAsync(userId : string): Promise<DataResult<UserProfileDto>> {
+        return this.apiClient.get<DataResult<UserProfileDto>>(RouteConstants.GET_USER_PROFILE, { userId: userId });
     }
 
     public async updateUserProfileAsync(dto: UpdateUserProfileDto): Promise<BaseResult> {

@@ -1,0 +1,7 @@
+.modal-title-centered {
+    text-align: center;
+    width: 100%;
+}
+.modal-content{
+    border-radius: 15px !important;
+}

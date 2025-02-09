@@ -115,18 +115,9 @@ public static class DependencyInjection
     {
         services.AddScoped<ICacheService, CacheService>();
 
-        var redisConfig = configuration.GetSection(nameof(RedisSettings));
-        var redisUrl = redisConfig["Url"];
-
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = configuration.GetConnectionString("Cache");
-        });
-
-        services.AddScoped(cfg =>
-        {
-            var multiplexer = ConnectionMultiplexer.Connect(redisUrl ?? string.Empty);
-            return multiplexer.GetDatabase();
         });
     }
 }

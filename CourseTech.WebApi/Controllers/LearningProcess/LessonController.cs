@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.LearningProcess
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -63,7 +63,8 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [HttpGet(RouteConstants.GetLessonsForUser)]
         public async Task<ActionResult<DataResult<UserLessonsDto>>> GetLessonsForUserAsync()
         {
-            var response = await lessonService.GetLessonsForUserAsync(AuthorizedUserId);
+            //var response = await lessonService.GetLessonsForUserAsync(AuthorizedUserId);
+            var response = await lessonService.GetLessonsForUserAsync(new Guid("3C3AF900-4B48-481C-B58D-08DD0BB4EFCA"));
             if (response.IsSuccess)
             {
                 return Ok(response);

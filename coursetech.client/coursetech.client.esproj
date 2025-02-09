@@ -9,10 +9,12 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\components\" />
+    <None Remove="src\modals\**" />
+    <TypeScriptConfiguration Remove="src\modals\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="src\hooks\" />
     <Folder Include="src\styles\" />
-    <Folder Include="src\modals\" />
     <Folder Include="src\types\dto\lessonRecord\" />
     <Folder Include="src\types\dto\userProfile\" />
     <Folder Include="src\types\dto\courseResult\" />

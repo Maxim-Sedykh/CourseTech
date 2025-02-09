@@ -18,7 +18,8 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [HttpGet(RouteConstants.GetCouserResult)]
         public async Task<ActionResult<DataResult<CourseResultDto>>> GetCourseResult()
         {
-            var response = await courseResultService.GetCourseResultAsync(AuthorizedUserId);
+            //var response = await courseResultService.GetCourseResultAsync(AuthorizedUserId);
+            var response = await courseResultService.GetCourseResultAsync(new Guid("3C3AF900-4B48-481C-B58D-08DD0BB4EFCA"));
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -29,7 +30,8 @@ namespace CourseTech.WebApi.Controllers.LearningProcess
         [HttpGet(RouteConstants.GetUserAnalys)]
         public async Task<ActionResult<DataResult<UserAnalysDto>>> GetUserAnalys()
         {
-            var response = await courseResultService.GetUserAnalys(AuthorizedUserId);
+            //var response = await courseResultService.GetUserAnalys(AuthorizedUserId);
+            var response = await courseResultService.GetUserAnalys(new Guid("3C3AF900-4B48-481C-B58D-08DD0BB4EFCA"));
             if (response.IsSuccess)
             {
                 return Ok(response);

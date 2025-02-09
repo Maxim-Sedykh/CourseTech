@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { BaseResult } from '../types/result/base-result';
 
 export class ApiClient {
     private axiosInstance: AxiosInstance;
@@ -7,28 +8,52 @@ export class ApiClient {
         this.axiosInstance = axios.create({
             baseURL: baseUrl,
         });
+
+        this.axiosInstance.interceptors.request.use((config) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return config;
+        }, (error) => {
+            return Promise.reject(error);
+        });
     }
 
-    private handleError(error: unknown): never {
+    private handleError(error: unknown): BaseResult {
+        const apiError = { code: -1, message: 'Something went wrong' }; // Default error
+
         if (axios.isAxiosError(error) && error.response) {
-            const errorMessage = error.response.data?.message || error.message || 'Something went wrong';
-            console.error('API Error:', errorMessage, error.response?.data)
-            throw new Error(errorMessage);
+            apiError.message = (error.response.data as any)?.message || error.message || apiError.message;
+            apiError.code = error.response.status;
+            console.error('API Error:', apiError.message, error.response?.data);
+        } else {
+            console.error('Network error:', error);
+            apiError.message = 'Network error';
+            apiError.code = -1;
         }
-        console.error('Network error:', error)
-        throw new Error('Network error');
+
+        return {
+            isSuccess: false,
+            error: apiError
+        };
     }
 
-    private async request<T>(config: AxiosRequestConfig): Promise<T> {
+    private async request<T>(config: AxiosRequestConfig): Promise<T | BaseResult> {
         try {
             const response: AxiosResponse<T> = await this.axiosInstance.request<T>(config);
             return response.data;
         } catch (error) {
-            this.handleError(error);
+            return this.handleError(error);
         }
     }
 
-    public get<T>(endpoint: string, params?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    public get<T>(endpoint: string, params?: unknown, config?: AxiosRequestConfig): Promise<T | BaseResult> {
+
+        if (params && typeof params !== 'object') {
+            throw new TypeError('params must be an object');
+        }
+        
         return this.request<T>({
             method: 'GET',
             url: endpoint,
@@ -37,7 +62,7 @@ export class ApiClient {
         });
     }
 
-    public post<T>(endpoint: string, body: unknown, config?: AxiosRequestConfig): Promise<T> {
+    public post<T>(endpoint: string, body: unknown, config?: AxiosRequestConfig): Promise<T | BaseResult> {
         return this.request<T>({
             method: 'POST',
             url: endpoint,
@@ -46,7 +71,7 @@ export class ApiClient {
         });
     }
 
-    public put<T>(endpoint: string, body: unknown, config?: AxiosRequestConfig): Promise<T> {
+    public put<T>(endpoint: string, body: unknown, config?: AxiosRequestConfig): Promise<T | BaseResult> {
         return this.request<T>({
             method: 'PUT',
             url: endpoint,
@@ -55,8 +80,7 @@ export class ApiClient {
         });
     }
 
-
-    public delete<T>(endpoint: string, params?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    public delete<T>(endpoint: string, params?: unknown, config?: AxiosRequestConfig): Promise<T | BaseResult> {
         return this.request<T>({
             method: 'DELETE',
             url: endpoint,
