@@ -15,7 +15,7 @@ namespace CourseTech.Application.Converters
             using var document = JsonDocument.ParseValue(ref reader);
             var rootElement = document.RootElement;
 
-            string type = rootElement.GetProperty("Type").GetString();
+            string type = rootElement.GetProperty("questionType").GetString();
 
             return type switch
             {
@@ -29,7 +29,6 @@ namespace CourseTech.Application.Converters
         public override void Write(Utf8JsonWriter writer, IUserAnswerDto value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            writer.WriteString("Type", value.GetType().Name);
             JsonSerializer.Serialize(writer, value, options);
             writer.WriteEndObject();
         }

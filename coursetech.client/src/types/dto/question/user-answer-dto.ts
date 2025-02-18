@@ -1,5 +1,6 @@
 export interface IUserAnswerDto {
     questionId: number;
+    questionType: string;
 }
 
 export interface OpenQuestionUserAnswerDto extends IUserAnswerDto {

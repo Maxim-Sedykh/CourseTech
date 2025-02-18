@@ -15,6 +15,6 @@ namespace CourseTech.Domain.Dto.LessonRecord
 
         public float Mark { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public string CreatedAt { get; set; }
     }
 }

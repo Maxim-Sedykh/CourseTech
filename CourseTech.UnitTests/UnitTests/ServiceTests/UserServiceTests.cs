@@ -1,10 +1,10 @@
-﻿using CourseTech.Application.Commands.UserCommand;
-using CourseTech.Application.Commands.UserProfileCommands;
+﻿using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Application.Commands.UserTokenCommands;
-using CourseTech.Application.Queries.Dtos.UserDtoQueries;
-using CourseTech.Application.Queries.Entities.UserProfileQueries;
-using CourseTech.Application.Queries.Entities.UserQueries;
-using CourseTech.Application.Queries.Entities.UserTokenQueries;
+using CourseTech.Application.CQRS.Commands.UserCommand;
+using CourseTech.Application.CQRS.Queries.Dtos.UserDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;

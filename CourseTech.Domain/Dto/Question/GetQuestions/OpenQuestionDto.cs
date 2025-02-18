@@ -17,5 +17,6 @@ namespace CourseTech.Domain.Dto.Question.Get
         public int Number { get; set; }
 
         public string DisplayQuestion { get; set; }
+        public string QuestionType { get; set; } = "OpenQuestionDto";
     }
 }

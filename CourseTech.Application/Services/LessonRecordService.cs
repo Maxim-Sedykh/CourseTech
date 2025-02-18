@@ -1,4 +1,4 @@
-﻿using CourseTech.Application.Queries.Dtos.LessonRecordDtoQueries;
+﻿using CourseTech.Application.CQRS.Queries.Dtos.LessonRecordDtoQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.LessonRecord;

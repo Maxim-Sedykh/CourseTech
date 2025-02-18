@@ -25,5 +25,7 @@ namespace CourseTech.Domain.Interfaces.Dtos.Question
         /// Правильный ли ответ у пользователя?
         /// </summary>
         bool AnswerCorrectness { get; set; }
+
+        string QuestionType { get; set; }
     }
 }

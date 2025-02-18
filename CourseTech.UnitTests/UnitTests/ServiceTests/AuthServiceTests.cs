@@ -1,9 +1,9 @@
-﻿using CourseTech.Application.Commands.RoleCommands;
-using CourseTech.Application.Commands.UserCommand;
-using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.Entities.RoleQueries;
-using CourseTech.Application.Queries.Entities.UserQueries;
-using CourseTech.Application.Queries.Entities.UserTokenQueries;
+﻿using CourseTech.Application.CQRS.Commands.RoleCommands;
+using CourseTech.Application.CQRS.Commands.UserCommand;
+using CourseTech.Application.CQRS.Commands.UserProfileCommands;
+using CourseTech.Application.CQRS.Queries.Entities.RoleQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.User;

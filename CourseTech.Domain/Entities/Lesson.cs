@@ -36,6 +36,11 @@ public class Lesson : IEntityId<int>, IAuditable
     /// </summary>
     public List<LessonRecord> LessonRecords { get; set; }
 
+    /// <summary>
+    /// Номер урока.
+    /// </summary>
+    public int Number { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

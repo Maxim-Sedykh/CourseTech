@@ -15,6 +15,8 @@ namespace CourseTech.Domain.Dto.Question.Get
 
         public string DisplayQuestion { get; set; }
 
-        public List<TestVariantDto> TestVariants { get; set; }
+        public List<TestVariantDto> TestVariants;
+
+        public string QuestionType { get; set; } = "TestQuestionDto";
     }
 }

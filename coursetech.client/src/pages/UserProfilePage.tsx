@@ -134,10 +134,22 @@ export function UserProfilePage() {
                         </Col>
                     </Row>
                 </div>
-                <Row className="mx-auto mb-4 mt-0 align-content-center w-75 bd-cyan-500 br-40" style={{ minHeight: '75px' }}>
-                    <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
-                        <p>Данные о прохождении курса недоступны</p>
-                    </Col>
+                <Row className="mx-auto mb-4 mt-0 d-flex w-75 bd-cyan-500 br-40" style={{ minHeight: '75px' }}>\
+                    {userProfile.isExamCompleted ? (
+                        <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
+                            <Button
+                                as="a"
+                                href={`/course/result`}
+                                className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40`}
+                            >
+                                Посмотреть итоги
+                            </Button>
+                        </Col>
+                    ) : (
+                        <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
+                            <p>Данные о прохождении курса недоступны</p>
+                        </Col>
+                    )}
                     <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
                         <Button onClick={modalHandlers.lessonList}>Список уроков</Button>
                     </Col>

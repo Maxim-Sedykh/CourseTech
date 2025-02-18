@@ -24,5 +24,7 @@ namespace CourseTech.Domain.Dto.Question.Pass
         public string UserQueryAnalys { get; set; }
 
         public bool AnswerCorrectness { get; set; }
+
+        public string QuestionType { get; set; } = "PracticalQuestionCorrectAnswerDto";
     }
 }

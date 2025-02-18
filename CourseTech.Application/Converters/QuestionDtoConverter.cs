@@ -1,4 +1,5 @@
 ﻿using CourseTech.Domain.Dto.Question.Get;
+using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -21,13 +22,14 @@ namespace CourseTech.Application.Converters
 
             writer.WriteStartObject();
 
-            writer.WriteNumber(nameof(value.Id), value.Id);
-            writer.WriteNumber(nameof(value.Number), value.Number);
-            writer.WriteString(nameof(value.DisplayQuestion), value.DisplayQuestion);
+            writer.WriteNumber("id", value.Id);
+            writer.WriteNumber("number", value.Number);
+            writer.WriteString("displayQuestion", value.DisplayQuestion);
+            writer.WriteString("questionType", value.QuestionType);
 
             if (value is TestQuestionDto testQuestion)
             {
-                writer.WritePropertyName(nameof(TestQuestionDto.TestVariants));
+                writer.WritePropertyName("testVariants");
                 JsonSerializer.Serialize(writer, testQuestion.TestVariants, options);
             }
 

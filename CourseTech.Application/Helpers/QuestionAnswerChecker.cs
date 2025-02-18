@@ -122,13 +122,13 @@ namespace CourseTech.Application.Helpers
         /// <returns></returns>
         private OpenQuestionCorrectAnswerDto CheckOpenQuestionAnswer(OpenQuestionUserAnswerDto userAnswer, List<string> openQuestionAnswerVariants, UserGradeDto userGrade)
         {
-            string normalizedUserAnswer = Regex.Replace(userAnswer.UserAnswer.ToLower().Trim(), @"s+", " ");
+            string normalizedUserAnswer = userAnswer.UserAnswer.ToLower().Trim();
 
             var correctAnswer = new OpenQuestionCorrectAnswerDto
             {
                 Id = userAnswer.QuestionId,
                 CorrectAnswer = openQuestionAnswerVariants.FirstOrDefault(),
-                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v == normalizedUserAnswer)
+                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v.Equals(normalizedUserAnswer, StringComparison.OrdinalIgnoreCase))
             };
 
             if (correctAnswer.AnswerCorrectness)
@@ -158,12 +158,10 @@ namespace CourseTech.Application.Helpers
                 AnswerCorrectness = false
             };
 
-            userAnswer.UserCodeAnswer = userAnswer.UserCodeAnswer.ToLower().Trim();
-
             try
             {
-                var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer);
-                var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode);
+                var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer.ToLower().Trim());
+                var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode.ToLower());
 
                 if (DynamicListComparer.AreListsOfDynamicEqual(userResult, correctResult))
                 {

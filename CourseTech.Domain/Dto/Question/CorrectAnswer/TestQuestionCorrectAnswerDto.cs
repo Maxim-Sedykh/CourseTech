@@ -14,5 +14,7 @@ namespace CourseTech.Domain.Dto.Question.Pass
         public string CorrectAnswer { get; set; }
 
         public bool AnswerCorrectness { get; set; }
+
+        public string QuestionType { get; set; } = "TestQuestionCorrectAnswerDto";
     }
 }

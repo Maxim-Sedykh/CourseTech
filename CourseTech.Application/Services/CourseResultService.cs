@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
-using CourseTech.Application.Queries.Dtos.LessonRecordDtoQueries;
-using CourseTech.Application.Queries.Dtos.UserProfileDtoQuery;
-using CourseTech.Application.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.CQRS.Commands.UserProfileCommands;
+using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
+using CourseTech.Application.CQRS.Queries.Dtos.LessonRecordDtoQueries;
+using CourseTech.Application.CQRS.Queries.Dtos.UserProfileDtoQuery;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;

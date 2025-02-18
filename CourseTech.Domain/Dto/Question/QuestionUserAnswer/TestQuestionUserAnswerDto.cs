@@ -10,5 +10,7 @@ namespace CourseTech.Domain.Dto.Question.QuestionUserAnswer
         public int QuestionId { get; set; }
 
         public byte UserAnswerNumberOfVariant { get; set; }
+
+        public string QuestionType { get; set; } = "TestQuestionUserAnswerDto";
     }
 }

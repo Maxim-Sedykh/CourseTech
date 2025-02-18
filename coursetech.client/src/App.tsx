@@ -15,7 +15,7 @@ export function App() {
                 <MainLayout>
                     <Routes>
                         <Route path="/" element={<HomePage />} />
-                        <Route path="/lesson/pass" element={<PassLessonPage />} />
+                        <Route path="/lesson/pass/:lessonId" element={<PassLessonPage />} />
                         <Route path="/lesson/read/:lessonId" element={<ReadLessonPage />} />
                         <Route path="/course/result" element={<CourseResultPage />} />
                         <Route path="/user/profile" element={<UserProfilePage />} />

@@ -18,7 +18,7 @@ namespace CourseTech.Application.Mapping
         {
             CreateMap<LessonRecord, LessonRecordDto>()
                 .ForMember(dest => dest.LessonName, opt => opt.MapFrom(src => src.Lesson.Name))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToLongDateString()));
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToString()));
         }
     }
 }

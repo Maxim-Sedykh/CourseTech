@@ -713,3 +713,21 @@ body {
     height: 300px;
     width: 300px;
 }
+
+pre {
+    white-space: pre-wrap; /* Сохраняет переносы строк и пробелы */
+    font-family: monospace; /* Важно для выравнивания табуляции */
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow: auto;
+    margin-bottom: 1em; /* Добавляет отступ между блоками кода */
+  }
+  
+  code {
+    font-family: monospace;
+  }
+  
+  b pre { /* Стили для pre, находящихся внутри тега b */
+    margin-top: 0.5em;
+  }

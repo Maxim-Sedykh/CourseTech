@@ -16,5 +16,6 @@ public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
 
         builder.Property(l => l.Name).HasMaxLength(ValidationConstraints.LessonNameMaximumLength).IsRequired();
         builder.Property(l => l.LectureMarkup).HasMaxLength(ValidationConstraints.LectureMarkupMaximumLength).IsRequired(false);
+        builder.Property(l => l.Number).IsRequired();
     }
 }

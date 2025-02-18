@@ -28,9 +28,10 @@ namespace CourseTech.Application.Converters
 
             writer.WriteStartObject();
 
-            writer.WriteNumber(nameof(value.Id), value.Id);
-            writer.WriteString(nameof(value.CorrectAnswer), value.CorrectAnswer);
-            writer.WriteBoolean(nameof(value.AnswerCorrectness), value.AnswerCorrectness);
+            writer.WriteNumber("id", value.Id);
+            writer.WriteString("correctAnswer", value.CorrectAnswer);
+            writer.WriteBoolean("answerCorrectness", value.AnswerCorrectness);
+            writer.WriteString("questionType", value.QuestionType);
 
             if (value is PracticalQuestionCorrectAnswerDto correctAnswer)
             {
@@ -42,13 +43,13 @@ namespace CourseTech.Application.Converters
 
         private void WritePracticalQuestionProperties(Utf8JsonWriter writer, PracticalQuestionCorrectAnswerDto correctAnswer, JsonSerializerOptions options)
         {
-            writer.WritePropertyName(nameof(correctAnswer.QuestionUserGrade));
+            writer.WritePropertyName("questionUserGrade");
             JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
 
-            writer.WritePropertyName(nameof(correctAnswer.UserQueryAnalys));
+            writer.WritePropertyName("userQueryAnalys");
             JsonSerializer.Serialize(writer, correctAnswer.UserQueryAnalys, options);
 
-            writer.WritePropertyName(nameof(correctAnswer.QueryResult));
+            writer.WritePropertyName("queryResult");
             SerializeQueryResult(writer, correctAnswer.QueryResult, options);
         }
 

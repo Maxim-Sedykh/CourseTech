@@ -1,5 +1,5 @@
-﻿using CourseTech.Application.Commands.UserTokenCommands;
-using CourseTech.Application.Queries.Entities.UserQueries;
+﻿using CourseTech.Application.CQRS.Commands.UserTokenCommands;
+using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities;

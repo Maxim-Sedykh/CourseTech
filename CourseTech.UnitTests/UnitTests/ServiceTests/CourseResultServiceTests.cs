@@ -10,15 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 using Xunit;
-using CourseTech.Application.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Entities;
 using Moq;
-using CourseTech.Application.Queries.Dtos.LessonDtoQueries;
 using CourseTech.Domain.Result;
-using CourseTech.Application.Queries.Dtos.LessonRecordDtoQueries;
-using CourseTech.Application.Commands.UserProfileCommands;
 using CourseTech.Tests.Configurations.Fixture;
 using CourseTech.Domain.Dto.CourseResult;
+using CourseTech.Application.CQRS.Commands.UserProfileCommands;
+using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
+using CourseTech.Application.CQRS.Queries.Dtos.LessonRecordDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests
 {

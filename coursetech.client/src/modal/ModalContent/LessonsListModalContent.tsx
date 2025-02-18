@@ -32,21 +32,18 @@ export function LessonsListModalContent() {
         <Container fluid>
             <Container>
                 {userLessons.lessonNames.map((lesson, index) => {
-                    const isDisabled = index >= userLessons.lessonsCompleted;
+                    const isDisabled = (index) > userLessons.lessonsCompleted;
 
                     return (
-                        <a className={`w-100 lesson-number-${lesson.id}`} href={`/lesson/read/${lesson.id}`}>
-                            <Button
-                                as="a"
-                                
-                                key={lesson.id}
-                                className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40 ${userLessons.lessonsCompleted < 4 ? 'disabled' : ''}`}
-                                disabled={isDisabled}
-                            >
-                                {index + 1}. {lesson.name}
-                            </Button>
-                        </a>
-                        
+                        <Button
+                            as="a"
+                            href={`/lesson/read/${lesson.id}`}
+                            key={lesson.id}
+                            className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40 ${isDisabled ? 'disabled' : ''}`}
+                            disabled={isDisabled}
+                        >
+                            {index + 1}. {lesson.name}
+                        </Button>
                     );
                 })}
             </Container>

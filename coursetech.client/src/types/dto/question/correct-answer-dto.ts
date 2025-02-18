@@ -2,6 +2,7 @@ export interface ICorrectAnswerDto {
     id: number;
     correctAnswer: string;
     answerCorrectness: boolean;
+    questionType: string;
 }
 
 export interface OpenQuestionCorrectAnswerDto extends ICorrectAnswerDto { }

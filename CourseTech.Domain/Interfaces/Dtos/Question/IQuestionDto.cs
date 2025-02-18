@@ -25,5 +25,7 @@ namespace CourseTech.Domain.Interfaces.Dtos.Question
         /// Вопрос, который отображается пользователю.
         /// </summary>
         string DisplayQuestion { get; set; }
+
+        string QuestionType { get; set; }
     }
 }

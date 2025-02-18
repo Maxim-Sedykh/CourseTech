@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using CourseTech.Application.Commands.RoleCommands;
-using CourseTech.Application.Queries.Dtos.RoleDtoQueries;
-using CourseTech.Application.Queries.Entities.RoleQueries;
-using CourseTech.Application.Queries.Entities.UserQueries;
+using CourseTech.Application.CQRS.Commands.RoleCommands;
+using CourseTech.Application.CQRS.Queries.Dtos.RoleDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.RoleQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Role;

@@ -1,9 +1,9 @@
-﻿using CourseTech.Application.Commands.LessonRecordCommands;
-using CourseTech.Application.Commands.UserProfileCommands;
-using CourseTech.Application.Queries.Dtos.QuestionDtoQueries;
-using CourseTech.Application.Queries.Entities.LessonQueries;
-using CourseTech.Application.Queries.Entities.UserProfileQueries;
-using CourseTech.Application.Queries.Views;
+﻿using CourseTech.Application.CQRS.Commands.LessonRecordCommands;
+using CourseTech.Application.CQRS.Commands.UserProfileCommands;
+using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.LessonQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.CQRS.Queries.Views;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.Practice;
@@ -85,7 +85,10 @@ namespace CourseTech.Application.Services
                 return DataResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
             }
 
-            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade);
+            if (profile.LessonsCompleted < lesson.Number)
+            {
+                await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade);
+            }
 
             return DataResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
             {
@@ -103,28 +106,27 @@ namespace CourseTech.Application.Services
         /// <returns></returns>
         private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, int lessonId, float userGrade)
         {
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
+            using var transaction = await unitOfWork.BeginTransactionAsync();
+
+            try
             {
-                try
-                {
-                    var userId = profile.UserId;
+                var userId = profile.UserId;
 
-                    await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
-                    await mediator.Send(new CreateLessonRecordCommand(userId, lessonId, userGrade));
+                await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
+                await mediator.Send(new CreateLessonRecordCommand(userId, lessonId, userGrade));
 
-                    await unitOfWork.SaveChangesAsync();
+                await unitOfWork.SaveChangesAsync();
 
-                    await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{userId}");
-                    await cacheService.RemoveAsync($"{CacheKeys.UserLessonRecords}{userId}");
+                await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{userId}");
+                await cacheService.RemoveAsync($"{CacheKeys.UserLessonRecords}{userId}");
 
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, ex.Message);
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ex.Message);
 
-                    await transaction.RollbackAsync();
-                }
+                await transaction.RollbackAsync();
             }
         }
     }

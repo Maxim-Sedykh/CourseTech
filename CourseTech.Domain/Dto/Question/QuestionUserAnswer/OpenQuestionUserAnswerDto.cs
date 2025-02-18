@@ -10,5 +10,6 @@ namespace CourseTech.Domain.Dto.Question.QuestionUserAnswer
         public int QuestionId { get; set; }
 
         public string UserAnswer { get; set; }
+        public string QuestionType { get; set; } = "OpenQuestionUserAnswerDto";
     }
 }

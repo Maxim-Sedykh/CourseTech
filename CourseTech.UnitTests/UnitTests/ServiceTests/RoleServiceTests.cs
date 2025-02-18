@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
-using CourseTech.Application.Commands.RoleCommands;
-using CourseTech.Application.Queries.Entities.RoleQueries;
-using CourseTech.Application.Queries.Entities.UserQueries;
+using CourseTech.Application.CQRS.Commands.RoleCommands;
+using CourseTech.Application.CQRS.Queries.Entities.RoleQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Role;
 using CourseTech.Domain.Dto.UserRole;

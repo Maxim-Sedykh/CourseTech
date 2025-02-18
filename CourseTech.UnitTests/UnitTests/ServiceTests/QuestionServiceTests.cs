@@ -1,7 +1,4 @@
-﻿using CourseTech.Application.Queries.Dtos.QuestionDtoQueries;
-using CourseTech.Application.Queries.Entities.LessonQueries;
-using CourseTech.Application.Queries.Entities.UserProfileQueries;
-using CourseTech.DAL.Views;
+﻿using CourseTech.DAL.Views;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question;
@@ -22,10 +19,13 @@ using CourseTech.Tests.Configurations.Fixture;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using Xunit.Sdk;
 using AutoMapper;
-using CourseTech.Application.Queries.Views;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using CourseTech.Domain.Dto.Question.Pass;
+using CourseTech.Application.CQRS.Queries.Views;
+using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.LessonQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests
 {

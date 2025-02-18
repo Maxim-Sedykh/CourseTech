@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ApiPaths } from "../../constants/api-paths";
 import { LessonService } from "../../services/lesson-service";
 import { LessonNameDto } from "../../types/dto/lesson/lesson-name-dto";
-import { Container, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 export function CoursePlanModalContent() {
 
