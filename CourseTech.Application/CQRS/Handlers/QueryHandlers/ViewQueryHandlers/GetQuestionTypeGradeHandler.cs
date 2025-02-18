@@ -1,16 +1,7 @@
-﻿using AutoMapper;
-using CourseTech.Application.CQRS.Queries.Views;
-using CourseTech.Application.Queries.Dtos.UserProfileDtoQuery;
+﻿using CourseTech.Application.CQRS.Queries.Views;
 using CourseTech.DAL.Views;
-using CourseTech.Domain.Dto.FinalResult;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.ViewQueryHandlers
 {

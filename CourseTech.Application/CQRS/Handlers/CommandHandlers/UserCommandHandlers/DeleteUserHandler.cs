@@ -1,13 +1,7 @@
-﻿using CourseTech.Application.Commands.Reviews;
-using CourseTech.Application.CQRS.Commands.UserCommand;
+﻿using CourseTech.Application.CQRS.Commands.UserCommand;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserCommandHandlers
 {

@@ -1,4 +1,4 @@
-import { Container, Row, Col, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { CourseResultService } from "../services/course-result-service";
 import { ApiPaths } from "../constants/api-paths";
 import { useEffect, useState } from "react";
@@ -49,7 +49,7 @@ export function CourseResultPage() {
     <>
         <Container fluid>
             <Container>
-                <Row className="my-5">
+                <Row className="my-5 bd-pink-800 br-40">
                     <Col md={3} sm={3}></Col>
                     <Col md={6} sm={6} className="text-center py-5 result-container">
                         <p className="fs-4 fw-bolder">Поздравляем {courseResult.login}!!!</p>

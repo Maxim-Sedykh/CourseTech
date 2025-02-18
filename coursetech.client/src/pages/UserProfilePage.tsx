@@ -134,23 +134,23 @@ export function UserProfilePage() {
                         </Col>
                     </Row>
                 </div>
-                <Row className="mx-auto mb-4 mt-0 d-flex w-75 bd-cyan-500 br-40" style={{ minHeight: '75px' }}>\
+                <Row className="mx-auto mb-4 mt-0 d-flex w-75 bd-cyan-500 br-40 py-3 px-3" style={{ minHeight: '75px' }}>
                     {userProfile.isExamCompleted ? (
-                        <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
+                        <Col md={6} sm={12} className={`${examRowStyle} text-center px-0 my-2`}>
                             <Button
                                 as="a"
                                 href={`/course/result`}
-                                className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40`}
+                                className={`bd-indigo-800 w-75 text-white mx-auto br-40`}
                             >
-                                Посмотреть итоги
+                                Посмотреть итоги прохождения курса
                             </Button>
                         </Col>
                     ) : (
-                        <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
+                        <Col md={6} sm={12} className={`${examRowStyle} text-center my-2`}>
                             <p>Данные о прохождении курса недоступны</p>
                         </Col>
                     )}
-                    <Col md={6} className={`${examRowStyle} col-sm-12 text-center`}>
+                    <Col md={6} sm={12} className={`${examRowStyle} text-center my-2`}>
                         <Button onClick={modalHandlers.lessonList}>Список уроков</Button>
                     </Col>
                 </Row>

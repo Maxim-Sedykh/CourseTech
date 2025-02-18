@@ -8,16 +8,6 @@ export class ApiClient {
         this.axiosInstance = axios.create({
             baseURL: baseUrl,
         });
-
-        this.axiosInstance.interceptors.request.use((config) => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                config.headers['Authorization'] = `Bearer ${token}`;
-            }
-            return config;
-        }, (error) => {
-            return Promise.reject(error);
-        });
     }
 
     private handleError(error: unknown): BaseResult {
@@ -41,7 +31,25 @@ export class ApiClient {
 
     private async request<T>(config: AxiosRequestConfig): Promise<T | BaseResult> {
         try {
-            const response: AxiosResponse<T> = await this.axiosInstance.request<T>(config);
+
+            const token = localStorage.getItem('token');
+
+            let updatedConfig : AxiosRequestConfig;
+
+            if (token) {
+                 updatedConfig = {
+                    ...config,
+                    headers: {
+                        ...config.headers,
+                        Authority: `Bearer ${token}`, // Замените на нужное значение
+                    },
+                };
+            }
+            else {
+                updatedConfig = config
+            }
+
+            const response: AxiosResponse<T> = await this.axiosInstance.request<T>(updatedConfig);
             return response.data;
         } catch (error) {
             return this.handleError(error);
