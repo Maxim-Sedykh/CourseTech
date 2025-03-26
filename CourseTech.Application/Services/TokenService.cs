@@ -15,122 +15,121 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CourseTech.Application.Services
+namespace CourseTech.Application.Services;
+
+public class TokenService : ITokenService
 {
-    public class TokenService : ITokenService
+    private readonly IMediator _mediator;
+    private readonly string _jwtKey;
+    private readonly string _issuer;
+    private readonly string _audience;
+
+    public TokenService(IMediator mediator, IOptions<JwtSettings> options)
     {
-        private readonly IMediator _mediator;
-        private readonly string _jwtKey;
-        private readonly string _issuer;
-        private readonly string _audience;
+        _jwtKey = options.Value.JwtKey;
+        _issuer = options.Value.Issuer;
+        _audience = options.Value.Audience;
+        _mediator = mediator;
+    }
 
-        public TokenService(IMediator mediator, IOptions<JwtSettings> options)
+    /// <inheritdoc/>
+    public string GenerateAccessToken(IEnumerable<Claim> claims)
+    {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var securityToken = new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.AddMinutes(10), credentials);
+        var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+        return token;
+    }
+
+    /// <inheritdoc/>
+    public string GenerateRefreshToken()
+    {
+        var randomNumbers = new byte[32];
+        using var randomNumberGenerator = RandomNumberGenerator.Create();
+        randomNumberGenerator.GetBytes(randomNumbers);
+        return Convert.ToBase64String(randomNumbers);
+    }
+
+    /// <inheritdoc/>
+    public List<Claim> GetClaimsFromUser(User user)
+    {
+        if (user == null)
         {
-            _jwtKey = options.Value.JwtKey;
-            _issuer = options.Value.Issuer;
-            _audience = options.Value.Audience;
-            _mediator = mediator;
+            throw new ArgumentNullException(nameof(user), ErrorMessage.UserNotFound);
         }
 
-        /// <inheritdoc/>
-        public string GenerateAccessToken(IEnumerable<Claim> claims)
+        if (user.Roles == null)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var securityToken = new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.AddMinutes(10), credentials);
-            var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            return token;
+            throw new ArgumentNullException(nameof(user.Roles), ErrorMessage.UserRolesNotFound);
         }
 
-        /// <inheritdoc/>
-        public string GenerateRefreshToken()
+        var claims = new List<Claim>
         {
-            var randomNumbers = new byte[32];
-            using var randomNumberGenerator = RandomNumberGenerator.Create();
-            randomNumberGenerator.GetBytes(randomNumbers);
-            return Convert.ToBase64String(randomNumbers);
+            new Claim(ClaimTypes.Name, user.Login),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        };
+
+        claims.AddRange(user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
+
+        return claims;
+    }
+
+    /// <inheritdoc/>
+    public async Task<DataResult<TokenDto>> RefreshToken(TokenDto dto)
+    {
+        string accessToken = dto.AccessToken;
+        string refreshToken = dto.RefreshToken;
+
+        var claimsPrincipal = GetPrincipalFromExpiredToken(accessToken);
+        var login = claimsPrincipal.Identity?.Name;
+
+        var user = await _mediator.Send(new GetUserWithTokenAndRolesByLoginQuery(login));
+
+        if (user == null || user.UserToken.RefreshToken != refreshToken ||
+            user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
+        {
+            return DataResult<TokenDto>.Failure((int)ErrorCodes.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
         }
 
-        /// <inheritdoc/>
-        public List<Claim> GetClaimsFromUser(User user)
+        var newClaims = GetClaimsFromUser(user);
+
+        var newAccessToken = GenerateAccessToken(newClaims);
+        var newRefreshToken = GenerateRefreshToken();
+
+        await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
+
+        return DataResult<TokenDto>.Success(new TokenDto()
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user), ErrorMessage.UserNotFound);
-            }
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+        });
+    }
 
-            if (user.Roles == null)
-            {
-                throw new ArgumentNullException(nameof(user.Roles), ErrorMessage.UserRolesNotFound);
-            }
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            };
-
-            claims.AddRange(user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
-
-            return claims;
-        }
-
-        /// <inheritdoc/>
-        public async Task<DataResult<TokenDto>> RefreshToken(TokenDto dto)
+    /// <summary>
+    /// Получение ClaimsPrincipal из исчезающего токена
+    /// </summary>
+    /// <param name="accessToken"></param>
+    /// <returns></returns>
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
+    {
+        var tokenValidationParameters = new TokenValidationParameters()
         {
-            string accessToken = dto.AccessToken;
-            string refreshToken = dto.RefreshToken;
-
-            var claimsPrincipal = GetPrincipalFromExpiredToken(accessToken);
-            var login = claimsPrincipal.Identity?.Name;
-
-            var user = await _mediator.Send(new GetUserWithTokenAndRolesByLoginQuery(login));
-
-            if (user == null || user.UserToken.RefreshToken != refreshToken ||
-                user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
-            {
-                return DataResult<TokenDto>.Failure((int)ErrorCodes.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
-            }
-
-            var newClaims = GetClaimsFromUser(user);
-
-            var newAccessToken = GenerateAccessToken(newClaims);
-            var newRefreshToken = GenerateRefreshToken();
-
-            await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
-
-            return DataResult<TokenDto>.Success(new TokenDto()
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-            });
-        }
-
-        /// <summary>
-        /// Получение ClaimsPrincipal из исчезающего токена
-        /// </summary>
-        /// <param name="accessToken"></param>
-        /// <returns></returns>
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
+            ValidateLifetime = true,
+            ValidAudience = _audience,
+            ValidIssuer = _issuer
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
         {
-            var tokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
-                ValidateLifetime = true,
-                ValidAudience = _audience,
-                ValidIssuer = _issuer
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
-            {
-                throw new SecurityTokenException(ErrorMessage.InvalidToken);
-            }
-            return claimsPrincipal;
+            throw new SecurityTokenException(ErrorMessage.InvalidToken);
         }
+        return claimsPrincipal;
     }
 }

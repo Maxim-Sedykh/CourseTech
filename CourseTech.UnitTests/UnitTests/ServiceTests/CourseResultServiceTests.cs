@@ -1,14 +1,7 @@
 ﻿using AutoFixture;
-using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Sdk;
 using Xunit;
 using CourseTech.Domain.Entities;
 using Moq;
@@ -20,136 +13,135 @@ using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
 using CourseTech.Application.CQRS.Queries.Dtos.LessonRecordDtoQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 
-namespace CourseTech.Tests.UnitTests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests;
+
+public class CourseResultServiceTests : IClassFixture<CourseResultServiceFixture>
 {
-    public class CourseResultServiceTests : IClassFixture<CourseResultServiceFixture>
+    private readonly CourseResultServiceFixture _fixture;
+    private readonly IFixture _autoFixture;
+
+    public CourseResultServiceTests(CourseResultServiceFixture fixture)
     {
-        private readonly CourseResultServiceFixture _fixture;
-        private readonly IFixture _autoFixture;
+        _autoFixture = new Fixture();
+        _fixture = fixture;
+    }
 
-        public CourseResultServiceTests(CourseResultServiceFixture fixture)
+    [Fact]
+    public async Task GetCourseResultAsync_ShouldReturnFailure_WhenValidationFails()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var profile = new UserProfile()
         {
-            _autoFixture = new Fixture();
-            _fixture = fixture;
-        }
+            Id = 1,
+            UserId = userId,
+            Name = "Test",
+        };
+        var lessonsCount = 0;
 
-        [Fact]
-        public async Task GetCourseResultAsync_ShouldReturnFailure_WhenValidationFails()
+        var errorMessage = "Userprofile not found";
+
+        _fixture.CourseResultValidatorMock
+            .Setup(v => v.ValidateUserCourseResult(It.IsAny<UserProfile>(), It.IsAny<int>()))
+            .Returns(BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, errorMessage));
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+            .ReturnsAsync(profile);
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetLessonsCountQuery>(), default))
+            .ReturnsAsync(lessonsCount);
+
+        // Act
+        var result = await _fixture.CourseResultService.GetCourseResultAsync(userId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal(errorMessage, result.Error.Message);
+    }
+
+    [Fact]
+    public async Task GetCourseResultAsync_ShouldReturnSuccess_WhenValidationPasses()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var profile = new UserProfile()
         {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var profile = new UserProfile()
-            {
-                Id = 1,
-                UserId = userId,
-                Name = "Test",
-            };
-            var lessonsCount = 0;
+            Id = 1,
+            UserId = userId,
+            Name = "Test",
+        };
+        var lessonsCount = 10;
+        var userLessonRecords = _autoFixture.Create<LessonRecordDto[]>();
 
-            var errorMessage = "Userprofile not found";
+        // Мокаем запросы и валидатор
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
+            .ReturnsAsync(profile);
 
-            _fixture.CourseResultValidatorMock
-                .Setup(v => v.ValidateUserCourseResult(It.IsAny<UserProfile>(), It.IsAny<int>()))
-                .Returns(BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, errorMessage));
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetLessonsCountQuery>(), default))
+            .ReturnsAsync(lessonsCount);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
-                .ReturnsAsync(profile);
+        _fixture.CourseResultValidatorMock
+            .Setup(v => v.ValidateUserCourseResult(It.IsAny<UserProfile>(), lessonsCount))
+            .Returns(BaseResult.Success());
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonsCountQuery>(), default))
-                .ReturnsAsync(lessonsCount);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetLessonRecordDtosByUserIdQuery>(), default))
+            .ReturnsAsync(userLessonRecords);
 
-            // Act
-            var result = await _fixture.CourseResultService.GetCourseResultAsync(userId);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<UpdateCompletedCourseUserProfileCommand>(), default))
+            .Returns(Task.CompletedTask);
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
-            Assert.Equal(errorMessage, result.Error.Message);
-        }
+        _fixture.MapperMock.Setup(m => m.Map<CourseResultDto>(It.IsAny<UserProfile>()))
+            .Returns(new CourseResultDto());
 
-        [Fact]
-        public async Task GetCourseResultAsync_ShouldReturnSuccess_WhenValidationPasses()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var profile = new UserProfile()
-            {
-                Id = 1,
-                UserId = userId,
-                Name = "Test",
-            };
-            var lessonsCount = 10;
-            var userLessonRecords = _autoFixture.Create<LessonRecordDto[]>();
+        // Act
+        var result = await _fixture.CourseResultService.GetCourseResultAsync(userId);
 
-            // Мокаем запросы и валидатор
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
-                .ReturnsAsync(profile);
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+    }
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonsCountQuery>(), default))
-                .ReturnsAsync(lessonsCount);
+    [Fact]
+    public async Task GetUserAnalys_ShouldReturnFailure_WhenAnalysNotFound()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
 
-            _fixture.CourseResultValidatorMock
-                .Setup(v => v.ValidateUserCourseResult(It.IsAny<UserProfile>(), lessonsCount))
-                .Returns(BaseResult.Success());
+        _fixture.CacheServiceMock
+            .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<UserAnalysDto>>>()))
+            .ReturnsAsync((UserAnalysDto)null);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLessonRecordDtosByUserIdQuery>(), default))
-                .ReturnsAsync(userLessonRecords);
+        // Act
+        var result = await _fixture.CourseResultService.GetUserAnalys(userId);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<UpdateCompletedCourseUserProfileCommand>(), default))
-                .Returns(Task.CompletedTask);
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.UserAnalysNotFound, result.Error.Code);
+    }
 
-            _fixture.MapperMock.Setup(m => m.Map<CourseResultDto>(It.IsAny<UserProfile>()))
-                .Returns(new CourseResultDto());
+    [Fact]
+    public async Task GetUserAnalys_ShouldReturnSuccess_WhenAnalysFound()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var userAnalys = _autoFixture.Create<UserAnalysDto>();
 
-            // Act
-            var result = await _fixture.CourseResultService.GetCourseResultAsync(userId);
+        _fixture.CacheServiceMock
+            .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<UserAnalysDto>>>()))
+            .ReturnsAsync(userAnalys);
 
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Data);
-        }
+        // Act
+        var result = await _fixture.CourseResultService.GetUserAnalys(userId);
 
-        [Fact]
-        public async Task GetUserAnalys_ShouldReturnFailure_WhenAnalysNotFound()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-
-            _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<UserAnalysDto>>>()))
-                .ReturnsAsync((UserAnalysDto)null);
-
-            // Act
-            var result = await _fixture.CourseResultService.GetUserAnalys(userId);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.UserAnalysNotFound, result.Error.Code);
-        }
-
-        [Fact]
-        public async Task GetUserAnalys_ShouldReturnSuccess_WhenAnalysFound()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var userAnalys = _autoFixture.Create<UserAnalysDto>();
-
-            _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<UserAnalysDto>>>()))
-                .ReturnsAsync(userAnalys);
-
-            // Act
-            var result = await _fixture.CourseResultService.GetUserAnalys(userId);
-
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal(userAnalys, result.Data);
-        }
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(userAnalys, result.Data);
     }
 }

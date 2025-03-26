@@ -1,15 +1,14 @@
 ﻿using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 
-namespace CourseTech.Domain.Dto.Question.CheckQuestions
-{
-    /// <summary>
-    /// Модель данных для хранения данных, которые нужны для проверки правильности вопроса тестового типа.
-    /// </summary>
-    public class TestQuestionCheckingDto : ICheckQuestionDto
-    {
-        public int QuestionId { get; set; }
+namespace CourseTech.Domain.Dto.Question.CheckQuestions;
 
-        public TestVariantDto CorrectVariant { get; set; }
-    }
+/// <summary>
+/// Модель данных для хранения данных, которые нужны для проверки правильности вопроса тестового типа.
+/// </summary>
+public class TestQuestionCheckingDto : ICheckQuestionDto
+{
+    public int QuestionId { get; set; }
+
+    public TestVariantDto CorrectVariant { get; set; }
 }

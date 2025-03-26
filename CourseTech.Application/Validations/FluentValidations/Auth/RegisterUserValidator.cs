@@ -3,36 +3,31 @@ using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Extensions;
 using FluentValidation;
 
-namespace CourseTech.Application.Validations.FluentValidations.Auth
+namespace CourseTech.Application.Validations.FluentValidations.Auth;
+
+/// <summary>
+/// Валидация регистрации пользователя
+/// </summary>
+public class RegisterUserValidator : AbstractValidator<RegisterUserDto>
 {
-    /// <summary>
-    /// Валидация регистрации пользователя
-    /// </summary>
-    public class RegisterUserValidator : AbstractValidator<RegisterUserDto>
+    public RegisterUserValidator()
     {
-        public RegisterUserValidator()
-        {
-            RuleFor(x => x.Login).ValidateLogin();
+        RuleFor(x => x.Login).ValidateLogin();
 
-            RuleFor(x => x.UserName).ValidateUserName();
+        RuleFor(x => x.UserName).ValidateUserName();
 
-            RuleFor(x => x.Surname).ValidateUserSurname();
+        RuleFor(x => x.Surname).ValidateUserSurname();
 
-            RuleFor(x => x.DateOfBirth)
-                .NotEmpty().WithMessage(ValidationErrorMessages.DateOfBirthNotEmptyMessage)
-                .Must(x => BeValidDateOfBirth(x)).WithMessage(ValidationErrorMessages.ValidDateOfBirthMessage);
+        RuleFor(x => x.DateOfBirth)
+            .NotEmpty().WithMessage(ValidationErrorMessages.DateOfBirthNotEmptyMessage)
+            .Must(x => BeValidDateOfBirth(x)).WithMessage(ValidationErrorMessages.ValidDateOfBirthMessage);
 
-            RuleFor(x => x.Password).ValidatePassword();
+        RuleFor(x => x.Password).ValidatePassword();
 
-            RuleFor(x => x.PasswordConfirm)
-                .NotEmpty().WithMessage(ValidationErrorMessages.PasswordConfirmNotEmptyMessage)
-                .Equal(x => x.Password).WithMessage(ValidationErrorMessages.PasswordConfirmNotEqualPasswordMessage);
-        }
-
-        private bool BeValidDateOfBirth(DateTime dateOfBirth) => dateOfBirth < DateTime.Now;
-
-        private bool HaveAtLeastOneDigit(string password) => password.Any(char.IsDigit);
-
-        private bool HaveAtLeastOneUppercase(string password) => password.Any(char.IsUpper);
+        RuleFor(x => x.PasswordConfirm)
+            .NotEmpty().WithMessage(ValidationErrorMessages.PasswordConfirmNotEmptyMessage)
+            .Equal(x => x.Password).WithMessage(ValidationErrorMessages.PasswordConfirmNotEqualPasswordMessage);
     }
+
+    private bool BeValidDateOfBirth(DateTime dateOfBirth) => dateOfBirth < DateTime.Now;
 }

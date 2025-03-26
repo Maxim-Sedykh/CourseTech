@@ -4,24 +4,23 @@ using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 
-namespace CourseTech.Application.Validations.Validators
+namespace CourseTech.Application.Validations.Validators;
+
+public class UserValidator : IUserValidator
 {
-    public class UserValidator : IUserValidator
+    /// <inheritdoc/>
+    public BaseResult ValidateDeletingUser(UserProfile userProfile, User user)
     {
-        /// <inheritdoc/>
-        public BaseResult ValidateDeletingUser(UserProfile userProfile, User user)
+        if (user is null)
         {
-            if (user is null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
-            }
-
-            if (userProfile is null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
-            }
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
         }
+
+        if (userProfile is null)
+        {
+            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+        }
+
+        return BaseResult.Success();
     }
 }

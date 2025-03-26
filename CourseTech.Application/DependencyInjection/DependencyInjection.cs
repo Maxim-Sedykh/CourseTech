@@ -12,7 +12,6 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using MediatR;
 
 namespace CourseTech.Application.DependencyInjection;
 

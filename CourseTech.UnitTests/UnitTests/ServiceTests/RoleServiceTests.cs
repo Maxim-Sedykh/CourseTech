@@ -14,469 +14,468 @@ using Moq;
 using System.Data;
 using Xunit;
 
-namespace CourseTech.Tests.UnitTests.ServiceTests
+namespace CourseTech.Tests.UnitTests.ServiceTests;
+
+public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 {
-    public class RoleServiceTests : IClassFixture<RoleServiceFixture>
+    private readonly RoleServiceFixture _fixture;
+    private readonly IFixture _autoFixture;
+
+    public RoleServiceTests(RoleServiceFixture fixture)
     {
-        private readonly RoleServiceFixture _fixture;
-        private readonly IFixture _autoFixture;
+        _fixture = fixture;
+        _autoFixture = new Fixture();
+    }
 
-        public RoleServiceTests(RoleServiceFixture fixture)
+    [Fact]
+    public async Task AddRoleForUserAsync_UserNotFound_ReturnsFailure()
+    {
+        // Arrange
+        var dto = _autoFixture.Create<UserRoleDto>();
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
+            .ReturnsAsync((User)null);
+
+        // Act
+        var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddRoleForUserAsync_RoleNotFound_ReturnsFailure()
+    {
+        // Arrange
+        var dto = new UserRoleDto("test", "admin");
         {
-            _fixture = fixture;
-            _autoFixture = new Fixture();
-        }
+            
+        };
+        var user = new User { Login = dto.Login, Roles = [new Role { Name = "wrontRole" }] };
 
-        [Fact]
-        public async Task AddRoleForUserAsync_UserNotFound_ReturnsFailure()
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
+            .ReturnsAsync(user);
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
+            .ReturnsAsync((Role)null);
+
+        // Act
+        var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddRoleForUserAsync_UserAlreadyHasRole_ReturnsFailure()
+    {
+        // Arrange
+        var dto = _autoFixture.Create<UserRoleDto>();
+        var user = new User
         {
-            // Arrange
-            var dto = _autoFixture.Create<UserRoleDto>();
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
-                .ReturnsAsync((User)null);
+            Login = dto.Login,
+            Roles = new List<Role> { new Role { Name = dto.RoleName } }
+        };
 
-            // Act
-            var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
+            .ReturnsAsync(user);
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
-        }
+        // Act
+        var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
 
-        [Fact]
-        public async Task AddRoleForUserAsync_RoleNotFound_ReturnsFailure()
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.UserAlreadyExistThisRole, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddRoleForUserAsync_SuccessfullyAddsRole_ReturnsSuccess()
+    {
+        // Arrange
+        var dto = new UserRoleDto("test", "Admin");
+        var user = new User { Login = dto.Login, Roles = [new Role() { Id = 1, Name = "User" }] };
+        var role = new Role { Id = 1, Name = dto.RoleName };
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
+            .ReturnsAsync(user);
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
+            .ReturnsAsync(role);
+
+        // Act
+        var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(dto.Login, result.Data.Login);
+        Assert.Equal(role.Name, result.Data.RoleName);
+
+        // Verify that the CreateUserRoleCommand was sent
+        _fixture.MediatorMock.Verify(m => m.Send(It.Is<CreateUserRoleCommand>(cmd => cmd.RoleId == role.Id && cmd.UserId == user.Id), default), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAllRoles_WhenRolesExist_ReturnsSuccessResult()
+    {
+        // Arrange
+        var roles = new[]
         {
-            // Arrange
-            var dto = new UserRoleDto("test", "admin");
-            {
-                
-            };
-            var user = new User { Login = dto.Login, Roles = [new Role { Name = "wrontRole" }] };
+            new RoleDto { Id = 1, RoleName = "Admin" },
+            new RoleDto { Id = 2, RoleName = "User" }
+        };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
-                .ReturnsAsync(user);
+        _fixture.CacheServiceMock
+            .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<RoleDto[]>>>()))
+            .ReturnsAsync(roles);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
-                .ReturnsAsync((Role)null);
+        // Act
+        var result = await _fixture.RoleService.GetAllRoles();
 
-            // Act
-            var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
+        var resultData = result.Data.ToList();
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
-        }
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(roles.Length, resultData.Count);
+        Assert.Equal("Admin", resultData[0].RoleName);
+        Assert.Equal("User", resultData[1].RoleName);
+    }
 
-        [Fact]
-        public async Task AddRoleForUserAsync_UserAlreadyHasRole_ReturnsFailure()
+    [Fact]
+    public async Task GetAllRoles_WhenNoRolesExist_ReturnsFailureResult()
+    {
+        // Arrange
+        var roles = new RoleDto[0]; // Пустой массив ролей
+
+        _fixture.CacheServiceMock
+            .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<RoleDto[]>>>()))
+            .ReturnsAsync(roles);
+
+        // Act
+        var result = await _fixture.RoleService.GetAllRoles();
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RolesNotFound, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteRoleAsync_RoleExists_DeletesRoleAndReturnsSuccessResult()
+    {
+        // Arrange
+        int roleId = 1;
+        var existingRole = new Role() { Id = roleId, Name = "Admin" };
+
+         _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existingRole);
+
+        _fixture.MapperMock
+            .Setup(m => m.Map<RoleDto>(It.IsAny<Role>()))
+            .Returns(new RoleDto() { Id = roleId });
+
+        // Act
+        var result = await _fixture.RoleService.DeleteRoleAsync(roleId);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+        Assert.Equal(roleId, result.Data.Id);
+
+        _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+        _fixture.CacheServiceMock.Verify(m => m.RemoveAsync(CacheKeys.Roles), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteRoleAsync_RoleDoesNotExist_ReturnsFailureResult()
+    {
+        // Arrange
+        long roleId = 1;
+
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Role)null);
+
+        // Act
+        var result = await _fixture.RoleService.DeleteRoleAsync(roleId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteRoleForUserAsync_WhenValidationPassed_DeletesRoleAndReturnsSuccessResult()
+    {
+        // Arrange
+        var dto = new DeleteUserRoleDto("testUser", 2);
+
+        var roleToDelete = new Role()
         {
-            // Arrange
-            var dto = _autoFixture.Create<UserRoleDto>();
-            var user = new User
-            {
-                Login = dto.Login,
-                Roles = new List<Role> { new Role { Name = dto.RoleName } }
-            };
+            Id = 2,
+            Name = "Admin"
+        };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
-                .ReturnsAsync(user);
-
-            // Act
-            var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.UserAlreadyExistThisRole, result.Error.Code);
-        }
-
-        [Fact]
-        public async Task AddRoleForUserAsync_SuccessfullyAddsRole_ReturnsSuccess()
+        var user = new User
         {
-            // Arrange
-            var dto = new UserRoleDto("test", "Admin");
-            var user = new User { Login = dto.Login, Roles = [new Role() { Id = 1, Name = "User" }] };
-            var role = new Role { Id = 1, Name = dto.RoleName };
+            Id = new Guid(),
+            Login = dto.Login,
+            Roles =
+            [
+                new Role() {
+                    Id = 1,
+                    Name = "User"
+                },
+                roleToDelete
+            ]
+        };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), default))
-                .ReturnsAsync(user);
-
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
-                .ReturnsAsync(role);
-
-            // Act
-            var result = await _fixture.RoleService.AddRoleForUserAsync(dto);
-
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal(dto.Login, result.Data.Login);
-            Assert.Equal(role.Name, result.Data.RoleName);
-
-            // Verify that the CreateUserRoleCommand was sent
-            _fixture.MediatorMock.Verify(m => m.Send(It.Is<CreateUserRoleCommand>(cmd => cmd.RoleId == role.Id && cmd.UserId == user.Id), default), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetAllRoles_WhenRolesExist_ReturnsSuccessResult()
+        var userRole = new UserRole
         {
-            // Arrange
-            var roles = new[]
-            {
-                new RoleDto { Id = 1, RoleName = "Admin" },
-                new RoleDto { Id = 2, RoleName = "User" }
-            };
+            RoleId = roleToDelete.Id,
+            UserId = user.Id
+        };
 
-            _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<RoleDto[]>>>()))
-                .ReturnsAsync(roles);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
 
-            // Act
-            var result = await _fixture.RoleService.GetAllRoles();
+        _fixture.RoleValidatorMock
+            .Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role>()))
+            .Returns(BaseResult.Success());
 
-            var resultData = result.Data.ToList();
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userRole);
 
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal(roles.Length, resultData.Count);
-            Assert.Equal("Admin", resultData[0].RoleName);
-            Assert.Equal("User", resultData[1].RoleName);
-        }
+        // Act
+        var result = await _fixture.RoleService.DeleteRoleForUserAsync(dto);
 
-        [Fact]
-        public async Task GetAllRoles_WhenNoRolesExist_ReturnsFailureResult()
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+        Assert.Equal(dto.Login, result.Data.Login);
+        Assert.Equal("Admin", result.Data.RoleName);
+
+        _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteRoleForUserAsync_ValidationFailed_ReturnsFailureResult()
+    {
+        // Arrange
+        var dto = new DeleteUserRoleDto("testUser", 2);
+
+        var roleToDelete = new Role()
         {
-            // Arrange
-            var roles = new RoleDto[0]; // Пустой массив ролей
+            Id = 2,
+            Name = "Admin"
+        };
 
-            _fixture.CacheServiceMock
-                .Setup(c => c.GetOrAddToCache(It.IsAny<string>(), It.IsAny<Func<Task<RoleDto[]>>>()))
-                .ReturnsAsync(roles);
-
-            // Act
-            var result = await _fixture.RoleService.GetAllRoles();
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RolesNotFound, result.Error.Code);
-        }
-
-        [Fact]
-        public async Task DeleteRoleAsync_RoleExists_DeletesRoleAndReturnsSuccessResult()
+        var user = new User
         {
-            // Arrange
-            int roleId = 1;
-            var existingRole = new Role() { Id = roleId, Name = "Admin" };
+            Id = new Guid(),
+            Login = dto.Login,
+            Roles =
+            [
+                new Role() {
+                    Id = 1,
+                    Name = "User"
+                },
+                roleToDelete
+            ]
+        };
 
-             _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existingRole);
-
-            _fixture.MapperMock
-                .Setup(m => m.Map<RoleDto>(It.IsAny<Role>()))
-                .Returns(new RoleDto() { Id = roleId });
-
-            // Act
-            var result = await _fixture.RoleService.DeleteRoleAsync(roleId);
-
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Data);
-            Assert.Equal(roleId, result.Data.Id);
-
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-            _fixture.CacheServiceMock.Verify(m => m.RemoveAsync(CacheKeys.Roles), Times.Once);
-        }
-
-        [Fact]
-        public async Task DeleteRoleAsync_RoleDoesNotExist_ReturnsFailureResult()
+        var userRole = new UserRole
         {
-            // Arrange
-            long roleId = 1;
+            RoleId = roleToDelete.Id,
+            UserId = user.Id
+        };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Role)null);
+        var errorMessage = "Role not found";
 
-            // Act
-            var result = await _fixture.RoleService.DeleteRoleAsync(roleId);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
-        }
+        _fixture.RoleValidatorMock
+            .Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
+            .Returns(BaseResult.Failure((int)ErrorCodes.RoleNotFound, errorMessage));
 
-        [Fact]
-        public async Task DeleteRoleForUserAsync_WhenValidationPassed_DeletesRoleAndReturnsSuccessResult()
-        {
-            // Arrange
-            var dto = new DeleteUserRoleDto("testUser", 2);
+        // Act
+        var result = await _fixture.RoleService.DeleteRoleForUserAsync(dto);
 
-            var roleToDelete = new Role()
-            {
-                Id = 2,
-                Name = "Admin"
-            };
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal(errorMessage, result.Error.Message);
 
-            var user = new User
-            {
-                Id = new Guid(),
-                Login = dto.Login,
-                Roles =
-                [
-                    new Role() {
-                        Id = 1,
-                        Name = "User"
-                    },
-                    roleToDelete
-                ]
-            };
+        _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 
-            var userRole = new UserRole
-            {
-                RoleId = roleToDelete.Id,
-                UserId = user.Id
-            };
+    [Fact]
+    public async Task CreateRoleAsync_RoleExists_ReturnsFailureResult()
+    {
+        // Arrange
+        var createRoleDto = new CreateRoleDto { RoleName = "Admin" };
+        var existingRole = new Role { Name = "Admin" };
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(user);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
+            .ReturnsAsync(existingRole);
 
-            _fixture.RoleValidatorMock
-                .Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role>()))
-                .Returns(BaseResult.Success());
+        // Act
+        var result = await _fixture.RoleService.CreateRoleAsync(createRoleDto);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(userRole);
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+    }
 
-            // Act
-            var result = await _fixture.RoleService.DeleteRoleForUserAsync(dto);
+    [Fact]
+    public async Task CreateRoleAsync_WhenRoleDoesNotExist_CreatesRoleAndReturnsSuccessResult()
+    {
+        // Arrange
+        var createRoleDto = new CreateRoleDto { RoleName = "User" };
 
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Data);
-            Assert.Equal(dto.Login, result.Data.Login);
-            Assert.Equal("Admin", result.Data.RoleName);
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
+            .ReturnsAsync((Role)null); // Роль не существует
 
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
+        _fixture.MediatorMock
+            .Setup(m => m.Send(It.IsAny<CreateRoleCommand>(), default))
+            .Returns(Task.CompletedTask); // Успешно создаем роль
 
-        [Fact]
-        public async Task DeleteRoleForUserAsync_ValidationFailed_ReturnsFailureResult()
-        {
-            // Arrange
-            var dto = new DeleteUserRoleDto("testUser", 2);
+        _fixture.MapperMock
+            .Setup(m => m.Map<RoleDto>(It.IsAny<Role>()))
+            .Returns(new RoleDto()); // Для простоты, просто возвращаем тот же объект
 
-            var roleToDelete = new Role()
-            {
-                Id = 2,
-                Name = "Admin"
-            };
+        // Act
+        var result = await _fixture.RoleService.CreateRoleAsync(createRoleDto);
 
-            var user = new User
-            {
-                Id = new Guid(),
-                Login = dto.Login,
-                Roles =
-                [
-                    new Role() {
-                        Id = 1,
-                        Name = "User"
-                    },
-                    roleToDelete
-                ]
-            };
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+    }
 
-            var userRole = new UserRole
-            {
-                RoleId = roleToDelete.Id,
-                UserId = user.Id
-            };
+    [Fact]
+    public async Task UpdateRoleForUserAsync_WhenValidationSucceeds_UpdatesRoleSuccessfully()
+    {
+        // Arrange
+        var updateDto = new UpdateUserRoleDto("user1", 1, 2);
+        var user = new User { Id = new Guid(), Login = "user1", Roles = [new Role() { Id = 1, Name = "OldRole" }] };
+        var role = new Role { Id = 1, Name = "OldRole" };
+        var newRole = new Role { Id = 2, Name = "NewRole" };
+        var userRole = new UserRole() { UserId = user.Id, RoleId = role.Id };
 
-            var errorMessage = "Role not found";
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(role);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(newRole);
+        _fixture.RoleValidatorMock.Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
+            .Returns(BaseResult.Success());
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userRole);
+        _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
+            .ReturnsAsync(Mock.Of<IDbContextTransaction>());
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<CreateUserRoleCommand>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(user);
+        // Act
+        var result = await _fixture.RoleService.UpdateRoleForUserAsync(updateDto);
 
-            _fixture.RoleValidatorMock
-                .Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
-                .Returns(BaseResult.Failure((int)ErrorCodes.RoleNotFound, errorMessage));
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal("user1", result.Data.Login);
+        Assert.Equal("NewRole", result.Data.RoleName);
+    }
 
-            // Act
-            var result = await _fixture.RoleService.DeleteRoleForUserAsync(dto);
+    [Fact]
+    public async Task UpdateRoleForUserAsync_WhenExceptionOccurs_RollsBackTransaction()
+    {
+        // Arrange
+        var user = new User { Id = new Guid(), Login = "user1", Roles = [new Role() { Id = 1, Name = "OldRole" }] };
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
-            Assert.Equal(errorMessage, result.Error.Message);
+        var updateDto = new UpdateUserRoleDto("user1", 1, 2);
+        var role = new Role { Id = 1, Name = "OldRole" };
+        var newRole = new Role { Id = 2, Name = "NewRole" };
 
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
-        }
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(role);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(newRole);
+        _fixture.RoleValidatorMock.Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
+            .Returns(BaseResult.Success());
 
-        [Fact]
-        public async Task CreateRoleAsync_RoleExists_ReturnsFailureResult()
-        {
-            // Arrange
-            var createRoleDto = new CreateRoleDto { RoleName = "Admin" };
-            var existingRole = new Role { Name = "Admin" };
+        var transactionMock = new Mock<IDbContextTransaction>();
 
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
-                .ReturnsAsync(existingRole);
+        _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
+            .ReturnsAsync(transactionMock.Object);
 
-            // Act
-            var result = await _fixture.RoleService.CreateRoleAsync(createRoleDto);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new UserRole { UserId = user.Id, RoleId = role.Id });
 
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
-        }
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()))
+            .Throws(new Exception("Database error")); // Симулируем исключение
 
-        [Fact]
-        public async Task CreateRoleAsync_WhenRoleDoesNotExist_CreatesRoleAndReturnsSuccessResult()
-        {
-            // Arrange
-            var createRoleDto = new CreateRoleDto { RoleName = "User" };
+        // Act
+        var result = await _fixture.RoleService.UpdateRoleForUserAsync(updateDto);
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<GetRoleByNameQuery>(), default))
-                .ReturnsAsync((Role)null); // Роль не существует
+        // Assert
+        Assert.False(result.IsSuccess);
+        transactionMock.Verify(t => t.RollbackAsync(It.IsAny<CancellationToken>()), Times.Once); // Подтверждение того что был вызван Rollback транзакции
+    }
 
-            _fixture.MediatorMock
-                .Setup(m => m.Send(It.IsAny<CreateRoleCommand>(), default))
-                .Returns(Task.CompletedTask); // Успешно создаем роль
+    [Fact]
+    public async Task UpdateRoleAsync_WhenRoleExists_UpdatesRoleSuccessfully()
+    {
+        // Arrange
+        var roleDto = new RoleDto { Id = 1, RoleName = "UpdatedRole" };
+        var existingRole = new Role { Id = 1, Name = "OldRole" };
 
-            _fixture.MapperMock
-                .Setup(m => m.Map<RoleDto>(It.IsAny<Role>()))
-                .Returns(new RoleDto()); // Для простоты, просто возвращаем тот же объект
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existingRole);
 
-            // Act
-            var result = await _fixture.RoleService.CreateRoleAsync(createRoleDto);
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Data);
-        }
+        _fixture.CacheServiceMock.Setup(c => c.RemoveAsync(CacheKeys.Roles))
+            .Returns(Task.CompletedTask);
 
-        [Fact]
-        public async Task UpdateRoleForUserAsync_WhenValidationSucceeds_UpdatesRoleSuccessfully()
-        {
-            // Arrange
-            var updateDto = new UpdateUserRoleDto("user1", 1, 2);
-            var user = new User { Id = new Guid(), Login = "user1", Roles = [new Role() { Id = 1, Name = "OldRole" }] };
-            var role = new Role { Id = 1, Name = "OldRole" };
-            var newRole = new Role { Id = 2, Name = "NewRole" };
-            var userRole = new UserRole() { UserId = user.Id, RoleId = role.Id };
+        // Act
+        var result = await _fixture.RoleService.UpdateRoleAsync(roleDto);
 
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(user);
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(role);
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(newRole);
-            _fixture.RoleValidatorMock.Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
-                .Returns(BaseResult.Success());
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(userRole);
-            _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
-                .ReturnsAsync(Mock.Of<IDbContextTransaction>());
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<CreateUserRoleCommand>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+        // Assert
+        Assert.True(result.IsSuccess);
+        _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
 
-            // Act
-            var result = await _fixture.RoleService.UpdateRoleForUserAsync(updateDto);
+    [Fact]
+    public async Task UpdateRoleAsync_WhenRoleDoesNotExist_ReturnsFailureResult()
+    {
+        // Arrange
+        var roleDto = new RoleDto { Id = 1, RoleName = "InvalidRole" };
 
-            // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal("user1", result.Data.Login);
-            Assert.Equal("NewRole", result.Data.RoleName);
-        }
+        _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Role)null);
 
-        [Fact]
-        public async Task UpdateRoleForUserAsync_WhenExceptionOccurs_RollsBackTransaction()
-        {
-            // Arrange
-            var user = new User { Id = new Guid(), Login = "user1", Roles = [new Role() { Id = 1, Name = "OldRole" }] };
+        // Act
+        var result = await _fixture.RoleService.UpdateRoleAsync(roleDto);
 
-            var updateDto = new UpdateUserRoleDto("user1", 1, 2);
-            var role = new Role { Id = 1, Name = "OldRole" };
-            var newRole = new Role { Id = 2, Name = "NewRole" };
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserWithRolesByLoginQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(user);
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(role);
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(newRole);
-            _fixture.RoleValidatorMock.Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
-                .Returns(BaseResult.Success());
-
-            var transactionMock = new Mock<IDbContextTransaction>();
-
-            _fixture.UnitOfWorkMock.Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
-                .ReturnsAsync(transactionMock.Object);
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetUserRoleByIdsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new UserRole { UserId = user.Id, RoleId = role.Id });
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()))
-                .Throws(new Exception("Database error")); // Симулируем исключение
-
-            // Act
-            var result = await _fixture.RoleService.UpdateRoleForUserAsync(updateDto);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            transactionMock.Verify(t => t.RollbackAsync(It.IsAny<CancellationToken>()), Times.Once); // Подтверждение того что был вызван Rollback транзакции
-        }
-
-        [Fact]
-        public async Task UpdateRoleAsync_WhenRoleExists_UpdatesRoleSuccessfully()
-        {
-            // Arrange
-            var roleDto = new RoleDto { Id = 1, RoleName = "UpdatedRole" };
-            var existingRole = new Role { Id = 1, Name = "OldRole" };
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existingRole);
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
-
-            _fixture.CacheServiceMock.Setup(c => c.RemoveAsync(CacheKeys.Roles))
-                .Returns(Task.CompletedTask);
-
-            // Act
-            var result = await _fixture.RoleService.UpdateRoleAsync(roleDto);
-
-            // Assert
-            Assert.True(result.IsSuccess);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateRoleAsync_WhenRoleDoesNotExist_ReturnsFailureResult()
-        {
-            // Arrange
-            var roleDto = new RoleDto { Id = 1, RoleName = "InvalidRole" };
-
-            _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetRoleByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Role)null);
-
-            // Act
-            var result = await _fixture.RoleService.UpdateRoleAsync(roleDto);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
-            _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
-        }
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

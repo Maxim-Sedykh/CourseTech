@@ -1,27 +1,20 @@
 ﻿using AutoMapper;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
-using Microsoft.AspNetCore.Html;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CourseTech.Application.Mapping
+namespace CourseTech.Application.Mapping;
+
+/// <summary>
+/// Настройка маппинга для сущности "Урок" в определённые DTO.
+/// </summary>
+public class LessonMapping : Profile
 {
-    /// <summary>
-    /// Настройка маппинга для сущности "Урок" в определённые DTO.
-    /// </summary>
-    public class LessonMapping : Profile
+    public LessonMapping()
     {
-        public LessonMapping()
-        {
-            CreateMap<Lesson, LessonLectureDto>().ReverseMap();
+        CreateMap<Lesson, LessonLectureDto>().ReverseMap();
 
-            CreateMap<Lesson, LessonNameDto>();
+        CreateMap<Lesson, LessonNameDto>();
 
-            CreateMap<Lesson, LessonDto>();
-        }
+        CreateMap<Lesson, LessonDto>();
     }
 }

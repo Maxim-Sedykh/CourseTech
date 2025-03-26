@@ -17,95 +17,94 @@ using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
 
-namespace CourseTech.Application.Services
+namespace CourseTech.Application.Services;
+
+public class CourseResultService(
+    ICacheService cacheService,
+    IMediator mediator,
+    IMapper mapper,
+    ICourseResultValidator courseResultValidator) : ICourseResultService
 {
-    public class CourseResultService(
-        ICacheService cacheService,
-        IMediator mediator,
-        IMapper mapper,
-        ICourseResultValidator courseResultValidator) : ICourseResultService
+
+    /// <inheritdoc/>
+    public async Task<DataResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
     {
+        var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
+        var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
 
-        /// <inheritdoc/>
-        public async Task<DataResult<CourseResultDto>> GetCourseResultAsync(Guid userId)
+        var validationResult = courseResultValidator.ValidateUserCourseResult(profile, lessonsCount);
+        if (!validationResult.IsSuccess)
         {
-            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
-            var lessonsCount = await mediator.Send(new GetLessonsCountQuery());
-
-            var validationResult = courseResultValidator.ValidateUserCourseResult(profile, lessonsCount);
-            if (!validationResult.IsSuccess)
-            {
-                return DataResult<CourseResultDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
-            }
-
-            var userLessonRecords = await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId));
-
-            var analysDto = CreateAnalys(profile.CurrentGrade, userLessonRecords, lessonsCount);
-
-            await mediator.Send(new UpdateCompletedCourseUserProfileCommand(profile, analysDto.Analys));
-
-            await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{profile.UserId}");
-
-            return DataResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
+            return DataResult<CourseResultDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
         }
 
-        /// <inheritdoc/>
-        public async Task<DataResult<UserAnalysDto>> GetUserAnalys(Guid userId)
+        var userLessonRecords = await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId));
+
+        var analysDto = CreateAnalys(profile.CurrentGrade, userLessonRecords, lessonsCount);
+
+        await mediator.Send(new UpdateCompletedCourseUserProfileCommand(profile, analysDto.Analys));
+
+        await cacheService.RemoveAsync($"{CacheKeys.UserProfile}{profile.UserId}");
+
+        return DataResult<CourseResultDto>.Success(mapper.Map<CourseResultDto>(profile));
+    }
+
+    /// <inheritdoc/>
+    public async Task<DataResult<UserAnalysDto>> GetUserAnalys(Guid userId)
+    {
+        var userAnalys = await cacheService.GetOrAddToCache(
+            $"{CacheKeys.UserAnalys}{userId}",
+            async () => await mediator.Send(new GetAnalysByUserIdQuery(userId)));
+
+        if (userAnalys == null)
         {
-            var userAnalys = await cacheService.GetOrAddToCache(
-                $"{CacheKeys.UserAnalys}{userId}",
-                async () => await mediator.Send(new GetAnalysByUserIdQuery(userId)));
-
-            if (userAnalys == null)
-            {
-                return DataResult<UserAnalysDto>.Failure((int)ErrorCodes.UserAnalysNotFound, ErrorMessage.UserAnalysNotFound);
-            }
-
-            return DataResult<UserAnalysDto>.Success(userAnalys);
+            return DataResult<UserAnalysDto>.Failure((int)ErrorCodes.UserAnalysNotFound, ErrorMessage.UserAnalysNotFound);
         }
 
-        /// <summary>
-        /// Метод для создание анализа пользователю, который прошёл курс, на основе его прохождений уроков
-        /// </summary>
-        /// <param name="usersCurrentGrade"></param>
-        /// <param name="userLessonRecords"></param>
-        /// <param name="lessonsCount"></param>
-        /// <returns>Модель для анализа</returns>
-        private UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
+        return DataResult<UserAnalysDto>.Success(userAnalys);
+    }
+
+    /// <summary>
+    /// Метод для создание анализа пользователю, который прошёл курс, на основе его прохождений уроков
+    /// </summary>
+    /// <param name="usersCurrentGrade"></param>
+    /// <param name="userLessonRecords"></param>
+    /// <param name="lessonsCount"></param>
+    /// <returns>Модель для анализа</returns>
+    private UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
+    {
+        var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };
+        var examLessonRecord = userLessonRecords.LastOrDefault();
+
+        if (userLessonRecords.Length != lessonsCount || examLessonRecord == null)
         {
-            var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };
-            var examLessonRecord = userLessonRecords.LastOrDefault();
-
-            if (userLessonRecords.Length != lessonsCount || examLessonRecord == null)
-            {
-                return analys;
-            }
-
-            string firstPartOfAnalys = usersCurrentGrade switch
-            {
-                > 90 => AnalysParts.ExcellentOverall,
-                > 75 => AnalysParts.GoodOverall,
-                > 60 => AnalysParts.SatisfactoryOverall,
-                _ => AnalysParts.UnsatisfactoryOverall
-            };
-
-            var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Length - 1).ToList();
-
-            if (commonLessonRecords.Count > 0)
-            {
-                var averageMark = commonLessonRecords.Average(x => x.Mark);
-                var maxMarkCommonLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).First();
-
-                string secondPartOfAnalys = string.Format(AnalysParts.LessonsAnalys,
-                    averageMark,
-                    maxMarkCommonLessonRecord.LessonName,
-                    maxMarkCommonLessonRecord.Mark,
-                    examLessonRecord.Mark);
-
-                analys.Analys = $"{firstPartOfAnalys} - {secondPartOfAnalys}";
-            }
-
             return analys;
         }
+
+        string firstPartOfAnalys = usersCurrentGrade switch
+        {
+            > 90 => AnalysParts.ExcellentOverall,
+            > 75 => AnalysParts.GoodOverall,
+            > 60 => AnalysParts.SatisfactoryOverall,
+            _ => AnalysParts.UnsatisfactoryOverall
+        };
+
+        var commonLessonRecords = userLessonRecords.Take(userLessonRecords.Length - 1).ToList();
+
+        if (commonLessonRecords.Count > 0)
+        {
+            var averageMark = commonLessonRecords.Average(x => x.Mark);
+            var maxMarkCommonLessonRecord = commonLessonRecords.OrderByDescending(x => x.Mark).First();
+
+            string secondPartOfAnalys = string.Format(AnalysParts.LessonsAnalys,
+                averageMark,
+                maxMarkCommonLessonRecord.LessonName,
+                maxMarkCommonLessonRecord.Mark,
+                examLessonRecord.Mark);
+
+            analys.Analys = $"{firstPartOfAnalys} - {secondPartOfAnalys}";
+        }
+
+        return analys;
     }
 }

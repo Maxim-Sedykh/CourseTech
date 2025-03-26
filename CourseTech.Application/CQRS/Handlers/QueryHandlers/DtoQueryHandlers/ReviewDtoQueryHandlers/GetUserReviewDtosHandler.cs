@@ -7,18 +7,17 @@ using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.ReviewDtoQueryHandlers
+namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.ReviewDtoQueryHandlers;
+
+public class GetUserReviewDtosHandler(IBaseRepository<Review> reviewRepository, IMapper mapper) : IRequestHandler<GetUserReviewDtosQuery, ReviewDto[]>
 {
-    public class GetUserReviewDtosHandler(IBaseRepository<Review> reviewRepository, IMapper mapper) : IRequestHandler<GetUserReviewDtosQuery, ReviewDto[]>
+    public async Task<ReviewDto[]> Handle(GetUserReviewDtosQuery request, CancellationToken cancellationToken)
     {
-        public async Task<ReviewDto[]> Handle(GetUserReviewDtosQuery request, CancellationToken cancellationToken)
-        {
-            return await reviewRepository.GetAll()
-                    .AsNoTracking()
-                    .Where(x => x.UserId == request.UserId)
-                    .Include(x => x.User)
-                    .AsProjected<Review, ReviewDto>(mapper)
-                    .ToArrayAsync(cancellationToken);
-        }
+        return await reviewRepository.GetAll()
+                .AsNoTracking()
+                .Where(x => x.UserId == request.UserId)
+                .Include(x => x.User)
+                .AsProjected<Review, ReviewDto>(mapper)
+                .ToArrayAsync(cancellationToken);
     }
 }

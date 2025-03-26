@@ -7,16 +7,15 @@ using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.UserDtoQueryHandlers
+namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.UserDtoQueryHandlers;
+
+public class GetUserDtosHandler(IBaseRepository<User> userRepository, IMapper mapper) : IRequestHandler<GetUserDtosQuery, UserDto[]>
 {
-    public class GetUserDtosHandler(IBaseRepository<User> userRepository, IMapper mapper) : IRequestHandler<GetUserDtosQuery, UserDto[]>
+    public async Task<UserDto[]> Handle(GetUserDtosQuery request, CancellationToken cancellationToken)
     {
-        public async Task<UserDto[]> Handle(GetUserDtosQuery request, CancellationToken cancellationToken)
-        {
-            return await userRepository.GetAll()
-                    .Include(x => x.Roles)
-                    .AsProjected<User, UserDto>(mapper)
-                    .ToArrayAsync(cancellationToken);
-        }
+        return await userRepository.GetAll()
+                .Include(x => x.Roles)
+                .AsProjected<User, UserDto>(mapper)
+                .ToArrayAsync(cancellationToken);
     }
 }

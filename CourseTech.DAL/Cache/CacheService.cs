@@ -1,5 +1,4 @@
-﻿using CourseTech.Domain.Constants.Cache;
-using CourseTech.Domain.Interfaces.Cache;
+﻿using CourseTech.Domain.Interfaces.Cache;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 

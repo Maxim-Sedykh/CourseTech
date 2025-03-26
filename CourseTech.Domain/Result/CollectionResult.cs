@@ -16,8 +16,8 @@ public class CollectionResult<T> : DataResult<IEnumerable<T>>
     public int Count { get; }
 
     public static new CollectionResult<T> Success(IEnumerable<T> data) =>
-        new CollectionResult<T>(data);
+        new(data);
 
     public static new CollectionResult<T> Failure(int errorCode, string errorMessage) =>
-        new CollectionResult<T>(Enumerable.Empty<T>(), new Error(errorMessage, errorCode));
+        new([], new Error(errorMessage, errorCode));
 }

@@ -1,112 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CourseTech.Domain.Constants.Route;
 
-namespace CourseTech.Domain.Constants.Route
+/// <summary>
+/// Константы для указания понятного роута в контроллерах.
+/// </summary>
+public static class RouteConstants
 {
-    /// <summary>
-    /// Константы для указания понятного роута в контроллерах.
-    /// </summary>
-    public static class RouteConstants
-    {
-        #region Аутентификация
+    #region Аутентификация
 
-        public const string Register = "register";
+    public const string Register = "register";
 
-        public const string Login = "login";
+    public const string Login = "login";
 
-        #endregion
+    #endregion
 
-        #region Токен
+    #region Токен
 
-        public const string RefreshToken = "refresh-token";
+    public const string RefreshToken = "refresh-token";
 
-        #endregion
+    #endregion
 
-        #region Роли
+    #region Роли
 
-        public const string CreateRole = "create-role";
+    public const string CreateRole = "create-role";
 
-        public const string UpdateRole = "update-role";
+    public const string UpdateRole = "update-role";
 
-        public const string DeleteRoleById = "delete-role/{id}";
+    public const string DeleteRoleById = "delete-role/{id}";
 
-        public const string AddRoleForUser = "add-role-for-user";
+    public const string AddRoleForUser = "add-role-for-user";
 
-        public const string DeleteRoleForUser = "delete-role-for-user";
+    public const string DeleteRoleForUser = "delete-role-for-user";
 
-        public const string UpdateRoleForUser = "update-role-for-user";
+    public const string UpdateRoleForUser = "update-role-for-user";
 
-        public const string GetAllRoles = "get-all-roles";
+    public const string GetAllRoles = "get-all-roles";
 
-        #endregion
+    #endregion
 
-        #region Результат курса
+    #region Результат курса
 
-        public const string GetUserAnalys = "get-user-analys";
+    public const string GetUserAnalys = "get-user-analys";
 
-        public const string GetCouserResult = "get-lessons-for-user";
+    public const string GetCouserResult = "get-lessons-for-user";
 
-        #endregion
+    #endregion
 
-        #region Урок
+    #region Урок
 
-        public const string UpdateLessonLecture = "update-lesson-lecture";
+    public const string UpdateLessonLecture = "update-lesson-lecture";
 
-        public const string GetLessonLecture = "get-lesson-lecture/{lessonId}";
+    public const string GetLessonLecture = "get-lesson-lecture/{lessonId}";
 
-        public const string GetLessonNames = "lesson-names";
+    public const string GetLessonNames = "lesson-names";
 
-        public const string GetLessonsForUser = "get-lessons-for-user";
+    public const string GetLessonsForUser = "get-lessons-for-user";
 
-        #endregion
+    #endregion
 
-        #region Записи прохождения уроков
+    #region Записи прохождения уроков
 
-        public const string GetLessonsRecords = "get-lesson-records";
+    public const string GetLessonsRecords = "get-lesson-records";
 
-        #endregion
+    #endregion
 
-        #region Вопрос
+    #region Вопрос
 
-        public const string GetLessonQuestions = "get-lesson-questions/{lessonId}";
+    public const string GetLessonQuestions = "get-lesson-questions/{lessonId}";
 
-        public const string PassLessonQuestions = "pass-lesson-questions";
+    public const string PassLessonQuestions = "pass-lesson-questions";
 
-        #endregion
+    #endregion
 
-        #region Отзыв
+    #region Отзыв
 
-        public const string CreateReview = "create-review";
+    public const string CreateReview = "create-review";
 
-        public const string DeleteReview = "delete-review/{id}";
+    public const string DeleteReview = "delete-review/{id}";
 
-        public const string GetReviews = "get-reviews";
+    public const string GetReviews = "get-reviews";
 
-        public const string GetUserReviews = "get-user-reviews/{userId}";
+    public const string GetUserReviews = "get-user-reviews/{userId}";
 
-        #endregion
+    #endregion
 
-        #region Пользователь
+    #region Пользователь
 
-        public const string GetUsers = "get-users";
+    public const string GetUsers = "get-users";
 
-        public const string DeleteUser = "delete-user/{userId}";
+    public const string DeleteUser = "delete-user/{userId}";
 
-        public const string GetUserById = "get-user/{userId}";
+    public const string GetUserById = "get-user/{userId}";
 
-        public const string UpdateUser = "update-user";
+    public const string UpdateUser = "update-user";
 
-        #endregion
+    #endregion
 
-        #region Профиль пользователя
+    #region Профиль пользователя
 
-        public const string GetUserProfile = "get-user-profile";
+    public const string GetUserProfile = "get-user-profile";
 
-        public const string UpdateUserProfile = "update-user-profile";
+    public const string UpdateUserProfile = "update-user-profile";
 
-        #endregion
-    }
+    #endregion
 }

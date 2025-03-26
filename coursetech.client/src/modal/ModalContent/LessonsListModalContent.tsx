@@ -3,7 +3,6 @@ import { Button, Container } from "react-bootstrap";
 import { UserLessonsDto } from "../../types/dto/lesson/user-lessons-dto";
 import { LessonService } from "../../services/lesson-service";
 import { ApiPaths } from "../../constants/api-paths";
-import { UserAnalysDto } from "../../types/dto/courseResult/user-analys-dto";
 import { LessonTypes } from "../../enums/lesson-types";
 
 

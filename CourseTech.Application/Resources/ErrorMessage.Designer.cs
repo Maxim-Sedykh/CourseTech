@@ -8,371 +8,370 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CourseTech.Application.Resources {
-    using System;
+namespace CourseTech.Application.Resources; 
+using System;
+
+
+/// <summary>
+///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
+/// </summary>
+// Этот класс создан автоматически классом StronglyTypedResourceBuilder
+// с помощью такого средства, как ResGen или Visual Studio.
+// Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
+// с параметром /str или перестройте свой проект VS.
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+internal class ErrorMessage {
     
+    private static global::System.Resources.ResourceManager resourceMan;
+    
+    private static global::System.Globalization.CultureInfo resourceCulture;
+    
+    [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+    internal ErrorMessage() {
+    }
     
     /// <summary>
-    ///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
+    ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
     /// </summary>
-    // Этот класс создан автоматически классом StronglyTypedResourceBuilder
-    // с помощью такого средства, как ResGen или Visual Studio.
-    // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
-    // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ErrorMessage {
-        
-        private static global::System.Resources.ResourceManager resourceMan;
-        
-        private static global::System.Globalization.CultureInfo resourceCulture;
-        
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ErrorMessage() {
+    [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+    internal static global::System.Resources.ResourceManager ResourceManager {
+        get {
+            if (object.ReferenceEquals(resourceMan, null)) {
+                global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CourseTech.Application.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
+                resourceMan = temp;
+            }
+            return resourceMan;
         }
-        
-        /// <summary>
-        ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CourseTech.Application.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
-                    resourceMan = temp;
-                }
-                return resourceMan;
-            }
+    }
+    
+    /// <summary>
+    ///   Перезаписывает свойство CurrentUICulture текущего потока для всех
+    ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
+    /// </summary>
+    [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+    internal static global::System.Globalization.CultureInfo Culture {
+        get {
+            return resourceCulture;
         }
-        
-        /// <summary>
-        ///   Перезаписывает свойство CurrentUICulture текущего потока для всех
-        ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
-            get {
-                return resourceCulture;
-            }
-            set {
-                resourceCulture = value;
-            }
+        set {
+            resourceCulture = value;
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Возникла ошибка при проверке ответов пользователя.
-        /// </summary>
-        internal static string AnswerCheckError {
-            get {
-                return ResourceManager.GetString("AnswerCheckError", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Возникла ошибка при проверке ответов пользователя.
+    /// </summary>
+    internal static string AnswerCheckError {
+        get {
+            return ResourceManager.GetString("AnswerCheckError", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось создать отзыв.
-        /// </summary>
-        internal static string CreateReviewFailed {
-            get {
-                return ResourceManager.GetString("CreateReviewFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не удалось создать отзыв.
+    /// </summary>
+    internal static string CreateReviewFailed {
+        get {
+            return ResourceManager.GetString("CreateReviewFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось удалить пользователя.
-        /// </summary>
-        internal static string DeleteUserFailed {
-            get {
-                return ResourceManager.GetString("DeleteUserFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не удалось удалить пользователя.
+    /// </summary>
+    internal static string DeleteUserFailed {
+        get {
+            return ResourceManager.GetString("DeleteUserFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
-        /// </summary>
-        internal static string InternalServerError {
-            get {
-                return ResourceManager.GetString("InternalServerError", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
+    /// </summary>
+    internal static string InternalServerError {
+        get {
+            return ResourceManager.GetString("InternalServerError", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Инвалидный запрос клиента.
-        /// </summary>
-        internal static string InvalidClientRequest {
-            get {
-                return ResourceManager.GetString("InvalidClientRequest", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Инвалидный запрос клиента.
+    /// </summary>
+    internal static string InvalidClientRequest {
+        get {
+            return ResourceManager.GetString("InvalidClientRequest", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Инвалидный тип урока.
-        /// </summary>
-        internal static string InvalidLessonType {
-            get {
-                return ResourceManager.GetString("InvalidLessonType", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Инвалидный тип урока.
+    /// </summary>
+    internal static string InvalidLessonType {
+        get {
+            return ResourceManager.GetString("InvalidLessonType", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Неизвестный тип вопроса.
-        /// </summary>
-        internal static string InvalidQuestionType {
-            get {
-                return ResourceManager.GetString("InvalidQuestionType", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Неизвестный тип вопроса.
+    /// </summary>
+    internal static string InvalidQuestionType {
+        get {
+            return ResourceManager.GetString("InvalidQuestionType", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Инвалидный токен.
-        /// </summary>
-        internal static string InvalidToken {
-            get {
-                return ResourceManager.GetString("InvalidToken", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Инвалидный токен.
+    /// </summary>
+    internal static string InvalidToken {
+        get {
+            return ResourceManager.GetString("InvalidToken", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Результат вашего запроса не совпадает с требованием задания.
-        /// </summary>
-        internal static string InvalidUserQuery {
-            get {
-                return ResourceManager.GetString("InvalidUserQuery", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Результат вашего запроса не совпадает с требованием задания.
+    /// </summary>
+    internal static string InvalidUserQuery {
+        get {
+            return ResourceManager.GetString("InvalidUserQuery", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Урок не найден.
-        /// </summary>
-        internal static string LessonNotFound {
-            get {
-                return ResourceManager.GetString("LessonNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Урок не найден.
+    /// </summary>
+    internal static string LessonNotFound {
+        get {
+            return ResourceManager.GetString("LessonNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Открытые вопросы урока не найдены.
-        /// </summary>
-        internal static string LessonOpenQuestionsNotFound {
-            get {
-                return ResourceManager.GetString("LessonOpenQuestionsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Открытые вопросы урока не найдены.
+    /// </summary>
+    internal static string LessonOpenQuestionsNotFound {
+        get {
+            return ResourceManager.GetString("LessonOpenQuestionsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Вопросы урока не найдены.
-        /// </summary>
-        internal static string LessonQuestionsNotFound {
-            get {
-                return ResourceManager.GetString("LessonQuestionsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Вопросы урока не найдены.
+    /// </summary>
+    internal static string LessonQuestionsNotFound {
+        get {
+            return ResourceManager.GetString("LessonQuestionsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Записи о прохождении уроков не найдены.
-        /// </summary>
-        internal static string LessonRecordsNotFound {
-            get {
-                return ResourceManager.GetString("LessonRecordsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Записи о прохождении уроков не найдены.
+    /// </summary>
+    internal static string LessonRecordsNotFound {
+        get {
+            return ResourceManager.GetString("LessonRecordsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Уроки не найдены.
-        /// </summary>
-        internal static string LessonsNotFound {
-            get {
-                return ResourceManager.GetString("LessonsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Уроки не найдены.
+    /// </summary>
+    internal static string LessonsNotFound {
+        get {
+            return ResourceManager.GetString("LessonsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Тестовые вопросы урока не найдены.
-        /// </summary>
-        internal static string LessonTestQuestionsNotFound {
-            get {
-                return ResourceManager.GetString("LessonTestQuestionsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Тестовые вопросы урока не найдены.
+    /// </summary>
+    internal static string LessonTestQuestionsNotFound {
+        get {
+            return ResourceManager.GetString("LessonTestQuestionsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Правильные варианты ответов для открытых вопросов урока не найдены.
-        /// </summary>
-        internal static string OpenQuestionsAnswerVariantsNotFound {
-            get {
-                return ResourceManager.GetString("OpenQuestionsAnswerVariantsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Правильные варианты ответов для открытых вопросов урока не найдены.
+    /// </summary>
+    internal static string OpenQuestionsAnswerVariantsNotFound {
+        get {
+            return ResourceManager.GetString("OpenQuestionsAnswerVariantsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось пройти урок.
-        /// </summary>
-        internal static string PassLessonFailed {
-            get {
-                return ResourceManager.GetString("PassLessonFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не удалось пройти урок.
+    /// </summary>
+    internal static string PassLessonFailed {
+        get {
+            return ResourceManager.GetString("PassLessonFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Неверный пароль.
-        /// </summary>
-        internal static string PasswordIsWrong {
-            get {
-                return ResourceManager.GetString("PasswordIsWrong", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Неверный пароль.
+    /// </summary>
+    internal static string PasswordIsWrong {
+        get {
+            return ResourceManager.GetString("PasswordIsWrong", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Пароли не совпадают.
-        /// </summary>
-        internal static string PasswordNotEqualsPasswordConfirm {
-            get {
-                return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Пароли не совпадают.
+    /// </summary>
+    internal static string PasswordNotEqualsPasswordConfirm {
+        get {
+            return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Вопросы не найдены.
-        /// </summary>
-        internal static string QuestionsNotFound {
-            get {
-                return ResourceManager.GetString("QuestionsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Вопросы не найдены.
+    /// </summary>
+    internal static string QuestionsNotFound {
+        get {
+            return ResourceManager.GetString("QuestionsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Транзакция Redis выполнена неудачно.
-        /// </summary>
-        internal static string RedisTransactionFailed {
-            get {
-                return ResourceManager.GetString("RedisTransactionFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Транзакция Redis выполнена неудачно.
+    /// </summary>
+    internal static string RedisTransactionFailed {
+        get {
+            return ResourceManager.GetString("RedisTransactionFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось зарегистрироваться.
-        /// </summary>
-        internal static string RegistrationFailed {
-            get {
-                return ResourceManager.GetString("RegistrationFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не удалось зарегистрироваться.
+    /// </summary>
+    internal static string RegistrationFailed {
+        get {
+            return ResourceManager.GetString("RegistrationFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отзыв не найден.
-        /// </summary>
-        internal static string ReviewNotFound {
-            get {
-                return ResourceManager.GetString("ReviewNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Отзыв не найден.
+    /// </summary>
+    internal static string ReviewNotFound {
+        get {
+            return ResourceManager.GetString("ReviewNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отзывы не найдены.
-        /// </summary>
-        internal static string ReviewsNotFound {
-            get {
-                return ResourceManager.GetString("ReviewsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Отзывы не найдены.
+    /// </summary>
+    internal static string ReviewsNotFound {
+        get {
+            return ResourceManager.GetString("ReviewsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Роль уже существует.
-        /// </summary>
-        internal static string RoleAlreadyExist {
-            get {
-                return ResourceManager.GetString("RoleAlreadyExist", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Роль уже существует.
+    /// </summary>
+    internal static string RoleAlreadyExist {
+        get {
+            return ResourceManager.GetString("RoleAlreadyExist", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Роль не найдена.
-        /// </summary>
-        internal static string RoleNotFound {
-            get {
-                return ResourceManager.GetString("RoleNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Роль не найдена.
+    /// </summary>
+    internal static string RoleNotFound {
+        get {
+            return ResourceManager.GetString("RoleNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Роли не найдены.
-        /// </summary>
-        internal static string RolesNotFound {
-            get {
-                return ResourceManager.GetString("RolesNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Роли не найдены.
+    /// </summary>
+    internal static string RolesNotFound {
+        get {
+            return ResourceManager.GetString("RolesNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Правильные варианты ответов для тестовых вопросов урока не найдены.
-        /// </summary>
-        internal static string TestQuestionsCorrectVariantsNotFound {
-            get {
-                return ResourceManager.GetString("TestQuestionsCorrectVariantsNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Правильные варианты ответов для тестовых вопросов урока не найдены.
+    /// </summary>
+    internal static string TestQuestionsCorrectVariantsNotFound {
+        get {
+            return ResourceManager.GetString("TestQuestionsCorrectVariantsNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось обновить роль для пользователя.
-        /// </summary>
-        internal static string UpdateRoleForUserFailed {
-            get {
-                return ResourceManager.GetString("UpdateRoleForUserFailed", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не удалось обновить роль для пользователя.
+    /// </summary>
+    internal static string UpdateRoleForUserFailed {
+        get {
+            return ResourceManager.GetString("UpdateRoleForUserFailed", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Пользователь уже существует.
-        /// </summary>
-        internal static string UserAlreadyExists {
-            get {
-                return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Пользователь уже существует.
+    /// </summary>
+    internal static string UserAlreadyExists {
+        get {
+            return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на У пользователя уже есть такая роль.
-        /// </summary>
-        internal static string UserAlreadyExistThisRole {
-            get {
-                return ResourceManager.GetString("UserAlreadyExistThisRole", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на У пользователя уже есть такая роль.
+    /// </summary>
+    internal static string UserAlreadyExistThisRole {
+        get {
+            return ResourceManager.GetString("UserAlreadyExistThisRole", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не найден анализ пользователя.
-        /// </summary>
-        internal static string UserAnalysNotFound {
-            get {
-                return ResourceManager.GetString("UserAnalysNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Не найден анализ пользователя.
+    /// </summary>
+    internal static string UserAnalysNotFound {
+        get {
+            return ResourceManager.GetString("UserAnalysNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Пользователь не найден.
-        /// </summary>
-        internal static string UserNotFound {
-            get {
-                return ResourceManager.GetString("UserNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Пользователь не найден.
+    /// </summary>
+    internal static string UserNotFound {
+        get {
+            return ResourceManager.GetString("UserNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Профиль пользователя не найден.
-        /// </summary>
-        internal static string UserProfileNotFound {
-            get {
-                return ResourceManager.GetString("UserProfileNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Профиль пользователя не найден.
+    /// </summary>
+    internal static string UserProfileNotFound {
+        get {
+            return ResourceManager.GetString("UserProfileNotFound", resourceCulture);
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Роли пользователя не найдены.
-        /// </summary>
-        internal static string UserRolesNotFound {
-            get {
-                return ResourceManager.GetString("UserRolesNotFound", resourceCulture);
-            }
+    }
+    
+    /// <summary>
+    ///   Ищет локализованную строку, похожую на Роли пользователя не найдены.
+    /// </summary>
+    internal static string UserRolesNotFound {
+        get {
+            return ResourceManager.GetString("UserRolesNotFound", resourceCulture);
         }
     }
 }

@@ -4,18 +4,17 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 
-namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserCommandHandlers
+namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserCommandHandlers;
+
+public class UpdateUserHandler(IBaseRepository<User> userRepository, IMapper mapper) : IRequestHandler<UpdateUserCommand>
 {
-    public class UpdateUserHandler(IBaseRepository<User> userRepository, IMapper mapper) : IRequestHandler<UpdateUserCommand>
+    public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
-        {
-            var user = request.User;
+        var user = request.User;
 
-            mapper.Map(request.UpdateUserDto, user);
+        mapper.Map(request.UpdateUserDto, user);
 
-            userRepository.Update(user);
-            await userRepository.SaveChangesAsync(cancellationToken);
-        }
+        userRepository.Update(user);
+        await userRepository.SaveChangesAsync(cancellationToken);
     }
 }

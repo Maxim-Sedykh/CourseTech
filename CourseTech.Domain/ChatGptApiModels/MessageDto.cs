@@ -1,9 +1,8 @@
-﻿namespace CourseTech.ChatGptServices.Models
-{
-    public class MessageDto
-    {
-        public string Role { get; set; }
+﻿namespace CourseTech.ChatGptServices.Models;
 
-        public string Content { get; set; }
-    }
+public class MessageDto
+{
+    public string Role { get; set; }
+
+    public string Content { get; set; }
 }

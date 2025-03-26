@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CourseTech.Domain.Enum;
+﻿namespace CourseTech.Domain.Enum;
 
 /// <summary>
 /// Типы вопросов (заданий), которые пользователь получает после лекционной части урока, в практической части.

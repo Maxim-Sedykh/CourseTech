@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CourseTech.Domain.Dto.Lesson.LessonInfo;
 
-namespace CourseTech.Domain.Dto.Lesson.LessonInfo
+/// <summary>
+/// Модель данных для передачи имени урока.
+/// </summary>
+public class LessonNameDto
 {
-    /// <summary>
-    /// Модель данных для передачи имени урока.
-    /// </summary>
-    public class LessonNameDto
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

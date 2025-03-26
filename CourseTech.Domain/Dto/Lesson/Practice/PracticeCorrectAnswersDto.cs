@@ -1,17 +1,14 @@
-﻿using CourseTech.Domain.Dto.Question.Get;
-using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces.Dtos.Question;
+﻿using CourseTech.Domain.Interfaces.Dtos.Question;
 
-namespace CourseTech.Domain.Dto.Lesson.Test
+namespace CourseTech.Domain.Dto.Lesson.Test;
+
+/// <summary>
+/// Модель данных для отображения в практической части правильных ответов пользователю.
+/// </summary>
+public class PracticeCorrectAnswersDto
 {
-    /// <summary>
-    /// Модель данных для отображения в практической части правильных ответов пользователю.
-    /// </summary>
-    public class PracticeCorrectAnswersDto
-    {
-        public int LessonId { get; set; }
+    public int LessonId { get; set; }
 
-        public List<ICorrectAnswerDto> QuestionCorrectAnswers { get; set; }
-    }
+    public List<ICorrectAnswerDto> QuestionCorrectAnswers { get; set; }
 }
 

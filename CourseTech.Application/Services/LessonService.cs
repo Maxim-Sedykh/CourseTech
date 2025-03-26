@@ -15,112 +15,111 @@ using CourseTech.Domain.Result;
 using MediatR;
 using ILogger = Serilog.ILogger;
 
-namespace CourseTech.Application.Services
+namespace CourseTech.Application.Services;
+
+public class LessonService(
+    ICacheService cacheService,
+    IMediator mediator,
+    ILogger logger,
+    ILessonValidator lessonValidator) : ILessonService
 {
-    public class LessonService(
-        ICacheService cacheService,
-        IMediator mediator,
-        ILogger logger,
-        ILessonValidator lessonValidator) : ILessonService
+    /// <inheritdoc/>
+    public async Task<DataResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
     {
-        /// <inheritdoc/>
-        public async Task<DataResult<LessonLectureDto>> GetLessonLectureAsync(int lessonId)
+        var lesson = await cacheService.GetOrAddToCache(
+            $"{CacheKeys.LessonLecture}{lessonId}",
+            async () => await mediator.Send(new GetLessonLectureDtoByIdQuery(lessonId)));
+
+        if (lesson is null)
         {
-            var lesson = await cacheService.GetOrAddToCache(
-                $"{CacheKeys.LessonLecture}{lessonId}",
-                async () => await mediator.Send(new GetLessonLectureDtoByIdQuery(lessonId)));
-
-            if (lesson is null)
-            {
-                return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-            }
-
-            return DataResult<LessonLectureDto>.Success(lesson);
+            return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
         }
 
-        /// <inheritdoc/>
-        public async Task<CollectionResult<LessonNameDto>> GetLessonNamesAsync()
+        return DataResult<LessonLectureDto>.Success(lesson);
+    }
+
+    /// <inheritdoc/>
+    public async Task<CollectionResult<LessonNameDto>> GetLessonNamesAsync()
+    {
+        var lessonNames = await cacheService.GetOrAddToCache(
+            CacheKeys.LessonNames,
+            async () => await mediator.Send(new GetLessonNamesQuery()));
+
+        if (!lessonNames.Any())
         {
-            var lessonNames = await cacheService.GetOrAddToCache(
-                CacheKeys.LessonNames,
-                async () => await mediator.Send(new GetLessonNamesQuery()));
+            logger.Error(ErrorMessage.LessonsNotFound);
 
-            if (!lessonNames.Any())
-            {
-                logger.Error(ErrorMessage.LessonsNotFound);
-
-                return CollectionResult<LessonNameDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
-            }
-
-            return CollectionResult<LessonNameDto>.Success(lessonNames);
+            return CollectionResult<LessonNameDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
         }
 
-        /// <inheritdoc/>
-        public async Task<DataResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId)
+        return CollectionResult<LessonNameDto>.Success(lessonNames);
+    }
+
+    /// <inheritdoc/>
+    public async Task<DataResult<UserLessonsDto>> GetLessonsForUserAsync(Guid userId)
+    {
+        var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
+
+        var lessons = await mediator.Send(new GetLessonDtosQuery());
+
+        var validateLessonsForUserResult = lessonValidator.ValidateLessonsForUser(profile, lessons);
+        if (!validateLessonsForUserResult.IsSuccess)
         {
-            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
-
-            var lessons = await mediator.Send(new GetLessonDtosQuery());
-
-            var validateLessonsForUserResult = lessonValidator.ValidateLessonsForUser(profile, lessons);
-            if (!validateLessonsForUserResult.IsSuccess)
-            {
-                return DataResult<UserLessonsDto>.Failure((int)validateLessonsForUserResult.Error.Code, validateLessonsForUserResult.Error.Message);
-            }
-
-            return DataResult<UserLessonsDto>.Success(new UserLessonsDto()
-            {
-                LessonNames = lessons,
-                LessonsCompleted = profile.LessonsCompleted
-            });
+            return DataResult<UserLessonsDto>.Failure((int)validateLessonsForUserResult.Error.Code, validateLessonsForUserResult.Error.Message);
         }
 
-        /// <inheritdoc/>
-        public async Task<DataResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto)
+        return DataResult<UserLessonsDto>.Success(new UserLessonsDto()
         {
-            var currentLesson = await mediator.Send(new GetLessonByIdQuery(dto.Id));
-            if (currentLesson == null)
-            {
-                return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-            }
+            LessonNames = lessons,
+            LessonsCompleted = profile.LessonsCompleted
+        });
+    }
 
-            if (HasChanges(currentLesson, dto))
-            {
-                await mediator.Send(new UpdateLessonCommand(dto, currentLesson));
-
-                await RemoveOldCacheAsync(currentLesson, dto);
-            }
-
-            return DataResult<LessonLectureDto>.Success(dto);
+    /// <inheritdoc/>
+    public async Task<DataResult<LessonLectureDto>> UpdateLessonLectureAsync(LessonLectureDto dto)
+    {
+        var currentLesson = await mediator.Send(new GetLessonByIdQuery(dto.Id));
+        if (currentLesson == null)
+        {
+            return DataResult<LessonLectureDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
         }
 
-        /// <summary>
-        /// Сравнивает свойства модели LessonLectureDto и сущности Lesson
-        /// </summary>
-        /// <param name="lesson"></param>
-        /// <param name="dto"></param>
-        /// <returns>Если свойства разные - возвращает false</returns>
-        private bool HasChanges(Lesson lesson, LessonLectureDto dto)
+        if (HasChanges(currentLesson, dto))
         {
-            return lesson.Name != dto.Name ||
-                   lesson.LessonType != dto.LessonType ||
-                   lesson.LectureMarkup != dto.LectureMarkup;
+            await mediator.Send(new UpdateLessonCommand(dto, currentLesson));
+
+            await RemoveOldCacheAsync(currentLesson, dto);
         }
 
-        /// <summary>
-        /// Очистка устаревшего кэша после обновления урока
-        /// </summary>
-        /// <param name="lesson"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        private async Task RemoveOldCacheAsync(Lesson lesson, LessonLectureDto dto)
-        {
-            if (lesson.Name != dto.Name)
-            {
-                await cacheService.RemoveAsync(CacheKeys.LessonNames);
-            }
+        return DataResult<LessonLectureDto>.Success(dto);
+    }
 
-            await cacheService.RemoveAsync($"{CacheKeys.LessonLecture}{lesson.Id}");
+    /// <summary>
+    /// Сравнивает свойства модели LessonLectureDto и сущности Lesson
+    /// </summary>
+    /// <param name="lesson"></param>
+    /// <param name="dto"></param>
+    /// <returns>Если свойства разные - возвращает false</returns>
+    private bool HasChanges(Lesson lesson, LessonLectureDto dto)
+    {
+        return lesson.Name != dto.Name ||
+               lesson.LessonType != dto.LessonType ||
+               lesson.LectureMarkup != dto.LectureMarkup;
+    }
+
+    /// <summary>
+    /// Очистка устаревшего кэша после обновления урока
+    /// </summary>
+    /// <param name="lesson"></param>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    private async Task RemoveOldCacheAsync(Lesson lesson, LessonLectureDto dto)
+    {
+        if (lesson.Name != dto.Name)
+        {
+            await cacheService.RemoveAsync(CacheKeys.LessonNames);
         }
+
+        await cacheService.RemoveAsync($"{CacheKeys.LessonLecture}{lesson.Id}");
     }
 }

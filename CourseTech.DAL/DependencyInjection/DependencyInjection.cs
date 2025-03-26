@@ -19,7 +19,6 @@ using CourseTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 using Role = CourseTech.Domain.Entities.Role;
 
 namespace CourseTech.DAL.DependencyInjection;
@@ -115,9 +114,17 @@ public static class DependencyInjection
     {
         services.AddScoped<ICacheService, CacheService>();
 
+        var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
+
+        if (redisSettings == null || string.IsNullOrEmpty(redisSettings.Url))
+        {
+            throw new ArgumentNullException("Redis settings are not configured properly.");
+        }
+
         services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = configuration.GetConnectionString("Cache");
+            options.Configuration = redisSettings.Url;
+            options.InstanceName = redisSettings.InstanceName; 
         });
     }
 }

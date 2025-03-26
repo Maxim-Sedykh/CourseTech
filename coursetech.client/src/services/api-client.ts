@@ -41,7 +41,7 @@ export class ApiClient {
                     ...config,
                     headers: {
                         ...config.headers,
-                        Authority: `Bearer ${token}`, // Замените на нужное значение
+                        Authorization: `Bearer ${token}`,
                     },
                 };
             }

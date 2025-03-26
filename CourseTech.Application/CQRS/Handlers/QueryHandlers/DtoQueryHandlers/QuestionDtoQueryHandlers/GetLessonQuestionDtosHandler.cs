@@ -8,17 +8,16 @@ using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.QuestionDtoQueryHandlers
+namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.QuestionDtoQueryHandlers;
+
+public class GetLessonQuestionDtosHandler(IBaseRepository<BaseQuestion> questionRepository, IMapper mapper) : IRequestHandler<GetLessonQuestionDtosQuery, List<IQuestionDto>>
 {
-    public class GetLessonQuestionDtosHandler(IBaseRepository<BaseQuestion> questionRepository, IMapper mapper) : IRequestHandler<GetLessonQuestionDtosQuery, List<IQuestionDto>>
+    public async Task<List<IQuestionDto>> Handle(GetLessonQuestionDtosQuery request, CancellationToken cancellationToken)
     {
-        public async Task<List<IQuestionDto>> Handle(GetLessonQuestionDtosQuery request, CancellationToken cancellationToken)
-        {
-            return await questionRepository.GetAll()
-                .Include(q => (q as TestQuestion).TestVariants)
-                .Where(q => q.LessonId == request.LessonId)
-                .Select(q => mapper.MapQuestion(q))
-                .ToListAsync(cancellationToken);
-        }
+        return await questionRepository.GetAll()
+            .Include(q => (q as TestQuestion).TestVariants)
+            .Where(q => q.LessonId == request.LessonId)
+            .Select(q => mapper.MapQuestion(q))
+            .ToListAsync(cancellationToken);
     }
 }

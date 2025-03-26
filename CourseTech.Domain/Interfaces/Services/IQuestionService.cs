@@ -1,32 +1,26 @@
 ﻿using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Result;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Interfaces.Services
+namespace CourseTech.Domain.Interfaces.Services;
+
+/// <summary>
+/// Сервис для работы с вопросами после урока, практической частью.
+/// </summary>
+public interface IQuestionService
 {
     /// <summary>
-    /// Сервис для работы с вопросами после урока, практической частью.
+    /// Получение вопросов для тестирования по идентификатору урока.
     /// </summary>
-    public interface IQuestionService
-    {
-        /// <summary>
-        /// Получение вопросов для тестирования по идентификатору урока.
-        /// </summary>
-        /// <param name="lessonId"></param>
-        /// <returns></returns>
-        Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
+    /// <param name="lessonId"></param>
+    /// <returns></returns>
+    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
 
-        /// <summary>
-        /// Завершение прохождения тестирования.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<DataResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId);
-    }
+    /// <summary>
+    /// Завершение прохождения тестирования.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<DataResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId);
 }

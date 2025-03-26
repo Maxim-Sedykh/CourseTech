@@ -10,46 +10,45 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
 
-namespace CourseTech.Application.Services
+namespace CourseTech.Application.Services;
+
+public class UserProfileService(
+    ICacheService cacheService,
+    IMediator mediator) : IUserProfileService
 {
-    public class UserProfileService(
-        ICacheService cacheService,
-        IMediator mediator) : IUserProfileService
+    /// <inheritdoc/>
+    public async Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
     {
-        /// <inheritdoc/>
-        public async Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
+        var profileDto = await cacheService.GetOrAddToCache(
+            $"{CacheKeys.UserProfile}{userId}",
+            async () => await mediator.Send(new GetUserProfileDtoByUserIdQuery(userId)));
+
+        if (profileDto is null)
         {
-            var profileDto = await cacheService.GetOrAddToCache(
-                $"{CacheKeys.UserProfile}{userId}",
-                async () => await mediator.Send(new GetUserProfileDtoByUserIdQuery(userId)));
-
-            if (profileDto is null)
-            {
-                return DataResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
-            }
-
-            return DataResult<UserProfileDto>.Success(profileDto);
+            return DataResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
-        /// <inheritdoc/>
-        public async Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
+        return DataResult<UserProfileDto>.Success(profileDto);
+    }
+
+    /// <inheritdoc/>
+    public async Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
+    {
+        var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
+
+        if (profile is null)
         {
-            var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
-
-            if (profile is null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
-            }
-
-            await mediator.Send(new UpdateUserProfileCommand(dto, profile));
-
-            var userProfileKey = $"{CacheKeys.UserProfile}:{userId}";
-
-            await cacheService.RemoveAsync(userProfileKey);
-
-            await cacheService.SetObjectAsync(userProfileKey, profile);
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
+
+        await mediator.Send(new UpdateUserProfileCommand(dto, profile));
+
+        var userProfileKey = $"{CacheKeys.UserProfile}:{userId}";
+
+        await cacheService.RemoveAsync(userProfileKey);
+
+        await cacheService.SetObjectAsync(userProfileKey, profile);
+
+        return BaseResult.Success();
     }
 }

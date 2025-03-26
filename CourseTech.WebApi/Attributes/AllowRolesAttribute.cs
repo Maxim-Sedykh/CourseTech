@@ -1,37 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
-namespace CourseTech.WebApi.Attributes
+namespace CourseTech.WebApi.Attributes;
+
+/// <summary>
+/// Атрибут, для того чтобы передавать массив ролей
+/// Если пользователь имеет хоть одну роль из списка, то валидация проходит
+/// </summary>
+public class AllowRolesAttribute : Attribute, IAuthorizationFilter
 {
-    /// <summary>
-    /// Атрибут, для того чтобы передавать массив ролей
-    /// Если пользователь имеет хоть одну роль из списка, то валидация проходит
-    /// </summary>
-    public class AllowRolesAttribute : Attribute, IAuthorizationFilter
-    {
-        private readonly HashSet<string> _roles;
+    private readonly HashSet<string> _roles;
 
-        public AllowRolesAttribute(params string[] roles)
+    public AllowRolesAttribute(params string[] roles) => _roles = [.. roles];
+
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var user = context.HttpContext.User;
+
+        if (!user.Identity.IsAuthenticated)
         {
-            _roles = new HashSet<string>(roles);
+            context.Result = new UnauthorizedResult();
+            return;
         }
 
-        public void OnAuthorization(AuthorizationFilterContext context)
+        bool authorized = user.Claims.Any(c => c.Type == ClaimTypes.Role && _roles.Contains(c.Value, StringComparer.OrdinalIgnoreCase));
+
+        if (!authorized)
         {
-            var user = context.HttpContext.User;
-
-            // Проверяем, аутентифицирован ли пользователь
-            if (!user.Identity.IsAuthenticated)
-            {
-                context.Result = new UnauthorizedResult();
-                return;
-            }
-
-            // Проверяем, есть ли у пользователя хотя бы одна из разрешенных ролей
-            if (!_roles.Any(user.IsInRole))
-            {
-                context.Result = new ForbidResult();
-            }
+            context.Result = new ForbidResult();
         }
     }
 }

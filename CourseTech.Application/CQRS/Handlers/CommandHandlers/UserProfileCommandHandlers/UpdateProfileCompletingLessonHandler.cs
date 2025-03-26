@@ -3,20 +3,19 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 
-namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserProfileCommandHandlers
+namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserProfileCommandHandlers;
+
+public class UpdateProfileCompletingLessonHandler(IBaseRepository<UserProfile> userProfileRepository) : IRequestHandler<UpdateProfileCompletingLessonCommand>
 {
-    public class UpdateProfileCompletingLessonHandler(IBaseRepository<UserProfile> userProfileRepository) : IRequestHandler<UpdateProfileCompletingLessonCommand>
+    public Task Handle(UpdateProfileCompletingLessonCommand request, CancellationToken cancellationToken)
     {
-        public Task Handle(UpdateProfileCompletingLessonCommand request, CancellationToken cancellationToken)
-        {
-            var profile = request.UserProfile;
+        var profile = request.UserProfile;
 
-            profile.CurrentGrade += request.UserGrade;
-            profile.LessonsCompleted++;
+        profile.CurrentGrade += request.UserGrade;
+        profile.LessonsCompleted++;
 
-            userProfileRepository.Update(profile);
+        userProfileRepository.Update(profile);
 
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

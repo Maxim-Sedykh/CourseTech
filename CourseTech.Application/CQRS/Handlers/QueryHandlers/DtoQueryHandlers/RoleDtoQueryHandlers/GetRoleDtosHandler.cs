@@ -7,16 +7,15 @@ using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.RoleDtoQueryHandlers
+namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.RoleDtoQueryHandlers;
+
+public class GetRoleDtosHandler(IBaseRepository<Role> roleRepository, IMapper mapper) : IRequestHandler<GetRoleDtosQuery, RoleDto[]>
 {
-    public class GetRoleDtosHandler(IBaseRepository<Role> roleRepository, IMapper mapper) : IRequestHandler<GetRoleDtosQuery, RoleDto[]>
+    public async Task<RoleDto[]> Handle(GetRoleDtosQuery request, CancellationToken cancellationToken)
     {
-        public async Task<RoleDto[]> Handle(GetRoleDtosQuery request, CancellationToken cancellationToken)
-        {
-            return await roleRepository
-                        .GetAll()
-                        .AsProjected<Role, RoleDto>(mapper)
-                        .ToArrayAsync(cancellationToken);
-        }
+        return await roleRepository
+                    .GetAll()
+                    .AsProjected<Role, RoleDto>(mapper)
+                    .ToArrayAsync(cancellationToken);
     }
 }

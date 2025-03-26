@@ -8,41 +8,40 @@ using MediatR;
 using Moq;
 using Serilog;
 
-namespace CourseTech.Tests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture;
+
+public class RoleServiceFixture : IDisposable
 {
-    public class RoleServiceFixture : IDisposable
+    public Mock<ICacheService> CacheServiceMock { get; }
+
+    public Mock<IMediator> MediatorMock { get; }
+
+    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+
+    public Mock<IMapper> MapperMock { get; }
+
+    public Mock<IRoleValidator> RoleValidatorMock { get; }
+
+    public Mock<ILogger> LoggerMock { get; }
+
+    public IRoleService RoleService { get; }
+
+    public RoleServiceFixture()
     {
-        public Mock<ICacheService> CacheServiceMock { get; }
+        CacheServiceMock = new Mock<ICacheService>();
+        MediatorMock = new Mock<IMediator>();
+        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        MapperMock = new Mock<IMapper>();
+        RoleValidatorMock = new Mock<IRoleValidator>();
+        LoggerMock = new Mock<ILogger>();
 
-        public Mock<IMediator> MediatorMock { get; }
-
-        public Mock<IUnitOfWork> UnitOfWorkMock { get; }
-
-        public Mock<IMapper> MapperMock { get; }
-
-        public Mock<IRoleValidator> RoleValidatorMock { get; }
-
-        public Mock<ILogger> LoggerMock { get; }
-
-        public IRoleService RoleService { get; }
-
-        public RoleServiceFixture()
-        {
-            CacheServiceMock = new Mock<ICacheService>();
-            MediatorMock = new Mock<IMediator>();
-            UnitOfWorkMock = new Mock<IUnitOfWork>();
-            MapperMock = new Mock<IMapper>();
-            RoleValidatorMock = new Mock<IRoleValidator>();
-            LoggerMock = new Mock<ILogger>();
-
-            RoleService = new RoleService(CacheServiceMock.Object,
-                MediatorMock.Object,
-                UnitOfWorkMock.Object,
-                MapperMock.Object,
-                RoleValidatorMock.Object,
-                LoggerMock.Object);
-        }
-
-        public void Dispose() { }
+        RoleService = new RoleService(CacheServiceMock.Object,
+            MediatorMock.Object,
+            UnitOfWorkMock.Object,
+            MapperMock.Object,
+            RoleValidatorMock.Object,
+            LoggerMock.Object);
     }
+
+    public void Dispose() { }
 }

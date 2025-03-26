@@ -8,25 +8,24 @@ using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using MediatR;
 
-namespace CourseTech.Application.Services
+namespace CourseTech.Application.Services;
+
+public class LessonRecordService(
+    ICacheService cacheService,
+    IMediator mediator) : ILessonRecordService
 {
-    public class LessonRecordService(
-        ICacheService cacheService,
-        IMediator mediator) : ILessonRecordService
+    /// <inheritdoc/>
+    public async Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId)
     {
-        /// <inheritdoc/>
-        public async Task<CollectionResult<LessonRecordDto>> GetUserLessonRecordsAsync(Guid userId)
+        var userLessonRecords = await cacheService.GetOrAddToCache(
+            $"{CacheKeys.UserLessonRecords}{userId}",
+            async () => await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId)));
+
+        if (!userLessonRecords.Any())
         {
-            var userLessonRecords = await cacheService.GetOrAddToCache(
-                $"{CacheKeys.UserLessonRecords}{userId}",
-                async () => await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId)));
-
-            if (!userLessonRecords.Any())
-            {
-                return CollectionResult<LessonRecordDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
-            }
-
-            return CollectionResult<LessonRecordDto>.Success(userLessonRecords);
+            return CollectionResult<LessonRecordDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
         }
+
+        return CollectionResult<LessonRecordDto>.Success(userLessonRecords);
     }
 }

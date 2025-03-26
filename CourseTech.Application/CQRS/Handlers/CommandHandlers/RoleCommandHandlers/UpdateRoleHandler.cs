@@ -3,18 +3,17 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 
-namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.RoleCommandHandlers
+namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.RoleCommandHandlers;
+
+public class UpdateRoleHandler(IBaseRepository<Role> roleRepository) : IRequestHandler<UpdateRoleCommand>
 {
-    public class UpdateRoleHandler(IBaseRepository<Role> roleRepository) : IRequestHandler<UpdateRoleCommand>
+    public async Task Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
-        public async Task Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
-        {
-            var role = request.Role;
+        var role = request.Role;
 
-            role.Name = request.NewRoleName;
+        role.Name = request.NewRoleName;
 
-            roleRepository.Update(role);
-            await roleRepository.SaveChangesAsync(cancellationToken);
-        }
+        roleRepository.Update(role);
+        await roleRepository.SaveChangesAsync(cancellationToken);
     }
 }

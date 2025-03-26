@@ -2,27 +2,25 @@
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Result;
-using System.Security.Claims;
 
-namespace CourseTech.Domain.Interfaces.Services
+namespace CourseTech.Domain.Interfaces.Services;
+
+/// <summary>
+/// Сервис предназначенный для авторизации/регистрации.
+/// </summary>
+public interface IAuthService
 {
     /// <summary>
-    /// Сервис предназначенный для авторизации/регистрации.
+    /// Регистрация пользователя.
     /// </summary>
-    public interface IAuthService
-    {
-        /// <summary>
-        /// Регистрация пользователя.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        Task<DataResult<UserDto>> Register(RegisterUserDto dto);
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    Task<DataResult<UserDto>> Register(RegisterUserDto dto);
 
-        /// <summary>
-        /// Авторизация пользователя.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        Task<DataResult<TokenDto>> Login(LoginUserDto dto);
-    }
+    /// <summary>
+    /// Авторизация пользователя.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    Task<DataResult<TokenDto>> Login(LoginUserDto dto);
 }

@@ -8,566 +8,568 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CourseTech.DAL.Migrations
+namespace CourseTech.DAL.Migrations;
+
+[DbContext(typeof(CourseDbContext))]
+partial class CourseDbContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(CourseDbContext))]
-    partial class CourseDbContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.6")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CourseTech.DAL.Views.QuestionTypeGrade", b =>
-                {
-                    b.Property<float>("Grade")
-                        .HasColumnType("real");
+        modelBuilder.Entity("CourseTech.DAL.Views.QuestionTypeGrade", b =>
+            {
+                b.Property<float>("Grade")
+                    .HasColumnType("real");
 
-                    b.Property<string>("QuestionTypeName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("QuestionTypeName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable((string)null);
+                b.ToTable((string)null);
 
-                    b.ToView("View_QuestionTypeGrade", (string)null);
-                });
+                b.ToView("View_QuestionTypeGrade", (string)null);
+            });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.Lesson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("CourseTech.Domain.Entities.Lesson", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("LectureMarkup")
-                        .HasMaxLength(10000)
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LectureMarkup")
+                    .HasMaxLength(10000)
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LessonType")
-                        .HasColumnType("int");
+                b.Property<int>("LessonType")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<int>("Number")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.ToTable("Lesson");
-                });
+                b.HasKey("Id");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.LessonRecord", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.ToTable("Lesson");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.LessonRecord", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("LessonId")
-                        .HasColumnType("int");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<float>("Mark")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(0f);
+                b.Property<int>("LessonId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<float>("Mark")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("real")
+                    .HasDefaultValue(0f);
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("LessonId");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("LessonId");
 
-                    b.ToTable("LessonRecord");
-                });
+                b.HasIndex("UserId");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.OpenQuestionAnswer", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.ToTable("LessonRecord");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.OpenQuestionAnswer", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("AnswerText")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("OpenQuestionId")
-                        .HasColumnType("int");
+                b.Property<string>("AnswerText")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("Id");
+                b.Property<int>("OpenQuestionId")
+                    .HasColumnType("int");
 
-                    b.HasIndex("OpenQuestionId");
+                b.HasKey("Id");
 
-                    b.ToTable("OpenQuestionAnswer");
-                });
+                b.HasIndex("OpenQuestionId");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                b.ToTable("OpenQuestionAnswer");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("DisplayQuestion")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                b.Property<string>("Discriminator")
+                    .IsRequired()
+                    .HasMaxLength(21)
+                    .HasColumnType("nvarchar(21)");
 
-                    b.Property<int>("LessonId")
-                        .HasColumnType("int");
+                b.Property<string>("DisplayQuestion")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                b.Property<int>("LessonId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<int>("Number")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.HasIndex("LessonId");
+                b.HasKey("Id");
 
-                    b.HasIndex("Id", "Number")
-                        .IsUnique();
+                b.HasIndex("LessonId");
 
-                    b.ToTable("BaseQuestion", t =>
-                        {
-                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
-                        });
+                b.HasIndex("Id", "Number")
+                    .IsUnique();
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseQuestion");
+                b.ToTable("BaseQuestion", t =>
+                    {
+                        t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
+                    });
 
-                    b.UseTphMappingStrategy();
-                });
+                b.HasDiscriminator<string>("Discriminator").HasValue("BaseQuestion");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.Review", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.UseTphMappingStrategy();
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.Review", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ReviewText")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<string>("ReviewText")
+                    .IsRequired()
+                    .HasMaxLength(1000)
+                    .HasColumnType("nvarchar(1000)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UserId");
+                b.HasKey("Id");
 
-                    b.ToTable("Review");
-                });
+                b.HasIndex("UserId");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.Role", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.ToTable("Review");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.Role", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.ToTable("Role");
-                });
+                b.HasKey("Id");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.TestVariant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                b.ToTable("Role");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.TestVariant", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<string>("Content")
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .HasColumnType("nvarchar(300)");
 
-                    b.Property<bool>("IsCorrect")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("TestQuestionId")
-                        .HasColumnType("int");
+                b.Property<bool>("IsCorrect")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<int>("TestQuestionId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("VariantNumber")
-                        .HasColumnType("int");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<int>("VariantNumber")
+                    .HasColumnType("int");
 
-                    b.HasIndex("TestQuestionId", "VariantNumber")
-                        .IsUnique();
+                b.HasKey("Id");
 
-                    b.ToTable("TestVariant");
-                });
+                b.HasIndex("TestQuestionId", "VariantNumber")
+                    .IsUnique();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                b.ToTable("TestVariant");
+            });
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+        modelBuilder.Entity("CourseTech.Domain.Entities.User", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Login")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<string>("Password")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.ToTable("User");
-                });
+                b.HasKey("Id");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.ToTable("User");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Analys")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Анализ ещё не получен. вы ещё не прошли курс.");
+                b.Property<int>("Age")
+                    .HasColumnType("int");
 
-                    b.Property<byte>("CountOfReviews")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0);
+                b.Property<string>("Analys")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("nvarchar(max)")
+                    .HasDefaultValue("Анализ ещё не получен. вы ещё не прошли курс.");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<byte>("CountOfReviews")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("tinyint")
+                    .HasDefaultValue((byte)0);
 
-                    b.Property<float>("CurrentGrade")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(3, 2)
-                        .HasColumnType("float")
-                        .HasDefaultValue(0f);
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                b.Property<float>("CurrentGrade")
+                    .ValueGeneratedOnAdd()
+                    .HasPrecision(3, 2)
+                    .HasColumnType("float")
+                    .HasDefaultValue(0f);
 
-                    b.Property<bool>("IsEditAble")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                b.Property<DateTime>("DateOfBirth")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsExamCompleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                b.Property<bool>("IsEditAble")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(true);
 
-                    b.Property<int>("LessonsCompleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                b.Property<bool>("IsExamCompleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                b.Property<int>("LessonsCompleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasDefaultValue(0);
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                b.Property<string>("Surname")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                b.HasKey("Id");
 
-                    b.ToTable("UserProfile");
-                });
+                b.HasIndex("UserId")
+                    .IsUnique();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserRole", b =>
-                {
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                b.ToTable("UserProfile");
+            });
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserRole", b =>
+            {
+                b.Property<long>("RoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("RoleId", "UserId");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UserId");
+                b.HasKey("RoleId", "UserId");
 
-                    b.ToTable("UserRole");
-                });
+                b.HasIndex("UserId");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserToken", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                b.ToTable("UserRole");
+            });
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserToken", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("RefreshTokenExpireTime")
-                        .HasColumnType("datetime2");
+                b.Property<string>("RefreshToken")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<DateTime>("RefreshTokenExpireTime")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                b.HasKey("Id");
 
-                    b.ToTable("UserToken");
-                });
+                b.HasIndex("UserId")
+                    .IsUnique();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", b =>
-                {
-                    b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
+                b.ToTable("UserToken");
+            });
 
-                    b.ToTable(t =>
-                        {
-                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
-                        });
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", b =>
+            {
+                b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
 
-                    b.HasDiscriminator().HasValue("OpenQuestion");
-                });
+                b.ToTable(t =>
+                    {
+                        t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
+                    });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.PracticalQuestion", b =>
-                {
-                    b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
+                b.HasDiscriminator().HasValue("OpenQuestion");
+            });
 
-                    b.Property<string>("CorrectQueryCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.PracticalQuestion", b =>
+            {
+                b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
 
-                    b.ToTable(t =>
-                        {
-                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
-                        });
+                b.Property<string>("CorrectQueryCode")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("PracticalQuestion");
-                });
+                b.ToTable(t =>
+                    {
+                        t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
+                    });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", b =>
-                {
-                    b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
+                b.HasDiscriminator().HasValue("PracticalQuestion");
+            });
 
-                    b.ToTable(t =>
-                        {
-                            t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
-                        });
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", b =>
+            {
+                b.HasBaseType("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion");
 
-                    b.HasDiscriminator().HasValue("TestQuestion");
-                });
+                b.ToTable(t =>
+                    {
+                        t.HasCheckConstraint("CK_Number", "Number BETWEEN 0 AND 100");
+                    });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.LessonRecord", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("LessonRecords")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasDiscriminator().HasValue("TestQuestion");
+            });
 
-                    b.HasOne("CourseTech.Domain.Entities.User", "User")
-                        .WithMany("LessonRecords")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("CourseTech.Domain.Entities.LessonRecord", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.Lesson", "Lesson")
+                    .WithMany("LessonRecords")
+                    .HasForeignKey("LessonId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Lesson");
+                b.HasOne("CourseTech.Domain.Entities.User", "User")
+                    .WithMany("LessonRecords")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("Lesson");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.OpenQuestionAnswer", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", "OpenQuestion")
-                        .WithMany("AnswerVariants")
-                        .HasForeignKey("OpenQuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("User");
+            });
 
-                    b.Navigation("OpenQuestion");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.OpenQuestionAnswer", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", "OpenQuestion")
+                    .WithMany("AnswerVariants")
+                    .HasForeignKey("OpenQuestionId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("Questions")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("OpenQuestion");
+            });
 
-                    b.Navigation("Lesson");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.BaseQuestion", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.Lesson", "Lesson")
+                    .WithMany("Questions")
+                    .HasForeignKey("LessonId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.Review", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("Lesson");
+            });
 
-                    b.Navigation("User");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.Review", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.User", "User")
+                    .WithMany("Reviews")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.TestVariant", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", "TestQuestion")
-                        .WithMany("TestVariants")
-                        .HasForeignKey("TestQuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("User");
+            });
 
-                    b.Navigation("TestQuestion");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.TestVariant", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", "TestQuestion")
+                    .WithMany("TestVariants")
+                    .HasForeignKey("TestQuestionId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.User", "User")
-                        .WithOne("UserProfile")
-                        .HasForeignKey("CourseTech.Domain.Entities.UserProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("TestQuestion");
+            });
 
-                    b.Navigation("User");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserProfile", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.User", "User")
+                    .WithOne("UserProfile")
+                    .HasForeignKey("CourseTech.Domain.Entities.UserProfile", "UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserRole", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.Navigation("User");
+            });
 
-                    b.HasOne("CourseTech.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserRole", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.Role", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.UserToken", b =>
-                {
-                    b.HasOne("CourseTech.Domain.Entities.User", "User")
-                        .WithOne("UserToken")
-                        .HasForeignKey("CourseTech.Domain.Entities.UserToken", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("CourseTech.Domain.Entities.User", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
-                    b.Navigation("User");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.UserToken", b =>
+            {
+                b.HasOne("CourseTech.Domain.Entities.User", "User")
+                    .WithOne("UserToken")
+                    .HasForeignKey("CourseTech.Domain.Entities.UserToken", "UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.Lesson", b =>
-                {
-                    b.Navigation("LessonRecords");
+                b.Navigation("User");
+            });
 
-                    b.Navigation("Questions");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.Lesson", b =>
+            {
+                b.Navigation("LessonRecords");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.User", b =>
-                {
-                    b.Navigation("LessonRecords");
+                b.Navigation("Questions");
+            });
 
-                    b.Navigation("Reviews");
+        modelBuilder.Entity("CourseTech.Domain.Entities.User", b =>
+            {
+                b.Navigation("LessonRecords");
 
-                    b.Navigation("UserProfile");
+                b.Navigation("Reviews");
 
-                    b.Navigation("UserToken");
-                });
+                b.Navigation("UserProfile");
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", b =>
-                {
-                    b.Navigation("AnswerVariants");
-                });
+                b.Navigation("UserToken");
+            });
 
-            modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", b =>
-                {
-                    b.Navigation("TestVariants");
-                });
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.OpenQuestion", b =>
+            {
+                b.Navigation("AnswerVariants");
+            });
+
+        modelBuilder.Entity("CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities.TestQuestion", b =>
+            {
+                b.Navigation("TestVariants");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

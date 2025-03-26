@@ -8,67 +8,66 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
-namespace CourseTech.ChatGptApi
+namespace CourseTech.ChatGptApi;
+
+public class ChatGptService : IChatGptService
 {
-    public class ChatGptService : IChatGptService
+    private readonly HttpClient _httpClient;
+    private readonly ChatGptSettings _chatGptSettings;
+
+    public ChatGptService(IOptions<ChatGptSettings> chatGptOptions)
     {
-        private readonly HttpClient _httpClient;
-        private readonly ChatGptSettings _chatGptSettings;
+        _chatGptSettings = chatGptOptions.Value;
+        _httpClient = new HttpClient();
 
-        public ChatGptService(IOptions<ChatGptSettings> chatGptOptions)
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _chatGptSettings.ApiKey);
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+    }
+
+    public async Task<string> SendMessageToChatGPT(string prompt)
+    {
+        var requestBody = new
         {
-            _chatGptSettings = chatGptOptions.Value;
-            _httpClient = new HttpClient();
+            model = _chatGptSettings.ChatGptModel,
+            messages = new[]
+            {
+                new { role = "user", content = prompt }
+            }
+        };
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _chatGptSettings.ApiKey);
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-        }
+        string json = JsonConvert.SerializeObject(requestBody);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        public async Task<string> SendMessageToChatGPT(string prompt)
+        HttpResponseMessage response = null;
+        try
         {
-            var requestBody = new
-            {
-                model = _chatGptSettings.ChatGptModel,
-                messages = new[]
-                {
-                    new { role = "user", content = prompt }
-                }
-            };
+            response = await _httpClient.PostAsync(_chatGptSettings.BaseUrl, content);
+            response.EnsureSuccessStatusCode();
 
-            string json = JsonConvert.SerializeObject(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = null;
-            try
-            {
-                response = await _httpClient.PostAsync(_chatGptSettings.BaseUrl, content);
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                return ParseChatGptResponse(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                throw new ApplicationException("An error occurred while communicating with the ChatGPT API.", e);
-            }
-            catch (JsonException e)
-            {
-                throw new ApplicationException("An error occurred while processing the response from the ChatGPT API.", e);
-            }
-            finally
-            {
-                response?.Dispose();
-            }
+            string responseBody = await response.Content.ReadAsStringAsync();
+            return ParseChatGptResponse(responseBody);
         }
-
-        private string ParseChatGptResponse(string responseBody)
+        catch (HttpRequestException e)
         {
-            JObject jsonObject = JObject.Parse(responseBody);
-
-            return jsonObject[ChatGptReponsePropertyConstants.FirstLevelResponseProperty][0]
-                [ChatGptReponsePropertyConstants.SecondLevelResponseProperty]
-                [ChatGptReponsePropertyConstants.ThirdLevelResponseProperty].ToString();
-
+            throw new ApplicationException("An error occurred while communicating with the ChatGPT API.", e);
         }
+        catch (JsonException e)
+        {
+            throw new ApplicationException("An error occurred while processing the response from the ChatGPT API.", e);
+        }
+        finally
+        {
+            response?.Dispose();
+        }
+    }
+
+    private string ParseChatGptResponse(string responseBody)
+    {
+        JObject jsonObject = JObject.Parse(responseBody);
+
+        return jsonObject[ChatGptReponsePropertyConstants.FirstLevelResponseProperty][0]
+            [ChatGptReponsePropertyConstants.SecondLevelResponseProperty]
+            [ChatGptReponsePropertyConstants.ThirdLevelResponseProperty].ToString();
+
     }
 }

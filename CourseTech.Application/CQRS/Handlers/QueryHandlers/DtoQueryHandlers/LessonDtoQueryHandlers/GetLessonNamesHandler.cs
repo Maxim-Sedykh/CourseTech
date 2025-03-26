@@ -7,15 +7,14 @@ using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.LessonDtoQueryHandlers
+namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.LessonDtoQueryHandlers;
+
+public class GetLessonNamesHandler(IBaseRepository<Lesson> lessonRepository, IMapper mapper) : IRequestHandler<GetLessonNamesQuery, LessonNameDto[]>
 {
-    public class GetLessonNamesHandler(IBaseRepository<Lesson> lessonRepository, IMapper mapper) : IRequestHandler<GetLessonNamesQuery, LessonNameDto[]>
+    public async Task<LessonNameDto[]> Handle(GetLessonNamesQuery request, CancellationToken cancellationToken)
     {
-        public async Task<LessonNameDto[]> Handle(GetLessonNamesQuery request, CancellationToken cancellationToken)
-        {
-            return await lessonRepository.GetAll()
-                        .AsProjected<Lesson, LessonNameDto>(mapper)
-                        .ToArrayAsync(cancellationToken);
-        }
+        return await lessonRepository.GetAll()
+                    .AsProjected<Lesson, LessonNameDto>(mapper)
+                    .ToArrayAsync(cancellationToken);
     }
 }

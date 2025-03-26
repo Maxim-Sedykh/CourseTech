@@ -1,22 +1,16 @@
 ﻿using CourseTech.Domain.Interfaces.Dtos.Question;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CourseTech.Domain.Dto.Question.Pass
+namespace CourseTech.Domain.Dto.Question.Pass;
+
+/// <summary>
+/// Модель данных для отображения правильного ответа на вопрос открытого типа.
+/// </summary>
+public class OpenQuestionCorrectAnswerDto : ICorrectAnswerDto
 {
-    /// <summary>
-    /// Модель данных для отображения правильного ответа на вопрос открытого типа.
-    /// </summary>
-    public class OpenQuestionCorrectAnswerDto : ICorrectAnswerDto
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string CorrectAnswer { get; set; }
+    public string CorrectAnswer { get; set; }
 
-        public bool AnswerCorrectness { get; set; }
-        public string QuestionType { get; set; } = "OpenQuestionCorrectAnswerDto";
-    }
+    public bool AnswerCorrectness { get; set; }
+    public string QuestionType { get; set; } = "OpenQuestionCorrectAnswerDto";
 }

@@ -1,12 +1,6 @@
-﻿using CourseTech.DAL;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CourseTech.DAL.Extensions;
 
@@ -25,6 +19,6 @@ public static class MigrationExtensions
 
         using CourseDbContext dbContext = score.ServiceProvider.GetService<CourseDbContext>();
 
-        //dbContext.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 }

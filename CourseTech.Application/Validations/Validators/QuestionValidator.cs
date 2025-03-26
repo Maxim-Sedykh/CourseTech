@@ -9,79 +9,78 @@ using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 
-namespace CourseTech.Application.Validations.Validators
+namespace CourseTech.Application.Validations.Validators;
+
+public class QuestionValidator : IQuestionValidator
 {
-    public class QuestionValidator : IQuestionValidator
+    /// <inheritdoc/>
+    public BaseResult ValidateCorrectAnswersOnNull(IEnumerable<TestVariantDto> correctTestVariants, IEnumerable<OpenQuestionAnswerDto> openQuestionAnswers)
     {
-        /// <inheritdoc/>
-        public BaseResult ValidateCorrectAnswersOnNull(IEnumerable<TestVariantDto> correctTestVariants, IEnumerable<OpenQuestionAnswerDto> openQuestionAnswers)
+        if (!correctTestVariants.Any())
         {
-            if (!correctTestVariants.Any())
-            {
-                return BaseResult.Failure((int)ErrorCodes.TestQuestionsCorrectVariantsNotFound,
-                    ErrorMessage.TestQuestionsCorrectVariantsNotFound);
-            }
-
-            if (!openQuestionAnswers.Any())
-            {
-                return BaseResult.Failure((int)ErrorCodes.OpenQuestionsAnswerVariantsNotFound,
-                    ErrorMessage.OpenQuestionsAnswerVariantsNotFound);
-            }
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.TestQuestionsCorrectVariantsNotFound,
+                ErrorMessage.TestQuestionsCorrectVariantsNotFound);
         }
 
-        /// <inheritdoc/>
-        public BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Lesson lesson)
+        if (!openQuestionAnswers.Any())
         {
-            if (userProfile == null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
-            }
-
-            if (lesson == null)
-            {
-                return BaseResult.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-            }
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.OpenQuestionsAnswerVariantsNotFound,
+                ErrorMessage.OpenQuestionsAnswerVariantsNotFound);
         }
 
-        /// <inheritdoc/>
-        public BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions,
-                                            int userAnswersCount,
-                                            LessonTypes currentLessonType)
+        return BaseResult.Success();
+    }
+
+    /// <inheritdoc/>
+    public BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Lesson lesson)
+    {
+        if (userProfile == null)
         {
-            if (!lessonQuestions.Any() || lessonQuestions.Count != userAnswersCount
-                || !lessonQuestions.OfType<TestQuestionCheckingDto>().Any() || !lessonQuestions.OfType<OpenQuestionCheckingDto>().Any())
-            {
-                return BaseResult.Failure((int)ErrorCodes.LessonQuestionsNotFound,
-                    ErrorMessage.LessonQuestionsNotFound);
-            }
-
-            if (currentLessonType != LessonTypes.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
-            {
-                return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
-                    ErrorMessage.InvalidLessonType);
-            }
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
-        /// <inheritdoc/>
-        public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions)
+        if (lesson == null)
         {
-            if (lesson is null)
-            {
-                return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-            }
-
-            if (!questions.Any())
-            {
-                return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
-            }
-
-            return BaseResult.Success();
+            return BaseResult.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
         }
+
+        return BaseResult.Success();
+    }
+
+    /// <inheritdoc/>
+    public BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions,
+                                        int userAnswersCount,
+                                        LessonTypes currentLessonType)
+    {
+        if (!lessonQuestions.Any() || lessonQuestions.Count != userAnswersCount
+            || !lessonQuestions.OfType<TestQuestionCheckingDto>().Any() || !lessonQuestions.OfType<OpenQuestionCheckingDto>().Any())
+        {
+            return BaseResult.Failure((int)ErrorCodes.LessonQuestionsNotFound,
+                ErrorMessage.LessonQuestionsNotFound);
+        }
+
+        if (currentLessonType != LessonTypes.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
+        {
+            return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
+                ErrorMessage.InvalidLessonType);
+        }
+
+        return BaseResult.Success();
+    }
+
+    /// <inheritdoc/>
+    public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions)
+    {
+        if (lesson is null)
+        {
+            return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+        }
+
+        if (!questions.Any())
+        {
+            return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
+        }
+
+        return BaseResult.Success();
     }
 }

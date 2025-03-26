@@ -5,37 +5,36 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace CourseTech.Tests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture;
+
+public class TokenServiceFixture : IDisposable
 {
-    public class TokenServiceFixture : IDisposable
+    public Mock<IMediator> MediatorMock { get; }
+
+    public JwtSettings JwtSettings { get; }
+
+    public ITokenService TokenService { get; }
+
+    public TokenServiceFixture()
     {
-        public Mock<IMediator> MediatorMock { get; }
+        MediatorMock = new Mock<IMediator>();
 
-        public JwtSettings JwtSettings { get; }
-
-        public ITokenService TokenService { get; }
-
-        public TokenServiceFixture()
+        JwtSettings = new JwtSettings
         {
-            MediatorMock = new Mock<IMediator>();
+            Issuer = "test",
+            Audience = "test",
+            Authority = "test",
+            JwtKey = "test",
+            Lifetime = "test",
+            RefreshTokenValidityInDays = 11
+        };
 
-            JwtSettings = new JwtSettings
-            {
-                Issuer = "test",
-                Audience = "test",
-                Authority = "test",
-                JwtKey = "test",
-                Lifetime = "test",
-                RefreshTokenValidityInDays = 11
-            };
+        var jwtOptions = Options.Create(JwtSettings);
 
-            var jwtOptions = Options.Create(JwtSettings);
-
-            TokenService = new TokenService(
-                MediatorMock.Object,
-                jwtOptions);
-        }
-
-        public void Dispose() { }
+        TokenService = new TokenService(
+            MediatorMock.Object,
+            jwtOptions);
     }
+
+    public void Dispose() { }
 }

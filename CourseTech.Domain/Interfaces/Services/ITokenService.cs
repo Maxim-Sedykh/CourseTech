@@ -3,38 +3,37 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Result;
 using System.Security.Claims;
 
-namespace CourseTech.Domain.Interfaces.Services
+namespace CourseTech.Domain.Interfaces.Services;
+
+/// <summary>
+/// Сервис для работы с токенами.
+/// </summary>
+public interface ITokenService
 {
     /// <summary>
-    /// Сервис для работы с токенами.
+    /// Генерация Access-токена.
     /// </summary>
-    public interface ITokenService
-    {
-        /// <summary>
-        /// Генерация Access-токена.
-        /// </summary>
-        /// <param name="claims"></param>
-        /// <returns></returns>
-        string GenerateAccessToken(IEnumerable<Claim> claims);
+    /// <param name="claims"></param>
+    /// <returns></returns>
+    string GenerateAccessToken(IEnumerable<Claim> claims);
 
-        /// <summary>
-        /// Генерация Refresh-токена.
-        /// </summary>
-        /// <returns></returns>
-        string GenerateRefreshToken();
+    /// <summary>
+    /// Генерация Refresh-токена.
+    /// </summary>
+    /// <returns></returns>
+    string GenerateRefreshToken();
 
-        /// <summary>
-        /// Обновление токена пользователя.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        Task<DataResult<TokenDto>> RefreshToken(TokenDto dto);
+    /// <summary>
+    /// Обновление токена пользователя.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    Task<DataResult<TokenDto>> RefreshToken(TokenDto dto);
 
-        /// <summary>
-        /// Получение основных клаймов из пользователя.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        List<Claim> GetClaimsFromUser(User user);
-    }
+    /// <summary>
+    /// Получение основных клаймов из пользователя.
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    List<Claim> GetClaimsFromUser(User user);
 }

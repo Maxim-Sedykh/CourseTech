@@ -1,11 +1,7 @@
 ﻿using CourseTech.DAL.Interceptors;
 using CourseTech.DAL.Views;
-using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace CourseTech.DAL;

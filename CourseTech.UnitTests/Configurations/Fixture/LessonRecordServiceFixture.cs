@@ -4,24 +4,23 @@ using CourseTech.Domain.Interfaces.Services;
 using MediatR;
 using Moq;
 
-namespace CourseTech.Tests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture;
+
+public class LessonRecordServiceFixture : IDisposable
 {
-    public class LessonRecordServiceFixture : IDisposable
+    public Mock<ICacheService> CacheServiceMock { get; }
+
+    public Mock<IMediator> MediatorMock { get; }
+
+    public ILessonRecordService LessonRecordService { get; }
+
+    public LessonRecordServiceFixture()
     {
-        public Mock<ICacheService> CacheServiceMock { get; }
+        CacheServiceMock = new Mock<ICacheService>();
+        MediatorMock = new Mock<IMediator>();
 
-        public Mock<IMediator> MediatorMock { get; }
-
-        public ILessonRecordService LessonRecordService { get; }
-
-        public LessonRecordServiceFixture()
-        {
-            CacheServiceMock = new Mock<ICacheService>();
-            MediatorMock = new Mock<IMediator>();
-
-            LessonRecordService = new LessonRecordService(CacheServiceMock.Object, MediatorMock.Object);
-        }
-
-        public void Dispose() { }
+        LessonRecordService = new LessonRecordService(CacheServiceMock.Object, MediatorMock.Object);
     }
+
+    public void Dispose() { }
 }

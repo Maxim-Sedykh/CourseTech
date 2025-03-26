@@ -6,30 +6,29 @@ using MediatR;
 using Moq;
 using Serilog;
 
-namespace CourseTech.Tests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture;
+
+public class LessonServiceFixture : IDisposable
 {
-    public class LessonServiceFixture : IDisposable
+    public Mock<ICacheService> CacheServiceMock { get; }
+
+    public Mock<IMediator> MediatorMock { get; }
+
+    public Mock<ILogger> LoggerMock { get; }
+
+    public Mock<ILessonValidator> LessonValidatorMock { get; }
+
+    public ILessonService LessonService { get; }
+
+    public LessonServiceFixture()
     {
-        public Mock<ICacheService> CacheServiceMock { get; }
+        CacheServiceMock = new Mock<ICacheService>();
+        MediatorMock = new Mock<IMediator>();
+        LoggerMock = new Mock<ILogger>();
+        LessonValidatorMock = new Mock<ILessonValidator>();
 
-        public Mock<IMediator> MediatorMock { get; }
-
-        public Mock<ILogger> LoggerMock { get; }
-
-        public Mock<ILessonValidator> LessonValidatorMock { get; }
-
-        public ILessonService LessonService { get; }
-
-        public LessonServiceFixture()
-        {
-            CacheServiceMock = new Mock<ICacheService>();
-            MediatorMock = new Mock<IMediator>();
-            LoggerMock = new Mock<ILogger>();
-            LessonValidatorMock = new Mock<ILessonValidator>();
-
-            LessonService = new LessonService(CacheServiceMock.Object, MediatorMock.Object, LoggerMock.Object, LessonValidatorMock.Object);
-        }
-
-        public void Dispose() { }
+        LessonService = new LessonService(CacheServiceMock.Object, MediatorMock.Object, LoggerMock.Object, LessonValidatorMock.Object);
     }
+
+    public void Dispose() { }
 }

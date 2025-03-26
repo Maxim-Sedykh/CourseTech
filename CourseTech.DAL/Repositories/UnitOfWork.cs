@@ -1,8 +1,4 @@
-﻿using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
-using CourseTech.Domain.Interfaces.Databases;
-using CourseTech.Domain.Interfaces.Repositories;
+﻿using CourseTech.Domain.Interfaces.Databases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;

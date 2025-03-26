@@ -1,10 +1,9 @@
-﻿namespace CourseTech.Domain.Dto.CourseResult
+﻿namespace CourseTech.Domain.Dto.CourseResult;
+
+/// <summary>
+/// Модель данных для анализа пользователя.
+/// </summary>
+public class UserAnalysDto
 {
-    /// <summary>
-    /// Модель данных для анализа пользователя.
-    /// </summary>
-    public class UserAnalysDto
-    {
-        public string Analys { get; set; }
-    }
+    public string Analys { get; set; }
 }

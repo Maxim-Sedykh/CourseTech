@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="DbViews\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using Azure;
-using CourseTech.Domain.Constants.LearningProcess;
+﻿using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Constants.Validation;
 using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

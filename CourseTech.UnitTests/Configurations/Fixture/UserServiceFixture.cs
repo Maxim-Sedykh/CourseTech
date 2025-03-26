@@ -7,37 +7,36 @@ using MediatR;
 using Moq;
 using Serilog;
 
-namespace CourseTech.Tests.Configurations.Fixture
+namespace CourseTech.Tests.Configurations.Fixture;
+
+public class UserServiceFixture : IDisposable
 {
-    public class UserServiceFixture : IDisposable
+    public Mock<ICacheService> CacheServiceMock { get; }
+
+    public Mock<IMediator> MediatorMock { get; }
+
+    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+
+    public Mock<ILogger> LoggerMock { get; }
+
+    public Mock<IUserValidator> UserValidatorMock { get; }
+
+    public IUserService UserService { get; }
+
+    public UserServiceFixture()
     {
-        public Mock<ICacheService> CacheServiceMock { get; }
+        CacheServiceMock = new Mock<ICacheService>();
+        MediatorMock = new Mock<IMediator>();
+        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UserValidatorMock = new Mock<IUserValidator>();
+        LoggerMock = new Mock<ILogger>();
 
-        public Mock<IMediator> MediatorMock { get; }
-
-        public Mock<IUnitOfWork> UnitOfWorkMock { get; }
-
-        public Mock<ILogger> LoggerMock { get; }
-
-        public Mock<IUserValidator> UserValidatorMock { get; }
-
-        public IUserService UserService { get; }
-
-        public UserServiceFixture()
-        {
-            CacheServiceMock = new Mock<ICacheService>();
-            MediatorMock = new Mock<IMediator>();
-            UnitOfWorkMock = new Mock<IUnitOfWork>();
-            UserValidatorMock = new Mock<IUserValidator>();
-            LoggerMock = new Mock<ILogger>();
-
-            UserService = new UserService(CacheServiceMock.Object,
-                MediatorMock.Object,
-                UnitOfWorkMock.Object,
-                LoggerMock.Object,
-                UserValidatorMock.Object);
-        }
-
-        public void Dispose() { }
+        UserService = new UserService(CacheServiceMock.Object,
+            MediatorMock.Object,
+            UnitOfWorkMock.Object,
+            LoggerMock.Object,
+            UserValidatorMock.Object);
     }
+
+    public void Dispose() { }
 }

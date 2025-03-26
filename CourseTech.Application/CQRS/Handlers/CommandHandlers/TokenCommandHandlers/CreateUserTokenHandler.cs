@@ -3,22 +3,21 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 
-namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.TokenCommandHandlers
+namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.TokenCommandHandlers;
+
+public class CreateUserTokenHandler(IBaseRepository<UserToken> userTokenRepository) : IRequestHandler<CreateUserTokenCommand>
 {
-    public class CreateUserTokenHandler(IBaseRepository<UserToken> userTokenRepository) : IRequestHandler<CreateUserTokenCommand>
+    public async Task Handle(CreateUserTokenCommand request, CancellationToken cancellationToken)
     {
-        public async Task Handle(CreateUserTokenCommand request, CancellationToken cancellationToken)
+        var userToken = new UserToken()
         {
-            var userToken = new UserToken()
-            {
-                UserId = request.UserId,
-                RefreshToken = request.RefreshToken,
-                RefreshTokenExpireTime = DateTime.UtcNow.AddDays(request.RefreshTokenValidityInDays)
-            };
+            UserId = request.UserId,
+            RefreshToken = request.RefreshToken,
+            RefreshTokenExpireTime = DateTime.UtcNow.AddDays(request.RefreshTokenValidityInDays)
+        };
 
-            await userTokenRepository.CreateAsync(userToken);
+        await userTokenRepository.CreateAsync(userToken);
 
-            await userTokenRepository.SaveChangesAsync(cancellationToken);
-        }
+        await userTokenRepository.SaveChangesAsync(cancellationToken);
     }
 }
