@@ -17,7 +17,7 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
 
     public override void Write(Utf8JsonWriter writer, ICorrectAnswerDto value, JsonSerializerOptions options)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         writer.WriteStartObject();
 
@@ -34,7 +34,7 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
         writer.WriteEndObject();
     }
 
-    private void WritePracticalQuestionProperties(Utf8JsonWriter writer, PracticalQuestionCorrectAnswerDto correctAnswer, JsonSerializerOptions options)
+    private static void WritePracticalQuestionProperties(Utf8JsonWriter writer, PracticalQuestionCorrectAnswerDto correctAnswer, JsonSerializerOptions options)
     {
         writer.WritePropertyName("questionUserGrade");
         JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
@@ -46,7 +46,7 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
         SerializeQueryResult(writer, correctAnswer.QueryResult, options);
     }
 
-    private void SerializeQueryResult(Utf8JsonWriter writer, List<dynamic> dynamicLists, JsonSerializerOptions options)
+    private static void SerializeQueryResult(Utf8JsonWriter writer, List<dynamic> dynamicLists, JsonSerializerOptions options)
     {
         if (dynamicLists != null)
         {

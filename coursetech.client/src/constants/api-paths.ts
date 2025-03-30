@@ -1,6 +1,6 @@
 export class ApiPaths {
     // Базовый URL API
-    private static readonly BASE_URL: string = "http://localhost:54321/api/v1";
+    private static readonly BASE_URL: string = "https://localhost:8081/api/v1";
 
     // Аутентификация
     public static readonly AUTH_API_PATH: string = `${ ApiPaths.BASE_URL }/Auth`;

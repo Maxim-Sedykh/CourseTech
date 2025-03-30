@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { BaseResult } from '../types/result/base-result';
 
 export class ApiClient {
@@ -31,25 +31,20 @@ export class ApiClient {
 
     private async request<T>(config: AxiosRequestConfig): Promise<T | BaseResult> {
         try {
-
             const token = localStorage.getItem('token');
+            const requestConfig = { ...config }; // Копируем исходную конфигурацию
 
-            let updatedConfig : AxiosRequestConfig;
+            console.log(requestConfig.baseURL);
+            console.log(requestConfig.url);
 
             if (token) {
-                 updatedConfig = {
-                    ...config,
-                    headers: {
-                        ...config.headers,
-                        Authorization: `Bearer ${token}`,
-                    },
+                requestConfig.headers = {
+                    ...requestConfig.headers,
+                    Authorization: `Bearer ${token}`,
                 };
             }
-            else {
-                updatedConfig = config
-            }
 
-            const response: AxiosResponse<T> = await this.axiosInstance.request<T>(updatedConfig);
+            const response = await this.axiosInstance.request<T>(requestConfig); // Используем обновленную конфигурацию
             return response.data;
         } catch (error) {
             return this.handleError(error);

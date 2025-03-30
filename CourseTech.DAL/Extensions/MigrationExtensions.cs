@@ -19,6 +19,6 @@ public static class MigrationExtensions
 
         using CourseDbContext dbContext = score.ServiceProvider.GetService<CourseDbContext>();
 
-        dbContext.Database.Migrate();
+        //dbContext.Database.Migrate();
     }
 }

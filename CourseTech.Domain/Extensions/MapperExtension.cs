@@ -21,17 +21,13 @@ public static class MapperExtension
     /// <exception cref="ArgumentException"></exception>
     public static IQuestionDto MapQuestion(this IMapper mapper, BaseQuestion question)
     {
-        switch (question)
+        return question switch
         {
-            case TestQuestion testQuestion:
-                return mapper.Map<TestQuestionDto>(testQuestion);
-            case PracticalQuestion practicalQuestion:
-                return mapper.Map<PracticalQuestionDto>(practicalQuestion);
-            case OpenQuestion openQuestion:
-                return mapper.Map<OpenQuestionDto>(openQuestion);
-            default:
-                throw new ArgumentException("Invalid question type");
-        }
+            TestQuestion testQuestion => mapper.Map<TestQuestionDto>(testQuestion),
+            PracticalQuestion practicalQuestion => mapper.Map<PracticalQuestionDto>(practicalQuestion),
+            OpenQuestion openQuestion => mapper.Map<OpenQuestionDto>(openQuestion),
+            _ => throw new ArgumentException("Invalid question type"),
+        };
     }
 
     /// <summary>
@@ -43,16 +39,12 @@ public static class MapperExtension
     /// <exception cref="ArgumentException"></exception>
     public static ICheckQuestionDto MapQuestionCheckings(this IMapper mapper, BaseQuestion question)
     {
-        switch (question)
+        return question switch
         {
-            case TestQuestion testQuestion:
-                return mapper.Map<TestQuestionCheckingDto>(testQuestion);
-            case OpenQuestion openQuestion:
-                return mapper.Map<OpenQuestionCheckingDto>(openQuestion);
-            case PracticalQuestion practicalQuestion:
-                return mapper.Map<PracticalQuestionCheckingDto>(practicalQuestion);
-            default:
-                throw new ArgumentException("Invalid question type");
-        }
+            TestQuestion testQuestion => mapper.Map<TestQuestionCheckingDto>(testQuestion),
+            OpenQuestion openQuestion => mapper.Map<OpenQuestionCheckingDto>(openQuestion),
+            PracticalQuestion practicalQuestion => mapper.Map<PracticalQuestionCheckingDto>(practicalQuestion),
+            _ => throw new ArgumentException("Invalid question type"),
+        };
     }
 }

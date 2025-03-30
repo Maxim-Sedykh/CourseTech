@@ -6,7 +6,7 @@ namespace CourseTech.DAL.Repositories;
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
     private readonly CourseDbContext _dbContext;
-    private readonly DbSet<TEntity> _table = null;
+    private readonly DbSet<TEntity> _table;
 
     public BaseRepository(CourseDbContext dbContext)
     {

@@ -8,7 +8,8 @@ services:
       context: .
       dockerfile: CourseTech.WebApi/Dockerfile
     ports:
-      - "54321:8080"
+      - "8080:80"    # HTTP
+      - "8081:443" # HTTPS
     depends_on:
       - coursetech.database
       - coursetech.cache

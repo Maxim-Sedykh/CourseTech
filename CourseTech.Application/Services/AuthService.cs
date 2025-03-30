@@ -7,6 +7,7 @@ using CourseTech.Application.CQRS.Queries.Entities.RoleQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Application.Resources;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
@@ -103,7 +104,7 @@ public class AuthService(
 
                 await unitOfWork.SaveChangesAsync();
 
-                //await cacheService.RemoveAsync(CacheKeys.Users);
+                await cacheService.RemoveAsync(CacheKeys.Users);
 
                 await transaction.CommitAsync();
             }

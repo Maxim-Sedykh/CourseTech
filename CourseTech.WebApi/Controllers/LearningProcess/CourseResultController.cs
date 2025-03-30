@@ -4,11 +4,12 @@ using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.LearningProcess;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -17,8 +18,7 @@ public class CourseResultController(ICourseResultService courseResultService) : 
     [HttpGet(RouteConstants.GetCouserResult)]
     public async Task<ActionResult<DataResult<CourseResultDto>>> GetCourseResult()
     {
-        //var response = await courseResultService.GetCourseResultAsync(AuthorizedUserId);
-        var response = await courseResultService.GetCourseResultAsync(new Guid("315B2EE7-BA7D-42D5-F1AA-08DD64A562B0"));
+        var response = await courseResultService.GetCourseResultAsync(AuthorizedUserId);
         if (response.IsSuccess)
         {
             return Ok(response);
@@ -29,8 +29,7 @@ public class CourseResultController(ICourseResultService courseResultService) : 
     [HttpGet(RouteConstants.GetUserAnalys)]
     public async Task<ActionResult<DataResult<UserAnalysDto>>> GetUserAnalys()
     {
-        //var response = await courseResultService.GetUserAnalys(AuthorizedUserId);
-        var response = await courseResultService.GetUserAnalys(new Guid("315B2EE7-BA7D-42D5-F1AA-08DD64A562B0"));
+        var response = await courseResultService.GetUserAnalys(AuthorizedUserId);
         if (response.IsSuccess)
         {
             return Ok(response);

@@ -15,7 +15,7 @@ public class BaseResult
 
     public Error Error { get; }
 
-    public static BaseResult Success() => new BaseResult();
+    public static BaseResult Success() => new();
 
     public static BaseResult Failure(int errorCode, string errorMessage) =>
         new(new Error(errorMessage, errorCode));
