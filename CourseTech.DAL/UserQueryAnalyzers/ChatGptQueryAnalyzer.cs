@@ -7,39 +7,79 @@ namespace CourseTech.DAL.UserQueryAnalyzers;
 
 public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQueryAnalyzer
 {
-    public async Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(string userQueryExceptionMessage,
+    public async Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(
+        string userQueryExceptionMessage,
         string userQuery,
-        string rightQuery,
-        float maxGradeForQuestion)
+        string rightQuery)
     {
-        var chatGptRequest = $@"Проанализируй запрос ученика. Он делает запросы к тестовой базе данных по теме Кинотеатр.
-                Его запрос выдал следующее сообщение в системе {userQueryExceptionMessage}. Оповести его об этом сообщении.
-                Есть правильный запрос {rightQuery}, Запрос пользователя {userQuery} не дал тех же результатов что правильный запрос.
-                Проанализируй почему. Выдай анализ в виде замечаний ученику. Используй алгоритм графа принятия решений в своём анализе, напиши алгоритм графа принятия решений который ты применял при анализе запроса пользователя
-                Пожалуйста, напиши список вершин и рёбер, как с помощью графа принятия решений ты анализировал запрос,
-                дай советы как сделать так чтобы были выполнены условия задания
-                За правильный ответ ученик мог бы получить {maxGradeForQuestion} баллов. Какую часть балла можно ученику дать за его запрос?
-                Дай ответ ученику. Отдай ответ в виде JSON. в котором есть свойства UserQueryAnalys в которое запиши свой анализ,
-                и свойство UserQueryGrade в котором запиши предполагаемую оценку пользователю за его запрос. Отдавай ответ только в виде валидного JSON,
-                без лишних слов. Чтобы его можно было спарсить в соответствующую модель. Сгенерируй JSON объект, который содержит следующие поля:
-                - ""UserQueryAnalys"" (строка): Содержит анализ запроса пользователя с графом принятия решений в виде текста.
-                - ""UserQueryGrade"" (число с плавающей точкой): Содержит оценку запроса пользователя. 
+        var chatGptRequest = $@"
+            Побудь в роли учителя. Проанализируй пожалуйста запрос ученика sql.
+            Запрос пользователя, семантически, по ключевым словам, раздели на граф принятия решения. Все данные пиши на русском. Анализ SQL-запроса ученика:
+            1. Ошибка: {userQueryExceptionMessage}
+            2. Запрос ученика: {userQuery}
+            3. Правильный запрос: {rightQuery}
 
-                Пример JSON:
-                {{
-                 ""UserQueryAnalys"": ""Текст анализа запроса"",
-                 ""UserQueryGrade"": 1.0
-                }}
+            Сформируй ответ СТРОГО в следующем JSON-формате:
+            {{
+                ""UserQueryAnalys"": ""Твой текстовый анализ ошибки"",
+                ""Vertexes"": [
+                    {{""Number"": 1, ""Name"": ""Название вершины 1""}},
+                    {{""Number"": 2, ""Name"": ""Название вершины 2""}}
+                ],
+                ""Edges"": [
+                    {{""From"": 1, ""To"": 2}}
+                ]
+            }}
 
-                Пожалуйста, очень прошу, не добавляй никаких дополнительных символов или разметки, таких как тройные кавычки или обратные апострофы.
-                Сделай так чтобы твой ответ можно было спарсить в json модельку без ошибок.
-                Пожалуйста, напиши список вершин и рёбер, как с помощью графа принятия решений ты анализировал запрос,
-                дай советы как сделать так чтобы были выполнены условия задания";
+            Требования:
+            - Только JSON, без дополнительного текста
+            - Все поля обязательные
+            - Имена полей в точности как указано
+            - Числовые значения без кавычек
+            - Не использовать markdown или код-блоки
+            - Не добавлять комментарии
 
-        var chatGptResponseJson = await chatGptService.SendMessageToChatGPT(chatGptRequest);
+            Алгоритм анализа:
+            1. Сначала определи основные этапы анализа как вершины графа
+            2. Затем определи связи между ними как рёбра
+            3. Вершины должны отражать ключевые шаги проверки запроса
+            4. Рёбра показывают логическую последовательность шагов";
 
-        var result = JsonSerializer.Deserialize<ChatGptAnalysResponseDto>(chatGptResponseJson);
+        try
+        {
+            var chatGptResponseJson = await chatGptService.SendMessageToChatGPT(chatGptRequest);
 
-        return result;
+            // Очистка ответа
+            chatGptResponseJson = CleanJsonResponse(chatGptResponseJson);
+
+            return JsonSerializer.Deserialize<ChatGptAnalysResponseDto>(chatGptResponseJson);
+        }
+        catch
+        {
+            // Fallback-решение
+            return new ChatGptAnalysResponseDto
+            {
+                UserQueryAnalys = "Не удалось проанализировать запрос",
+                Vertexes = [],
+                Edges = []
+            };
+        }
+    }
+
+    private string CleanJsonResponse(string rawResponse)
+    {
+        // Удаление всех не-JSON элементов
+        var jsonStart = rawResponse.IndexOf('{');
+        var jsonEnd = rawResponse.LastIndexOf('}') + 1;
+
+        if (jsonStart >= 0 && jsonEnd > jsonStart)
+        {
+            return rawResponse[jsonStart..jsonEnd]
+                .Replace("```json", "")
+                .Replace("```", "")
+                .Trim();
+        }
+
+        return rawResponse;
     }
 }

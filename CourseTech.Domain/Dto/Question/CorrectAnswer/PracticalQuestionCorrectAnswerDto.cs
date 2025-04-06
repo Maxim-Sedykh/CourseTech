@@ -1,4 +1,5 @@
-﻿using CourseTech.Domain.Interfaces.Dtos.Question;
+﻿using CourseTech.Domain.Dto.Analyzer;
+using CourseTech.Domain.Interfaces.Dtos.Question;
 
 namespace CourseTech.Domain.Dto.Question.Pass;
 
@@ -13,11 +14,13 @@ public class PracticalQuestionCorrectAnswerDto : ICorrectAnswerDto
 
     public float QuestionUserGrade { get; set; }
 
-    public List<dynamic> QueryResult { get; set; }
+    public List<dynamic> UserQueryResult { get; set; }
 
-    public string UserQueryAnalys { get; set; }
+    public List<dynamic> CorrectQueryResult { get; set; }
 
     public bool AnswerCorrectness { get; set; }
 
-    public string QuestionType { get; set; } = "PracticalQuestionCorrectAnswerDto";
+    public string QuestionType { get; set; } = nameof(PracticalQuestionCorrectAnswerDto);
+
+    public ChatGptAnalysResponseDto ChatGptAnalysis { get; set; }
 }

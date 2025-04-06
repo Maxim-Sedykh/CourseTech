@@ -39,11 +39,14 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
         writer.WritePropertyName("questionUserGrade");
         JsonSerializer.Serialize(writer, correctAnswer.QuestionUserGrade, options);
 
-        writer.WritePropertyName("userQueryAnalys");
-        JsonSerializer.Serialize(writer, correctAnswer.UserQueryAnalys, options);
+        writer.WritePropertyName("chatGptAnalysis");
+        JsonSerializer.Serialize(writer, correctAnswer.ChatGptAnalysis, options);
 
-        writer.WritePropertyName("queryResult");
-        SerializeQueryResult(writer, correctAnswer.QueryResult, options);
+        writer.WritePropertyName("userQueryResult");
+        SerializeQueryResult(writer, correctAnswer.UserQueryResult, options);
+
+        writer.WritePropertyName("correctQueryResult");
+        SerializeQueryResult(writer, correctAnswer.CorrectQueryResult, options);
     }
 
     private static void SerializeQueryResult(Utf8JsonWriter writer, List<dynamic> dynamicLists, JsonSerializerOptions options)

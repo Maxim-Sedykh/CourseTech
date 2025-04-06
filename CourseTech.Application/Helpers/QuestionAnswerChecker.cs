@@ -11,10 +11,11 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
+using Serilog;
 
 namespace CourseTech.Application.Helpers;
 
-public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, ISqlQueryProvider sqlProvider) : IQuestionAnswerChecker
+public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, ISqlQueryProvider sqlProvider, ILogger logger) : IQuestionAnswerChecker
 {
     /// <summary>
     /// Оценка за тестовое задание
@@ -162,17 +163,18 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
             var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer.ToLower().Trim());
             var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode.ToLower());
 
+            correctAnswer.CorrectQueryResult = correctResult;
+            correctAnswer.UserQueryResult = userResult;
+
             if (DynamicListComparer.AreListsOfDynamicEqual(userResult, correctResult))
             {
                 correctAnswer.AnswerCorrectness = true;
-                correctAnswer.QueryResult = userResult;
+                correctAnswer.UserQueryResult = userResult;
 
                 userGrade.Grade += _practicalQuestionGrade;
             }
             else
             {
-                correctAnswer.QueryResult = userResult;
-
                 throw new InvalidOperationException(ErrorMessage.InvalidUserQuery);
             }
         }
@@ -180,13 +182,12 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
         {
             var userQueryChatGptAnalysDto = await chatGptQueryAnalyzer.AnalyzeUserQuery(ex.Message,
                 userAnswer.UserCodeAnswer,
-                questionChecking.CorrectQueryCode,
-                _practicalQuestionGrade);
+                questionChecking.CorrectQueryCode);
 
-            correctAnswer.QuestionUserGrade = userQueryChatGptAnalysDto.UserQueryGrade;
-            correctAnswer.UserQueryAnalys = userQueryChatGptAnalysDto.UserQueryAnalys;
+            correctAnswer.QuestionUserGrade = 0;
+            correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;
 
-            userGrade.Grade += userQueryChatGptAnalysDto.UserQueryGrade;
+            userGrade.Grade += 0;
         }
 
         return correctAnswer;

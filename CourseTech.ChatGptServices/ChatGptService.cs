@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
+using ILogger = Serilog.ILogger;
 
 namespace CourseTech.ChatGptApi;
 
@@ -14,14 +15,16 @@ public class ChatGptService : IChatGptService
 {
     private readonly HttpClient _httpClient;
     private readonly ChatGptSettings _chatGptSettings;
+    private readonly ILogger _logger;
 
-    public ChatGptService(IOptions<ChatGptSettings> chatGptOptions)
+    public ChatGptService(IOptions<ChatGptSettings> chatGptOptions, ILogger logger)
     {
         _chatGptSettings = chatGptOptions.Value;
         _httpClient = new HttpClient();
 
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _chatGptSettings.ApiKey);
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+        _logger = logger;
     }
 
     public async Task<string> SendMessageToChatGPT(string prompt)
@@ -31,7 +34,7 @@ public class ChatGptService : IChatGptService
             model = _chatGptSettings.ChatGptModel,
             messages = new[]
             {
-                new { role = "user", content = prompt }
+                new { role = _chatGptSettings.Role, content = prompt }
             }
         };
 
@@ -49,11 +52,9 @@ public class ChatGptService : IChatGptService
         }
         catch (HttpRequestException e)
         {
-            throw new ApplicationException("An error occurred while communicating with the ChatGPT API.", e);
-        }
-        catch (JsonException e)
-        {
-            throw new ApplicationException("An error occurred while processing the response from the ChatGPT API.", e);
+            _logger.Error(e, e.Message);
+
+            throw;
         }
         finally
         {

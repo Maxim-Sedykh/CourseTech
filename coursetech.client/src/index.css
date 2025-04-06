@@ -671,7 +671,7 @@ body {
 }
 
 .main-bodyheader {
-    background-image: url(./assets/images/MainPagePic1.jpg);
+    background: linear-gradient(to bottom, black, darkblue);
     border-radius: 30px;
     min-height: 300px;
 }

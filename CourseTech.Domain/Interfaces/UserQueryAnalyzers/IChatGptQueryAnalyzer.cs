@@ -12,10 +12,9 @@ public interface IChatGptQueryAnalyzer
     /// </summary>
     /// <param name="userQuery"></param>
     /// <param name="rightQuery"></param>
-    /// <param name="maxGradeForQuestion"></param>
     /// <returns></returns>
-    Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(string exceptionMessage,
+    Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(
+        string exceptionMessage,
         string userQuery,
-        string rightQuery,
-        float maxGradeForQuestion);
+        string rightQuery);
 }

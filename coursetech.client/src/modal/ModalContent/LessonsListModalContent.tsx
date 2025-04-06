@@ -13,14 +13,22 @@ export function LessonsListModalContent() {
 
     const lessonService = new LessonService(ApiPaths.LESSON_API_PATH);
 
+    const [isFetching, setIsFetching] = useState(false);
+
+
     useEffect(() => {
+
+        if (isFetching) return;
+
         const fetchLessons = async () => {
             try {
                 const result = await lessonService.getLessonsForUser();
 
-                setUserLessons(result.data );
+                setUserLessons(result.data);
             } catch (error) {
                 console.error('Error fetching lessons:', error);
+            } finally {
+                setIsFetching(false);
             }
         };
 

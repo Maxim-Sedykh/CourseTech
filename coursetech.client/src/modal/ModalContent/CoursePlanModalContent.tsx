@@ -7,16 +7,23 @@ import { Container } from "react-bootstrap";
 export function CoursePlanModalContent() {
 
     const [lessonNames, setLessonNames] = useState<LessonNameDto[]>();
-    
+
+    const [isFetching, setIsFetching] = useState(false);
+
         const lessonService = new LessonService(ApiPaths.LESSON_API_PATH);
     
         useEffect(() => {
+
+            if (isFetching) return;
+
             const fetchLessons = async () => {
                 try {
                     const result = await lessonService.getLessonNames();
                     setLessonNames(result.data);
                 } catch (error) {
                     console.error('Error fetching lessons:', error);
+                } finally {
+                    setIsFetching(false);
                 }
             };
     

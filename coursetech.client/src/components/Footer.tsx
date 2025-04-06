@@ -6,7 +6,7 @@ export function Footer() {
             <Container>
                 <Row>
                     <Col className="text-center">
-                        <p>&copy; 2023 My site. All rights reserved.</p>
+                        <p>&copy; 2025 CourseTech. All rights reserved.</p>
                     </Col>
                 </Row>
                 <Row>

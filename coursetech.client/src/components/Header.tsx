@@ -7,10 +7,12 @@ import { LoginModalContent } from "../modal/ModalContent/LoginModalContent";
 import { AuthService } from "../services/auth-service";
 import { ApiPaths } from "../constants/api-paths";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
     const authService = new AuthService(ApiPaths.AUTH_API_PATH);
     const { open } = useModal();
+    const navigate = useNavigate();
 
     const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
     const [username, setUsername] = useState(authService.getUsername());
@@ -35,6 +37,7 @@ export function Header() {
         authService.logout();
         setIsAuthenticated(false);
         setUsername('');
+        navigate('/'); // Добавляем редирект на главную страницу
     };
 
     const renderDropdownItems = () => {
