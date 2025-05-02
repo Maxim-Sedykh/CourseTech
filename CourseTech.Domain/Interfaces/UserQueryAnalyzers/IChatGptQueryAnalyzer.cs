@@ -16,5 +16,7 @@ public interface IChatGptQueryAnalyzer
     Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(
         string exceptionMessage,
         string userQuery,
-        string rightQuery);
+        string rightQuery,
+        double userQuerySeconds,
+        double correctQuerySeconds);
 }

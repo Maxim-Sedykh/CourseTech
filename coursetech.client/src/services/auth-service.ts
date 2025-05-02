@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { jwtDecode } from "jwt-decode";
 import { RouteConstants } from "../constants/route-constants";
 import { DecodedToken } from "../types/auth/decoded-token";

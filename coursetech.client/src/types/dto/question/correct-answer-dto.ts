@@ -9,10 +9,14 @@ export interface OpenQuestionCorrectAnswerDto extends ICorrectAnswerDto { }
 
 export interface TestQuestionCorrectAnswerDto extends ICorrectAnswerDto { }
 
+export interface QueryResult {
+    [key: string]: any;
+}
+
 export interface PracticalQuestionCorrectAnswerDto extends ICorrectAnswerDto {
     questionUserGrade: number;
-    userQueryResult: any[];
-    correctQueryResult: any[];
+    correctQueryTime: number;
+    userQueryTime: number;
     chatGptAnalysis: ChatGptAnalysResponseDto;
 }
 

@@ -10,14 +10,23 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
     public async Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(
         string userQueryExceptionMessage,
         string userQuery,
-        string rightQuery)
+        string rightQuery,
+        double userQuerySeconds,
+        double correctQuerySeconds)
     {
         var chatGptRequest = $@"
             Побудь в роли учителя. Проанализируй пожалуйста запрос ученика sql.
-            Запрос пользователя, семантически, по ключевым словам, раздели на граф принятия решения. Все данные пиши на русском. Анализ SQL-запроса ученика:
+            Запрос пользователя, семантически, по ключевым словам SQL, сделай по возможности так, чтобы из вершин могли следовать 2 или более ребра.
+            В графе должно быть как можно больше вершин. Упомяни большинство ключевых слов SQL, которые ты анализировал. Составь сложный граф.
+            раздели на граф принятия решения. Все данные пиши на русском. Анализ SQL-запроса ученика:
             1. Ошибка: {userQueryExceptionMessage}
             2. Запрос ученика: {userQuery}
             3. Правильный запрос: {rightQuery}
+            4. Время выполнения правильного запроса {correctQuerySeconds}
+            5. Время выполнения запроса пользователя {userQuerySeconds}
+
+            Если запрос пользователя выполняется заметно дольше чем запрос правильный. То в своём анализе пожалуйста, дай пользователю пояснения,
+                расскажи почему его запрос работает медленнее, и что нужно исправить или сделать чтобы он работал быстрее
 
             Сформируй ответ СТРОГО в следующем JSON-формате:
             {{
@@ -49,14 +58,12 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
         {
             var chatGptResponseJson = await chatGptService.SendMessageToChatGPT(chatGptRequest);
 
-            // Очистка ответа
             chatGptResponseJson = CleanJsonResponse(chatGptResponseJson);
 
             return JsonSerializer.Deserialize<ChatGptAnalysResponseDto>(chatGptResponseJson);
         }
         catch
         {
-            // Fallback-решение
             return new ChatGptAnalysResponseDto
             {
                 UserQueryAnalys = "Не удалось проанализировать запрос",
@@ -68,7 +75,6 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
 
     private string CleanJsonResponse(string rawResponse)
     {
-        // Удаление всех не-JSON элементов
         var jsonStart = rawResponse.IndexOf('{');
         var jsonEnd = rawResponse.LastIndexOf('}') + 1;
 

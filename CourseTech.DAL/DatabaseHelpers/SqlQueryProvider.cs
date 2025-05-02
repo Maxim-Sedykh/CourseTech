@@ -2,6 +2,8 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace CourseTech.DAL.DatabaseHelpers;
 
@@ -15,13 +17,26 @@ public class SqlQueryProvider : ISqlQueryProvider
     }
 
     /// <inheritdoc/>
-    public async Task<List<dynamic>> ExecuteQueryAsync(string sqlQuery)
+    public async Task<(List<dynamic> result, double elapsedSeconds)> ExecuteQueryAsync(string sqlQuery)
     {
-        using (var connection = new SqlConnection(_connectionString))
+        using var connection = new SqlConnection(_connectionString);
+
+        await connection.OpenAsync();
+
+        var regex = new Regex(@"'((?:''|[^'])*)'");
+        sqlQuery = regex.Replace(sqlQuery, match => $"N'{match.Groups[1].Value}'");
+
+        var stopwatch = new Stopwatch();
+
+        lock(new object())
         {
-            await connection.OpenAsync();
-            var result = await connection.QueryAsync<dynamic>(sqlQuery);
-            return result.ToList();
+            stopwatch.Restart();
+
+            var result = connection.QueryAsync<dynamic>(sqlQuery).Result;
+
+            stopwatch.Stop();
+
+            return (result.ToList(), stopwatch.Elapsed.TotalSeconds);
         }
     }
 }

@@ -1,171 +1,198 @@
-import { Container, Row, Col, Button, ListGroup, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthService } from "../services/auth-service";
 import { ApiPaths } from "../constants/api-paths";
 import { useModal } from "../context/ModalContext";
 import { CoursePlanModalContent } from "../modal/ModalContent/CoursePlanModalContent";
 import { DocumentationModalContent } from "../modal/ModalContent/DocumentationModalContent";
+import { useMemo } from "react";
+
+const authService = new AuthService(ApiPaths.AUTH_API_PATH);
 
 export function HomePage() {
-
     const { open } = useModal();
-    const modalHandlers = {
-            documentation: () => open(<DocumentationModalContent />, 'Документация'),
-            coursePlan: () => open(<CoursePlanModalContent />, 'План курса')
-        };
+    
 
-    const authService = new AuthService(ApiPaths.AUTH_API_PATH);
+    
+    const modalHandlers = useMemo(() => ({
+        documentation: () => open(<DocumentationModalContent />, 'Документация'),
+        coursePlan: () => open(<CoursePlanModalContent />, 'План курса')
+    }), [open]);
 
     return (
-      <Container fluid>
-        <Container className="px-1 pb-2 mb-0">
-          <Row className="p-4 main-bodyheader d-flex justify-content-between mt-4 br-40">
-            <Col md={9} sm={12} className="px-3">
-              <p className="text-white mt-2 fs-2">Курс по СУБД MS SQL Server c изучением основ языка запросов T-SQL</p>
-              <p className="text-white fs-5 my-4 text-justify">
-                Изучите работу с базами данных с СУБД MS SQL Server и языком запросов T-SQL: теория и практика с разборами правильных ответов.
-                Наша система практических заданий позволит вам легко и доступно понять учебный материал
-                Учите T-SQL быстро и эффективно!
-              </p>
-              <div className="text-center">
-                {authService.isAuthenticated() ? (
-                  <Link to="/profile" className="btn d-block bd-cyan-500 br-40 w-50 mt-4 mb-3">
-                    Перейти к обучению
-                  </Link>
-                ) : (
-                  <Link to="/register" className="btn d-block bd-cyan-500 br-40 w-50 mt-4 mb-3">
-                    Перейти к обучению
-                  </Link>
-                )}
-              </div>
-            </Col>
-            <Col md={3} sm={12}>
-              <p className="text-center text-white fs-4 mt-3">
-                Курс содержит:
-              </p>
-              <div className="border border-white br-40 w-100 text-white mx-auto mt-5 px-3 py-2 lh-lg w-100 fs-6" style={{ height: '115px' }}>
-                Занятия: 10<br />
-                Всего заданий: 91<br />
-                Практические задания: 4
-              </div>
-              <div className="text-center">
-                <Button className="bd-cyan-500 br-40 mt-4" onClick={modalHandlers.coursePlan}>
-                  План обучения 
-                </Button>
-              </div>
-            </Col>
-          </Row>
-          <Row className="ms-4 mt-0">
-            <Col md={12} sm={12} className="text-center">
-              <ListGroup horizontal className="text-center list-itd">
-              <ListGroup.Item style={{ borderRadius: '0px 0px 0px 20px', background: '#030305' }} className="border border-info"><a className="link text-white text-decoration-none" href="#section-2">После обучения вы сможете</a></ListGroup.Item>
-              <ListGroup.Item style={{ borderRadius: '0px 0px 20px 0px', background: '#030305' }} className="border border-info"><a className="link text-white text-decoration-none" href="#section-3">О курсе...</a></ListGroup.Item>
-            </ListGroup>
-          </Col>
-        </Row>
-      </Container>
-      <Container fluid>
-        <Container className="ps-0">
-          <Row className="mt-5">
-            <p className="text-black fs-2">
-              Чему вы научитесь на этом курсе
-            </p>
-            <Col md={4} sm={12}>
-              <div>
-                <div className="about-course-part-imgdiv mx-auto mb-3">
-                  <img className="img-fluid rounded-circle w-100 h-100 main-page-pic2" />
-                </div>
-                <p>Cоздавать так называемые «программы» внутри базы данных и управлять алгоритмами бизнес-логики</p>
-              </div>
-            </Col>
-            <Col md={4} sm={12}>
-              <div>
-                <div className="about-course-part-imgdiv mx-auto mb-3">
-                  <img className="img-fluid rounded-circle w-100 h-100 main-page-pic3"/>
-                </div>
-                <p>Основам работы с языком SQL в Среде СУБД Microsoft SQL Server</p>
-              </div>
-            </Col>
-            <Col md={4} sm={12}>
-              <div>
-                <div className="about-course-part-imgdiv mx-auto mb-3">
-                  <img className="img-fluid rounded-circle w-100 h-100 main-page-pic4" />
-                </div>
-                <p>Формулировать, создавать и отлаживать различные типы запросов T-SQL</p>
-              </div>
-            </Col>
-          </Row>
-          <Row className="mt-5">
-            <p id="section-3" className="text-black fs-2">
-              О курсе
-            </p>
-            <Col md={7} sm={12}>
-              <Card className="px-5 mt-3 br-40 lh-lg" style={{ minHeight: '350px' }}>
-                <Card.Body>
-                <p className="fs-5 m-auto">
-                    В этом курсе вы научитесь работать: с базой данных, путём создания и чтения различных запросов к базам данных
-                    в системе управления базами данных (СУБД) "Microsoft SQL Server 2019" и с основами языка запросов T-SQL.
-                    <div className="text-center">
-                      {authService.isAuthenticated() ? (
-                        <Link to="/user/profile" className="btn br-40 bd-cyan-500 fs-5">
-                          Продолжите обучение!
-                        </Link>
-                      ) : (
-                        <Link to="/register" className="btn br-40 bd-cyan-500 fs-5">
-                          Зарегистрируйтесь и начните обучение!
-                        </Link>
-                      )}
-                    </div>
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={5} sm={12} className="p-3" style={{ height: '350px' }}>
-              <div className="w-100" style={{ height: '350px' }}>
-                <img className="img-fluid h-100 br-40 main-page-pic5" style={{ height: '350px' }} src="/images/MainPagePic5.jpg"/>
-              </div>
-            </Col>
-          </Row>
-          <Row className="mt-5">
-            <p id="section-1" className="text-black fs-2">
-              Для кого этот курс
-            </p>
-            <p className="fs-5 mt-4 lh-base">
-              Этот курс для новичков в SQL и для людей, которые имеют некоторые
-              знания в сфере работы с данными, в частности языка SQL
-              Если вы новичок в изучении БД, то для прохождения этого курса рекомендуется ознакомиться со справочным материалом.
-            </p>
-            <Button onClick={modalHandlers.documentation} className="bd-cyan-500 text-white my-3 ms-4 br-40" style={{ border: 'none', maxWidth: '200px' }}>
-              Документация   {/* Replace placeholder button logic */}
-            </Button>
-          </Row>
-          <Row className="mt-5">
-            <p id="section-2" className="text-black fs-2">
-              После обучения вы сможете
-            </p>
-            <ul className="mt-3 ms-5">
-              <li>Работать в среде СУБД "MS SQL Server"</li>
-              <li>Писать сложные расширенные запросы используя различные функции языка T-SQL</li>
-              <li>Создавать запросы для выполнения операций над таблицами</li>
-              <li>Выполнять транзакции</li>
-              <li>Писать хранимые процедуры</li>
-              <li>Писать запросы, используя локальные переменные</li>
-            </ul>
-          </Row>
-          <Row className="my-5">
-            <p className="text-black fs-2">
-              Дополнительная литература
-            </p>
-            <ul className="ms-5 mt-3 lh-lg">
-              <li><a href="https://learn.microsoft.com/ru-ru/sql/t-sql/language-reference?view=sql-server-ver15">Справочник по Transact-SQL | Microsoft Learn</a></li>
-              <li><a href="https://info-comp.ru/programmirovanie/412-directory-transact-sql.html">Справочник Transact-SQL – основы для новичков | info-comp.ru</a></li>
-              <li>Microsoft SQL Server 2012, основы T-SQL, Бен-Ган И., Райтман М.А., 2015.</li>
-              <li><a href="https://metanit.com/sql/sqlserver/">MS SQL Server 2022 и T-SQL | metanit.com</a></li>
-            </ul>
-          </Row>
-          <br />
+        <Container fluid className="px-0">
+            {/* Hero Section */}
+            <Container className="bg-primary rounded-4 p-4 my-4 shadow">
+                <Row className="d-flex justify-content-between align-items-center">
+                    <Col lg={8} md={7} className="text-white py-3">
+                        <h2 className="fw-bold mb-3">Курс по СУБД MS SQL Server c изучением основ языка запросов T-SQL</h2>
+                        <p className="mb-3">
+                            Изучите работу с базами данных с СУБД MS SQL Server и языком запросов T-SQL: теория и практика с разборами правильных ответов.
+                            Наша система практических заданий позволит вам легко и доступно понять учебный материал.
+                            Учите T-SQL быстро и эффективно!
+                        </p>
+                        <div className="d-grid gap-2 d-sm-block">
+                            {authService.isAuthenticated() ? (
+                                <Link to="/profile" className="btn btn-info btn-sm rounded-pill px-3">
+                                    Перейти к обучению
+                                </Link>
+                            ) : (
+                                <Link to="/register" className="btn btn-info btn-sm rounded-pill px-3">
+                                    Начать обучение
+                                </Link>
+                            )}
+                        </div>
+                    </Col>
+                    <Col lg={4} md={5} className="text-center py-3">
+                        <h4 className="text-white mb-3">Курс содержит:</h4>
+                        <Card className="border-0 bg-dark text-white mb-3">
+                            <Card.Body className="p-2">
+                                <ul className="list-unstyled">
+                                    <li className="mb-1">Занятия: 10</li>
+                                    <li className="mb-1">Всего заданий: 91</li>
+                                    <li>Практические задания: 4</li>
+                                </ul>
+                            </Card.Body>
+                        </Card>
+                        <Button 
+                            variant="info" 
+                            size="sm" 
+                            className="rounded-pill px-3"
+                            onClick={modalHandlers.coursePlan}
+                        >
+                            План обучения
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
+
+            {/* What You'll Learn Section */}
+            <Container className="my-4">
+                <h3 className="fw-bold mb-4 text-center">Чему вы научитесь на этом курсе</h3>
+                <Row className="g-3">
+                    <Col md={4} className="d-flex flex-column align-items-center text-center">
+                        <div className="main-page-pic2 rounded-circle p-3 mb-2" style={{width: '120px', height: '120px'}}>
+                            <div className="img-fluid rounded-3 shadow-sm main-page-pic2"></div>
+                        </div>
+                        <p>Создавать так называемые «программы» внутри базы данных и управлять алгоритмами бизнес-логики</p>
+                    </Col>
+                    <Col md={4} className="d-flex flex-column align-items-center text-center">
+                        <div className="main-page-pic3 rounded-circle p-3 mb-2" style={{width: '120px', height: '120px'}}>
+                            <div  className="rounded-circle main-page-pic3"></div>
+                        </div>
+                        <p>Основам работы с языком SQL в Среде СУБД Microsoft SQL Server</p>
+                    </Col>
+                    <Col md={4} className="d-flex flex-column align-items-center text-center">
+                        <div className="main-page-pic4 rounded-circle p-3 mb-2" style={{width: '120px', height: '120px'}}>
+                            <div className="rounded-circle main-page-pic4"></div>
+                        </div>
+                        <p>Формулировать, создавать и отлаживать различные типы запросов T-SQL</p>
+                    </Col>
+                </Row>
+            </Container>
+
+            {/* About Course Section */}
+            <Container id="section-3" className="my-4">
+                <h3 className="fw-bold mb-4 text-center">О курсе</h3>
+                <Row className="align-items-center g-3">
+                    <Col lg={7}>
+                        <Card className="border-0 shadow-sm h-100">
+                            <Card.Body className="p-3 d-flex flex-column">
+                                <p className="flex-grow-1">
+                                    В этом курсе вы научитесь работать: с базой данных, путём создания и чтения различных запросов к базам данных
+                                    в системе управления базами данных (СУБД) "Microsoft SQL Server 2019" и с основами языка запросов T-SQL.
+                                </p>
+                                <div className="text-center mt-3">
+                                    {authService.isAuthenticated() ? (
+                                        <Link to="/user/profile" className="btn btn-info btn-sm rounded-pill px-3">
+                                            Продолжите обучение!
+                                        </Link>
+                                    ) : (
+                                        <Link to="/register" className="btn btn-info btn-sm rounded-pill px-3">
+                                            Зарегистрируйтесь и начните обучение!
+                                        </Link>
+                                    )}
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col lg={5}>
+                        <div 
+                            className="img-fluid rounded-3 shadow-sm main-page-pic5"
+                            style= {{
+                              height: '250px'
+                            }}
+                        >
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+
+            {/* Target Audience Section */}
+            <Container className="my-4">
+                <h3 className="fw-bold mb-3">Для кого этот курс</h3>
+                <Card className="border-0 bg-light mb-3">
+                    <Card.Body className="p-3">
+                        <p>
+                            Этот курс для новичков в SQL и для людей, которые имеют некоторые
+                            знания в сфере работы с данными, в частности языка SQL.
+                            Если вы новичок в изучении БД, то для прохождения этого курса рекомендуется ознакомиться со справочным материалом.
+                        </p>
+                        <Button 
+                            variant="info" 
+                            size="sm" 
+                            className="rounded-pill mt-2"
+                            onClick={modalHandlers.documentation}
+                        >
+                            Документация
+                        </Button>
+                    </Card.Body>
+                </Card>
+            </Container>
+
+            {/* Learning Outcomes Section */}
+            <Container id="section-2" className="my-4">
+                <h3 className="fw-bold mb-3">После обучения вы сможете</h3>
+                <Card className="border-0 bg-light">
+                    <Card.Body className="p-3">
+                        <ul>
+                            <li className="mb-1">Работать в среде СУБД "MS SQL Server"</li>
+                            <li className="mb-1">Писать сложные расширенные запросы используя различные функции языка T-SQL</li>
+                            <li className="mb-1">Создавать запросы для выполнения операций над таблицами</li>
+                            <li className="mb-1">Выполнять транзакции</li>
+                            <li className="mb-1">Писать хранимые процедуры</li>
+                            <li>Писать запросы, используя локальные переменные</li>
+                        </ul>
+                    </Card.Body>
+                </Card>
+            </Container>
+
+            {/* Additional Literature Section */}
+            <Container className="my-4">
+                <h3 className="fw-bold mb-3">Дополнительная литература</h3>
+                <Card className="border-0 bg-light">
+                    <Card.Body className="p-3">
+                        <ul>
+                            <li className="mb-1">
+                                <a href="https://learn.microsoft.com/ru-ru/sql/t-sql/language-reference?view=sql-server-ver15" target="_blank" rel="noopener noreferrer">
+                                    Справочник по Transact-SQL | Microsoft Learn
+                                </a>
+                            </li>
+                            <li className="mb-1">
+                                <a href="https://info-comp.ru/programmirovanie/412-directory-transact-sql.html" target="_blank" rel="noopener noreferrer">
+                                    Справочник Transact-SQL – основы для новичков | info-comp.ru
+                                </a>
+                            </li>
+                            <li className="mb-1">Microsoft SQL Server 2012, основы T-SQL, Бен-Ган И., Райтман М.А., 2015.</li>
+                            <li>
+                                <a href="https://metanit.com/sql/sqlserver/" target="_blank" rel="noopener noreferrer">
+                                    MS SQL Server 2022 и T-SQL | metanit.com
+                                </a>
+                            </li>
+                        </ul>
+                    </Card.Body>
+                </Card>
+            </Container>
         </Container>
-      </Container>
-    </Container>
-  );
-};
+    );
+}

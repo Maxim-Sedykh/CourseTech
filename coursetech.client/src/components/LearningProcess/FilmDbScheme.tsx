@@ -1,108 +1,101 @@
-import filmTableImage from '../../assets/images/filmTable.jpg';
-import hallRowTableImage from '../../assets/images/hallRowTable.jpg';
-import hallTableImage from '../../assets/images/hallTable.jpg';
-import screeningTableImage from '../../assets/images/screeningTable.jpg';
-import ticketTableImage from '../../assets/images/ticketTable.jpg';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { Card, Alert } from 'react-bootstrap';
 
 export function FilmDbScheme() {
+    const sqlCode = `
+-- Таблица фильмов
+CREATE TABLE [dbo].[Films](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
+    [Name] [nvarchar](50) NOT NULL,
+    [Description] [nvarchar](200) NULL,
+    CONSTRAINT [PK_Films] PRIMARY KEY CLUSTERED ([Id] ASC)
+)
+
+-- Таблица залов
+CREATE TABLE [dbo].[Halls](
+    [Id] [tinyint] IDENTITY(1,1) NOT NULL,
+    [Name] [nvarchar](50) NOT NULL,
+    CONSTRAINT [PK_Halls] PRIMARY KEY CLUSTERED ([Id] ASC)
+)
+
+-- Таблица сеансов
+CREATE TABLE [dbo].[Screenings](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
+    [HallId] [tinyint] NOT NULL,
+    [FilmId] [bigint] NOT NULL,
+    [Time] [datetime2](7) NOT NULL,
+    CONSTRAINT [PK_Screenings] PRIMARY KEY CLUSTERED ([Id] ASC)
+)
+
+-- Внешние ключи для таблицы сеансов
+ALTER TABLE [dbo].[Screenings] WITH CHECK ADD CONSTRAINT [FK_Screenings_Films_FilmId] 
+FOREIGN KEY([FilmId]) REFERENCES [dbo].[Films] ([Id]) ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Screenings] WITH CHECK ADD CONSTRAINT [FK_Screenings_Halls_HallId] 
+FOREIGN KEY([HallId]) REFERENCES [dbo].[Halls] ([Id]) ON DELETE CASCADE
+GO
+
+-- Таблица рядов в зале
+CREATE TABLE [dbo].[HallRows](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
+    [HallId] [tinyint] NOT NULL,
+    [Number] [smallint] NOT NULL,
+    [Capacity] [smallint] NOT NULL,
+    CONSTRAINT [PK_HallRows] PRIMARY KEY CLUSTERED ([Id] ASC)
+)
+
+ALTER TABLE [dbo].[HallRows] WITH CHECK ADD CONSTRAINT [FK_HallRows_Halls_HallId] 
+FOREIGN KEY([HallId]) REFERENCES [dbo].[Halls] ([Id]) ON DELETE CASCADE
+GO
+
+-- Таблица билетов
+CREATE TABLE [dbo].[Tickets](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
+    [Row] [tinyint] NOT NULL,
+    [Seat] [tinyint] NOT NULL,
+    [Cost] [decimal](18, 2) NOT NULL,
+    [ScreeningId] [bigint] NOT NULL,
+    CONSTRAINT [PK_Tickets] PRIMARY KEY CLUSTERED ([Id] ASC)
+)
+
+ALTER TABLE [dbo].[Tickets] WITH CHECK ADD CONSTRAINT [FK_Tickets_Screenings_ScreeningId] 
+FOREIGN KEY([ScreeningId]) REFERENCES [dbo].[Screenings] ([Id]) ON DELETE CASCADE
+GO
+`;
+
     return (
-    <>
-        <p>
-            Допустим у нас база данных - Cinema. Которая основана на предметной области - кинотеатр (вы уже к ней подключились, поэтому писать
-            такие операторы, как USE, GO не надо). И в этой базе есть следующие таблицы:
-        </p>
-        <b>
-            CREATE TABLE [dbo].[Films](<br />
-            [Id] [bigint] IDENTITY(1,1) NOT NULL,<br />
-            [Name] [nvarchar](50) NOT NULL,<br />
-            [Description] [nvarchar](200) NULL,<br />
-            CONSTRAINT [PK_Films] PRIMARY KEY CLUSTERED<br />
-            (<br />
-            [Id] ASC<br />
-            )<br />
-            )<br />
-            <br />
-            CREATE TABLE [dbo].[Halls](<br />
-            [Id] [tinyint] IDENTITY(1,1) NOT NULL,<br />
-            [Name] [nvarchar](50) NOT NULL,<br />
-            CONSTRAINT [PK_Halls] PRIMARY KEY CLUSTERED<br />
-            (<br />
-            [Id] ASC<br />
-            )<br />
-            )<br />
-            <br />
-            CREATE TABLE [dbo].[Screenings](<br />
-            [Id] [bigint] IDENTITY(1,1) NOT NULL,<br />
-            [HallId] [tinyint] NOT NULL,<br />
-            [FilmId] [bigint] NOT NULL,<br />
-            [Time] [datetime2](7) NOT NULL,<br />
-            CONSTRAINT [PK_Screenings] PRIMARY KEY CLUSTERED<br />
-            (<br />
-            [Id] ASC<br />
-            )<br />
-            )<br />
-            <br />
-            ALTER TABLE [dbo].[Screenings]  WITH CHECK ADD  CONSTRAINT [FK_Screenings_Films_FilmId] FOREIGN KEY([FilmId])<br />
-            REFERENCES [dbo].[Films] ([Id])<br />
-            ON DELETE CASCADE<br />
-            GO<br />
-            <br />
-            ALTER TABLE [dbo].[Screenings]  WITH CHECK ADD  CONSTRAINT [FK_Screenings_Halls_HallId] FOREIGN KEY([HallId])<br />
-            REFERENCES [dbo].[Halls] ([Id])<br />
-            ON DELETE CASCADE<br />
-            GO<br />
-            <br />
-            CREATE TABLE [dbo].[HallRows](<br />
-            [Id] [bigint] IDENTITY(1,1) NOT NULL,<br />
-            [HallId] [tinyint] NOT NULL,<br />
-            [Number] [smallint] NOT NULL,<br />
-            [Capacity] [smallint] NOT NULL,<br />
-            CONSTRAINT [PK_HallRows] PRIMARY KEY CLUSTERED<br />
-            (<br />
-            [Id] ASC<br />
-            )<br />
-            )<br />
-            <br />
-            ALTER TABLE [dbo].[HallRows]  WITH CHECK ADD  CONSTRAINT [FK_HallRows_Halls_HallId] FOREIGN KEY([HallId])<br />
-            REFERENCES [dbo].[Halls] ([Id])<br />
-            ON DELETE CASCADE<br />
-            GO<br />
-            <br />
-            CREATE TABLE [dbo].[Tickets](<br />
-            [Id] [bigint] IDENTITY(1,1) NOT NULL,<br />
-            [Row] [tinyint] NOT NULL,<br />
-            [Seat] [tinyint] NOT NULL,<br />
-            [Cost] [decimal](18, 2) NOT NULL,<br />
-            [ScreeningId] [bigint] NOT NULL,<br />
-            CONSTRAINT [PK_Tickets] PRIMARY KEY CLUSTERED<br />
-            (<br />
-            [Id] ASC<br />
-            )<br />
-            )<br />
-            <br />
-            ALTER TABLE [dbo].[Tickets]  WITH CHECK ADD  CONSTRAINT [FK_Tickets_Screenings_ScreeningId] FOREIGN KEY([ScreeningId])<br />
-            REFERENCES [dbo].[Screenings] ([Id])<br />
-            ON DELETE CASCADE<br />
-            GO<br />
-            <br />
-        </b>
-        <p>
-            Со следующими записями:<br /><br />
-            Films<br /><br />
-            <img className="img-fluid" src={filmTableImage} />
-            <br /><br />
-            HallRows<br /><br />
-            <img className="img-fluid" src={hallRowTableImage} />
-            <br /><br />
-            Halls<br /><br />
-            <img className="img-fluid" src={hallTableImage} />
-            <br /><br />
-            Screenings<br /><br />
-            <img className="img-fluid" src={screeningTableImage} />
-            <br /><br />
-            Tickets<br /><br />
-            <img className="img-fluid" src={ticketTableImage} />
-            <br /><br />
-        </p>
-    </>)
+        <div className="database-scheme">
+            <Card className="border-white mt-0">
+                <Card.Body>
+                    <Card.Text>
+                        База данных представляет кинотеатр и содержит следующие таблицы:
+                    </Card.Text>
+                    
+                    <div className="mb-4">
+                        <SyntaxHighlighter 
+                            language="sql" 
+                            style={atomOneDark}
+                            customStyle={{ 
+                                borderRadius: '8px',
+                                fontSize: '0.9rem',
+                                padding: '1.5rem'
+                            }}
+                            showLineNumbers
+                        >
+                            {sqlCode}
+                        </SyntaxHighlighter>
+                    </div>
+
+                    <Card.Text className="mt-4">
+                        <Alert variant="info" className="mb-3">
+                            Таблицы заполнены случайными данными. В каждой таблице по 100 000 записей.
+                            Это сделано для оценки производительности вашего запроса
+                        </Alert>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        </div>
+    );
 }

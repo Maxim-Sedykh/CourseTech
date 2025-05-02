@@ -1,6 +1,6 @@
-import { Alert, Container, Spinner, Modal, Button } from 'react-bootstrap';
+import { Alert, Container, Spinner } from 'react-bootstrap';
 import { ChatGptAnalysResponseDto } from "../../types/dto/question/correct-answer-dto";
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 interface GraphVisualizerProps {
     data?: ChatGptAnalysResponseDto | null;
@@ -8,9 +8,6 @@ interface GraphVisualizerProps {
 }
 
 export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProps) {
-    const [selectedVertex, setSelectedVertex] = useState<{name: string} | null>(null);
-    const [showModal, setShowModal] = useState(false);
-
     // Параметры SVG
     const svgWidth = 400;
     const svgHeight = 400;
@@ -35,15 +32,6 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
         }, {} as Record<number, { x: number; y: number; name: string }>);
     }, [data?.Vertexes]);
 
-    const handleVertexClick = (vertexName: string) => {
-        setSelectedVertex({ name: vertexName });
-        setShowModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
-
     if (isLoading) {
         return (
             <Container className="text-center my-5">
@@ -62,8 +50,7 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
 
     return (
         <Container className="my-3">
-                
-                <Alert variant="info" className="mb-3">
+            <Alert variant="info" className="mb-3">
                 Нажмите на любую вершину, чтобы увидеть её подробное описание
             </Alert>
 
@@ -76,6 +63,24 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                 position: 'relative'
             }}>
                 <svg width="100%" height="100%" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                    {/* Определение маркера для стрелки */}
+                    <defs>
+                        <marker
+                            id="arrowhead"
+                            markerWidth="10"
+                            markerHeight="7"
+                            refX="9"
+                            refY="3.5"
+                            orient="auto"
+                        >
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#888" />
+                        </marker>
+
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="rgba(0,0,0,0.3)" />
+                        </filter>
+                    </defs>
+
                     {/* Рисуем связи */}
                     {data.Edges.map((edge, index) => {
                         if (edge?.from == null || edge?.to == null) return null;
@@ -84,15 +89,31 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                         const toPos = vertexPositions[edge.to];
                         if (!fromPos || !toPos) return null;
 
+                        // Рассчитываем вектор направления
+                        const dx = toPos.x - fromPos.x;
+                        const dy = toPos.y - fromPos.y;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+
+                        // Нормализуем вектор
+                        const nx = dx / length;
+                        const ny = dy / length;
+
+                        // Укорачиваем линию, чтобы она не заходила на вершину
+                        const fromX = fromPos.x + nx * 20; // 20 - радиус вершины
+                        const fromY = fromPos.y + ny * 20;
+                        const toX = toPos.x - nx * 20;
+                        const toY = toPos.y - ny * 20;
+
                         return (
                             <line
                                 key={`link-${index}`}
-                                x1={fromPos.x}
-                                y1={fromPos.y}
-                                x2={toPos.x}
-                                y2={toPos.y}
+                                x1={fromX}
+                                y1={fromY}
+                                x2={toX}
+                                y2={toY}
                                 stroke="#888"
                                 strokeWidth="2"
+                                markerEnd="url(#arrowhead)"
                             />
                         );
                     })}
@@ -104,9 +125,8 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                         if (!pos) return null;
 
                         return (
-                            <g 
+                            <g
                                 key={`vertex-${vertex.number}`}
-                                onClick={() => handleVertexClick(pos.name)}
                                 style={{ cursor: 'pointer' }}
                             >
                                 <circle
@@ -139,30 +159,8 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                             </g>
                         );
                     })}
-
-                    {/* Тень для узлов */}
-                    <defs>
-                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="rgba(0,0,0,0.3)" />
-                        </filter>
-                    </defs>
                 </svg>
             </div>
-
-            {/* Модальное окно с описанием вершины */}
-            <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Описание вершины</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {selectedVertex?.name}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Закрыть
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </Container>
     );
 }

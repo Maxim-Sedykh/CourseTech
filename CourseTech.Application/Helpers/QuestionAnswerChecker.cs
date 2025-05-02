@@ -3,6 +3,7 @@ using CourseTech.DAL.Views;
 using CourseTech.Domain.Comparers;
 using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
+using CourseTech.Domain.Dto.Question.CorrectAnswer;
 using CourseTech.Domain.Dto.Question.Pass;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Dto.TestVariant;
@@ -47,6 +48,8 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
         var correctAnswers = new List<ICorrectAnswerDto>();
         userGrade.Grade = 0;
 
+        var tasks = new List<Task<ICorrectAnswerDto>>();
+
         for (int i = 0; i < userAnswers.Count; i++)
         {
             var userAnswer = userAnswers[i];
@@ -54,12 +57,14 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
 
             if (userAnswer.QuestionId != checkQuestionDto.QuestionId)
             {
-                return new List<ICorrectAnswerDto>();
+                return [];
             }
 
-            ICorrectAnswerDto correctAnswer = await CheckAnswer(userAnswer, checkQuestionDto, userGrade);
-            correctAnswers.Add(correctAnswer);
+            tasks.Add(CheckAnswer(userAnswer, checkQuestionDto, userGrade));
         }
+
+        var results = await Task.WhenAll(tasks);
+        correctAnswers.AddRange(results);
 
         return correctAnswers;
     }
@@ -158,18 +163,31 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
             AnswerCorrectness = false
         };
 
+        (List<dynamic>, double correctQueryTime) correctResult;
+        (List<dynamic>, double userQueryTime) userResult;
+
         try
         {
-            var userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer.ToLower().Trim());
-            var correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode.ToLower());
+            correctResult = await sqlProvider.ExecuteQueryAsync(questionChecking.CorrectQueryCode.ToLower());
+            correctAnswer.CorrectQueryTime = correctResult.correctQueryTime;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, $"Correct query in test database has fallen with error {ex.Message}");
 
-            correctAnswer.CorrectQueryResult = correctResult;
-            correctAnswer.UserQueryResult = userResult;
+            throw;
+        }
 
-            if (DynamicListComparer.AreListsOfDynamicEqual(userResult, correctResult))
+
+        try
+        {
+            userResult = await sqlProvider.ExecuteQueryAsync(userAnswer.UserCodeAnswer.ToLower().Trim());
+
+            correctAnswer.UserQueryTime = userResult.userQueryTime;
+
+            if (DynamicListComparer.AreListsOfDynamicEqual(userResult.Item1, correctResult.Item1))
             {
                 correctAnswer.AnswerCorrectness = true;
-                correctAnswer.UserQueryResult = userResult;
 
                 userGrade.Grade += _practicalQuestionGrade;
             }
@@ -182,7 +200,9 @@ public class QuestionAnswerChecker(IChatGptQueryAnalyzer chatGptQueryAnalyzer, I
         {
             var userQueryChatGptAnalysDto = await chatGptQueryAnalyzer.AnalyzeUserQuery(ex.Message,
                 userAnswer.UserCodeAnswer,
-                questionChecking.CorrectQueryCode);
+                questionChecking.CorrectQueryCode,
+                correctAnswer.UserQueryTime,
+                correctAnswer.CorrectQueryTime);
 
             correctAnswer.QuestionUserGrade = 0;
             correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;

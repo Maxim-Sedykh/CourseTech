@@ -1,160 +1,239 @@
 ﻿import { useState, useEffect } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Table, Spinner, Badge } from "react-bootstrap";
 import { UserProfileDto } from "../types/dto/userProfile/user-profile-dto";
 import { UserProfileService } from "../services/user-profile-service";
 import { ApiPaths } from "../constants/api-paths";
 import { AuthService } from "../services/auth-service";
 import { LessonsListModalContent } from "../modal/ModalContent/LessonsListModalContent";
 import { useModal } from "../context/ModalContext";
+import { Alert } from "react-bootstrap";
+import { LessonRecordDto } from "../types/dto/lessonRecord/lesson-record-dto";
+import { LessonRecordService } from "../services/lesson-record-service";
+
+const authService = new AuthService(ApiPaths.AUTH_API_PATH);
+
+const userProfileService = new UserProfileService(ApiPaths.USER_PROFILE_API_PATH);
 
 export function UserProfilePage() {
-
-    const authService = new AuthService(ApiPaths.AUTH_API_PATH);
 
     const { open } = useModal();
 
     const [userProfile, setUserProfile] = useState<UserProfileDto | null>(null);
+    const [lessonRecords, setLessonRecords] = useState<LessonRecordDto[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [recordsLoading, setRecordsLoading] = useState(true);
     const [isCurrentUserProfile, setIsCurrentUserProfile] = useState(true);
-    const [profileCardColor, setProfileCardColor] = useState('bd-cyan-500');
-    const [examRowStyle, setExamRowStyle] = useState('col-md-12');
     const currentLogin = authService.getUsername();
     let currentUserId = authService.getUserId();
 
     const modalHandlers = {
-            lessonList: () => open(<LessonsListModalContent />, 'Список уроков'),
-        };
+        lessonList: () => open(<LessonsListModalContent />, 'Список уроков'),
+    };
 
     useEffect(() => {
-        const fetchUserProfile = async () => {
+        const fetchData = async () => {
             try {
-                const userProfileService = new UserProfileService(ApiPaths.USER_PROFILE_API_PATH);
+                setLoading(true);
 
-                if(!currentUserId) {
-                    currentUserId = "костыль, позже будет пофикшено"
+                if (!currentUserId) {
+                    currentUserId = "костыль, позже будет пофикшено";
                 }
 
-                const response = await userProfileService.getUserProfileAsync(currentUserId);
+                const [profileResponse, recordsResponse] = await Promise.all([
+                    userProfileService.getUserProfileAsync(currentUserId),
+                    new LessonRecordService(ApiPaths.LESSON_RECORD_API_PATH).getLessonsRecords()
+                ]);
 
-                if (response.data) {
-                    setUserProfile(response.data);
-                } else {
-                    console.error("Error fetching user profile:", response.error);
-                    // Handle error appropriately (e.g., display an error message)
+                if (profileResponse.data) {
+                    setUserProfile(profileResponse.data);
+                    setIsCurrentUserProfile(profileResponse.data.login === currentLogin);
                 }
+
+                if (recordsResponse.data) {
+                    setLessonRecords(recordsResponse.data);
+                }
+
             } catch (error) {
-                console.error("Error fetching user profile:", error);
-                // Handle error appropriately (e.g., display an error message)
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+                setRecordsLoading(false);
             }
         };
 
         if (currentLogin) {
-            fetchUserProfile();
+            fetchData();
         }
-    }, [currentLogin]);
+    }, [currentLogin, currentUserId]);
 
-    useEffect(() => {
-        if (userProfile) {
-            setIsCurrentUserProfile(userProfile.login === currentLogin);
-
-            if (userProfile.login !== currentLogin) {
-                setProfileCardColor("bd-cyan-800");
-            } else {
-                setProfileCardColor("bd-cyan-500");
-            }
-            setExamRowStyle(userProfile.isExamCompleted ? "col-md-6" : "col-md-12");
-        }
-    }, [userProfile, currentLogin]);
-
-    if (!userProfile) {
-        return <div>Loading...</div>; // Or display a loading spinner
+    if (loading) {
+        return (
+            <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+                <Spinner animation="border" variant="primary" />
+            </Container>
+        );
     }
 
-    return (<>
-        <Container fluid>
-            <Container>
-                <div className="text-center my-2 fs-3">
-                    {isCurrentUserProfile ? (<p>Ваш профиль</p>
-                    ) : (
-                        <>
-                            <p>Профиль пользователя {userProfile.login}</p>
-                            <br />
-                            <a
-                                href={`/profile/${currentLogin}`} // Adjust route
-                                className="my-3 fs-5 text-black"
-                            >
-                                Вернуться к себе
-                            </a>
-                        </>
-                    )}
-                </div>
-                <div className={`personalArea-userinfo ${profileCardColor} text-white p-3 me-0 my-3`} style={{ fontSize: '20px', borderRadius: '40px' }}>
-                    {userProfile.isExamCompleted && (
-                        <div className="w-25 border border-white br-40 mx-auto mb-3 fs-5 bd-cyan-800">
-                            <p className="fs-6 text-center mx-auto my-1">Вы закончили этот курс!</p>
-                        </div>
-                    )}
+    if (!userProfile) {
+        return (
+            <Container className="text-center my-5">
+                <Alert variant="danger">Не удалось загрузить профиль пользователя</Alert>
+            </Container>
+        );
+    }
 
-                    <Row>
-                        <Col md={6} sm={12} className="text-white">
-                            <Card className="personalProfileCard bd-cyan-500 pt-4 p-3 mb-2 border border-white br-40">
-                                <Card.Body>
-                                    <Row className="mb-3">
-                                        <Col><label>Логин :</label></Col>
-                                        <Col>{userProfile.login}</Col>
-                                    </Row>
-                                    <Row className="mb-3">
-                                        <Col><label>Имя :</label></Col>
-                                        <Col>{userProfile.name}</Col>
-                                    </Row>
-                                    <Row className="mb-3">
-                                        <Col><label>Фамилия :</label></Col>
-                                        <Col>{userProfile.surname}</Col>
-                                    </Row>
-                                    <Row className="mb-3">
-                                        <Col><label>Возраст :</label></Col>
-                                        <Col>{userProfile.age}</Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={6} sm={12}>
-                            <Card className="personalProfileCard bd-cyan-500 ps-4 pt-4 pb-0 mb-2 border border-white br-40">
-                                <Card.Body>
-                                    <p className="mb-3">
-                                        Окончательный результат:
-                                        {userProfile.isExamCompleted ? (
-                                            <>{userProfile.currentGrade} баллов из 100</>
-                                        ) : (
-                                            <> не получен</>
-                                        )}
-                                    </p>
-                                    <p>Уроков пройдено: {userProfile.lessonsCompleted}</p>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
-                <Row className="mx-auto mb-4 mt-0 d-flex w-75 bd-cyan-500 br-40 py-3 px-3" style={{ minHeight: '75px' }}>
-                    {userProfile.isExamCompleted ? (
-                        <Col md={6} sm={12} className={`${examRowStyle} text-center px-0 my-2`}>
-                            <Button
-                                as="a"
-                                href={`/course/result`}
-                                className={`bd-indigo-800 w-75 text-white mx-auto br-40`}
-                            >
-                                Посмотреть итоги прохождения курса
-                            </Button>
-                        </Col>
-                    ) : (
-                        <Col md={6} sm={12} className={`${examRowStyle} text-center my-2`}>
-                            <p>Данные о прохождении курса недоступны</p>
-                        </Col>
-                    )}
-                    <Col md={6} sm={12} className={`${examRowStyle} text-center my-2`}>
-                        <Button onClick={modalHandlers.lessonList}>Список уроков</Button>
+    return (
+        <Container fluid className="px-0">
+            <div className="bg-primary bg-gradient py-4 mb-4">
+                <Container>
+                    <h1 className="text-white text-center mb-0">
+                        {isCurrentUserProfile ? 'Ваш профиль' : `Профиль пользователя ${userProfile.login}`}
+                    </h1>
+                </Container>
+            </div>
+
+            <Container>
+                {/* Основная информация профиля */}
+                <Row className="g-4 mb-4">
+                    <Col md={6}>
+                        <Card className="shadow-sm h-100">
+                            <Card.Header className="bg-primary text-white">
+                                <h5 className="mb-0">Личная информация</h5>
+                            </Card.Header>
+                            <Card.Body>
+                                <div className="d-flex flex-column">
+                                    <div className="d-flex justify-content-between py-2 border-bottom">
+                                        <span className="fw-bold">Логин:</span>
+                                        <span>{userProfile.login}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between py-2 border-bottom">
+                                        <span className="fw-bold">Имя:</span>
+                                        <span>{userProfile.name || 'Не указано'}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between py-2 border-bottom">
+                                        <span className="fw-bold">Фамилия:</span>
+                                        <span>{userProfile.surname || 'Не указана'}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between py-2">
+                                        <span className="fw-bold">Возраст:</span>
+                                        <span>{userProfile.age || 'Не указан'}</span>
+                                    </div>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+                    <Col md={6}>
+                        <Card className="shadow-sm h-100">
+                            <Card.Header className="bg-primary text-white">
+                                <h5 className="mb-0">Прогресс обучения</h5>
+                            </Card.Header>
+                            <Card.Body>
+                                {userProfile.isExamCompleted ? (
+                                    <div className="text-center mb-3">
+                                        <Badge bg="success" className="fs-6 mb-2">
+                                            Курс завершен!
+                                        </Badge>
+                                        <div className="d-flex align-items-center justify-content-center">
+                                            <span className="me-2">Итоговый результат:</span>
+                                            {userProfile.currentGrade}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center mb-3">
+                                        <Badge bg="secondary" className="fs-6">
+                                            Курс в процессе
+                                        </Badge>
+                                    </div>
+                                )}
+                                <div className="d-flex justify-content-between py-2 border-bottom">
+                                    <span className="fw-bold">Пройдено уроков:</span>
+                                    <span>{userProfile.lessonsCompleted}</span>
+                                </div>
+                                <div className="d-flex justify-content-between py-2">
+                                    <span className="fw-bold">Последняя активность:</span>
+                                    <span>{new Date().toLocaleDateString()}</span>
+                                </div>
+                            </Card.Body>
+                        </Card>
                     </Col>
                 </Row>
+
+                {/* Кнопки действий */}
+                <Row className="mb-4 g-3">
+                    {userProfile.isExamCompleted && (
+                        <Col md={6}>
+                            <Button
+                                variant="outline-primary"
+                                size="lg"
+                                className="w-100"
+                                href="/course/result"
+                            >
+                                Итоги прохождения курса
+                            </Button>
+                        </Col>
+                    )}
+                    <Col md={userProfile.isExamCompleted ? 6 : 12}>
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            className="w-100"
+                            onClick={modalHandlers.lessonList}
+                        >
+                            Список уроков
+                        </Button>
+                    </Col>
+                </Row>
+
+                {/* История прохождения уроков */}
+                <Card className="shadow-sm mb-4">
+                    <Card.Header className="bg-primary text-white">
+                        <h5 className="mb-0">История прохождения уроков</h5>
+                    </Card.Header>
+                    <Card.Body>
+                        {recordsLoading ? (
+                            <div className="text-center py-4">
+                                <Spinner animation="border" variant="primary" />
+                            </div>
+                        ) : lessonRecords.length > 0 ? (
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <th>Название урока</th>
+                                            <th>Оценка за пройденный урок</th>
+                                            <th>Дата прохождения</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {lessonRecords.map((record) => (
+                                            <tr>
+                                                <td>{record.lessonName}</td>
+                                                <td>
+                                                    {record.mark}
+                                                </td>
+                                                <td>{new Date(record.createdAt).toLocaleDateString()}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        ) : (
+                            <Alert variant="info" className="text-center">
+                                Нет данных о пройденных уроках
+                            </Alert>
+                        )}
+                    </Card.Body>
+                </Card>
+
+                {!isCurrentUserProfile && (
+                    <div className="text-center mb-4">
+                        <Button variant="outline-secondary" href={`/profile/${currentLogin}`}>
+                            Вернуться к своему профилю
+                        </Button>
+                    </div>
+                )}
             </Container>
         </Container>
-    </>);
-};
+    );
+}

@@ -10,5 +10,5 @@ public interface ISqlQueryProvider
     /// </summary>
     /// <param name="sqlQuery">SQL запрос пользователя в виде строки</param>
     /// <returns></returns>
-    Task<List<dynamic>> ExecuteQueryAsync(string sqlQuery);
+    Task<(List<dynamic> result, double elapsedSeconds)> ExecuteQueryAsync(string sqlQuery);
 }

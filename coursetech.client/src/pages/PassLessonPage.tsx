@@ -3,16 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ApiPaths } from "../constants/api-paths";
 import { QuestionService } from "../services/question-service";
 import { LessonPracticeDto } from "../types/dto/question/lesson-practice-dto";
-import { Container, Row, Col, Alert, Button, FormCheck, FormControl, Form, Modal, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Alert, Button, FormCheck, FormControl, Form, Modal, Spinner, Dropdown } from "react-bootstrap";
 import { LessonTypes } from "../enums/lesson-types";
 import { PracticeUserAnswersDto } from "../types/dto/question/practice-user-answer-dto";
 import { TestQuestionDto } from "../types/dto/question/question-dto";
 import { IQuestionDto } from "../types/dto/question/question-dto-interface";
 import { PracticeCorrectAnswersDto } from "../types/dto/question/practice-correct-answer-dto";
 import { OpenQuestionUserAnswerDto, PracticalQuestionUserAnswerDto, TestQuestionUserAnswerDto } from "../types/dto/question/user-answer-dto";
-import { PracticalQuestionCorrectAnswerDto } from "../types/dto/question/correct-answer-dto";
 import { FilmDbScheme } from "../components/LearningProcess/FilmDbScheme";
 import { GraphVisualizer } from "../components/Graph/GraphVisualizer";
+import { PracticalQuestionCorrectAnswerDto } from "../types/dto/question/correct-answer-dto";
 
 function isTestQuestionDto(question: IQuestionDto): question is TestQuestionDto {
     return (question as TestQuestionDto).testVariants !== undefined;
@@ -36,25 +36,26 @@ export function PassLessonPage() {
         questions: []
     });
 
-    const [practiceCorrectAnswersDto, setPracticeCorrectAnswersDto] = useState<PracticeCorrectAnswersDto>({
-        lessonId: lessonIdNumber,
-        questionCorrectAnswers: []
-    });
-
+    const [practiceCorrectAnswersDto, setPracticeCorrectAnswersDto] = useState<PracticeCorrectAnswersDto | null>(null);
     const [loading, setLoading] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showDbSchemeModal, setShowDbSchemeModal] = useState(false);
 
-    const lessonContainerColor = lessonPracticeDto.lessonType === LessonTypes.Exam ? "bd-indigo-800" : "bd-blue-700";
+    const lessonContainerColor = lessonPracticeDto.lessonType === LessonTypes.Exam 
+        ? "bg-indigo-900" 
+        : "bg-blue-800";
 
-    const handleTestQuestionChange = useCallback((questionIndex: number, variantNumber: number) => {
+    // Группируем вопросы по типам
+    const testQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'TestQuestionDto');
+    const openQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'OpenQuestionDto');
+    const practicalQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'PracticalQuestionDto');
+
+    const handleTestQuestionChange = useCallback((questionId: number, variantNumber: number) => {
         setFormData(prev => {
-            const question = lessonPracticeDto.questions[questionIndex];
-            if (!question) return prev;
-
-            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === question.id);
+            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === questionId);
             const newAnswer: TestQuestionUserAnswerDto = {
-                questionId: question.id,
+                questionId,
                 userAnswerNumberOfVariant: variantNumber,
                 questionType: 'TestQuestionUserAnswerDto'
             };
@@ -66,16 +67,13 @@ export function PassLessonPage() {
                     : [...prev.userAnswerDtos, newAnswer]
             };
         });
-    }, [lessonPracticeDto.questions]);
+    }, []);
 
-    const handleOpenQuestionChange = useCallback((questionIndex: number, value: string) => {
+    const handleOpenQuestionChange = useCallback((questionId: number, value: string) => {
         setFormData(prev => {
-            const question = lessonPracticeDto.questions[questionIndex];
-            if (!question) return prev;
-
-            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === question.id);
+            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === questionId);
             const newAnswer: OpenQuestionUserAnswerDto = {
-                questionId: question.id,
+                questionId,
                 userAnswer: value,
                 questionType: 'OpenQuestionUserAnswerDto'
             };
@@ -87,16 +85,13 @@ export function PassLessonPage() {
                     : [...prev.userAnswerDtos, newAnswer]
             };
         });
-    }, [lessonPracticeDto.questions]);
+    }, []);
 
-    const handlePracticalQuestionChange = useCallback((questionIndex: number, value: string) => {
+    const handlePracticalQuestionChange = useCallback((questionId: number, value: string) => {
         setFormData(prev => {
-            const question = lessonPracticeDto.questions[questionIndex];
-            if (!question) return prev;
-
-            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === question.id);
+            const existingIndex = prev.userAnswerDtos.findIndex(a => a.questionId === questionId);
             const newAnswer: PracticalQuestionUserAnswerDto = {
-                questionId: question.id,
+                questionId,
                 userCodeAnswer: value,
                 questionType: 'PracticalQuestionUserAnswerDto'
             };
@@ -108,29 +103,7 @@ export function PassLessonPage() {
                     : [...prev.userAnswerDtos, newAnswer]
             };
         });
-    }, [lessonPracticeDto.questions]);
-
-    const getLevelTitle = useCallback((questionIndex: number) => {
-        if (!lessonPracticeDto || questionIndex === 0) return null;
-
-        const question = lessonPracticeDto.questions[questionIndex];
-        const previousQuestion = lessonPracticeDto.questions[questionIndex - 1];
-
-        if (question.questionType === 'OpenQuestionDto' && previousQuestion.questionType === 'TestQuestionDto') {
-            return <p className="text-white mt-4 fs-4 text-center">Средний уровень</p>;
-        }
-
-        if (question.questionType === 'PracticalQuestionDto' && previousQuestion.questionType === 'OpenQuestionDto') {
-            return (
-                <>
-                    <p className="text-white mt-4 fs-4 text-center">Высокий уровень</p>
-                    <FilmDbScheme />
-                </>
-            );
-        }
-
-        return null;
-    }, [lessonPracticeDto]);
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -138,18 +111,19 @@ export function PassLessonPage() {
 
         try {
             const sortedAnswers = [...formData.userAnswerDtos].sort((x, y) => x.questionId - y.questionId);
-            const response = await questionService.passLessonQuestions({ 
-                ...formData, 
-                userAnswerDtos: sortedAnswers 
+            const response = await questionService.passLessonQuestions({
+                ...formData,
+                userAnswerDtos: sortedAnswers
             });
 
-
-            setPracticeCorrectAnswersDto(response.data as PracticeCorrectAnswersDto);
-            
+            const correctAnswers = response.data as PracticeCorrectAnswersDto;
+            setPracticeCorrectAnswersDto(correctAnswers);
             setIsSubmitted(true);
 
             if (lessonPracticeDto?.lessonType === LessonTypes.Exam) {
-                navigate('/course/result');
+                setTimeout(() => {
+                    navigate('/course/result');
+                }, 3000);
             }
         } catch (error) {
             console.error("Ошибка при отправке ответов:", error);
@@ -173,143 +147,215 @@ export function PassLessonPage() {
         fetchLesson();
     }, [lessonIdNumber]);
 
-    return (
-        <Container fluid>
-            <Container>
-                <Row>
-                    <Col md={2} className="hidden-sm" />
-                    <Col md={8} sm={12} className={`${lessonContainerColor} my-5 br-40 px-4`}>
-                        {lessonPracticeDto.lessonType === LessonTypes.Exam ? (
-                            <p className="text-center text-white text-uppercase fs-2 mt-3">
-                                Э К З А М Е Н
+    const renderQuestionSection = (questions: IQuestionDto[], title: string, level: string) => {
+        if (questions.length === 0) return null;
+
+        const isPracticalSection = title === "Практические задания";
+
+        return (
+            <div className="mb-4 p-3 bg-dark rounded">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 className="text-white mb-0">{title}</h4>
+                        <p className="text-info fs-5 mb-0">{level}</p>
+                    </div>
+                    {isPracticalSection && (
+                        <Dropdown>
+                            <Dropdown.Toggle variant="outline-info">
+                                Схема базы данных
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => setShowDbSchemeModal(true)}>
+                                    Показать схему
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    )}
+                </div>
+                {isPracticalSection && (
+                    <Alert variant="info" className="mb-3">
+                        Для выполнения заданий ознакомьтесь со схемой базы данных
+                    </Alert>
+                )}
+                
+                {questions.map(question => {
+                    const userAnswer = formData.userAnswerDtos.find(a => a.questionId === question.id);
+                    const correctAnswer = practiceCorrectAnswersDto?.questionCorrectAnswers?.find(a => a.id === question.id);
+                    const practicalAnswer = correctAnswer && 'chatGptAnalysis' in correctAnswer
+                        ? correctAnswer as PracticalQuestionCorrectAnswerDto
+                        : null;
+
+                    return (
+                        <div key={question.id} className="mb-4 p-3 bg-secondary rounded">
+                            <p className="fs-5 text-white">
+                                <b>{question.number}</b>. {question.displayQuestion}
                             </p>
-                        ) : (
-                            <p className="text-center text-white fs-2 mt-3">
-                                Практическая часть занятия
-                            </p>
-                        )}
-
-                        <Form autoComplete="off" onSubmit={handleSubmit}>
-                            <input type="hidden" value={lessonPracticeDto.lessonId} />
-                            <input type="hidden" value={lessonPracticeDto.lessonType} />
-
-                            <p className="text-white mt-4 fs-4 text-center">Начальный уровень</p>
-
-                            {lessonPracticeDto.questions.map((question, index) => {
-                                const userAnswer = formData.userAnswerDtos.find(a => a.questionId === question.id);
-                                const correctAnswer = practiceCorrectAnswersDto.questionCorrectAnswers?.[index];
-
-                                return (
-                                    <div key={question.id}>
-                                        {getLevelTitle(index)}
-                                        <p>
-                                            <b>{question.number}</b>. {question.displayQuestion}
-                                        </p>
-
-                                        {correctAnswer?.answerCorrectness === true && (
-                                            <Alert variant="success" className="text-center">
-                                                Правильно!
-                                            </Alert>
-                                        )}
-
-                                        {correctAnswer?.answerCorrectness === false && (
-                                            <>
-                                                <Alert variant="danger" className="text-center">
-                                                    Неправильно! Правильный ответ: {correctAnswer.correctAnswer}
-                                                </Alert>
-
-                                                {correctAnswer.questionType === 'PracticalQuestionCorrectAnswerDto' && (
-                                                    <div className="mt-3">
-                                                        <h5 className="text-center">Анализ искусственного интеллекта:</h5>
-                                                        <GraphVisualizer
-                                                            data={(correctAnswer as PracticalQuestionCorrectAnswerDto)?.chatGptAnalysis}
-                                                        />
-                                                        {(correctAnswer as PracticalQuestionCorrectAnswerDto)?.chatGptAnalysis.UserQueryAnalys && (
-                                                            <Alert variant="info" className="mt-3">
-                                                                <Alert.Heading>Анализ запроса:</Alert.Heading>
-                                                                <p>{(correctAnswer as PracticalQuestionCorrectAnswerDto)?.chatGptAnalysis.UserQueryAnalys}</p>
-                                                            </Alert>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
-
-                                        {isTestQuestionDto(question) ? (
-                                            question.testVariants?.map(variant => (
-                                                <div key={variant.variantNumber}>
-                                                    <FormCheck
-                                                        type="radio"
-                                                        id={`input-pointer-${variant.variantNumber}-${index}`}
-                                                        label={variant.content}
-                                                        name={`question-${index}`}
-                                                        value={`v_${variant.variantNumber}`}
-                                                        required
-                                                        checked={(userAnswer as TestQuestionUserAnswerDto)?.userAnswerNumberOfVariant === variant.variantNumber}
-                                                        onChange={() => handleTestQuestionChange(index, variant.variantNumber)}
-                                                    />
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <FormControl
-                                                as={question.questionType === 'PracticalQuestionDto' ? "textarea" : "input"}
-                                                className="br-40 w-75"
-                                                placeholder="Ответ..."
+                            
+                            {isTestQuestionDto(question) ? (
+                                <div className="ps-3">
+                                    {question.testVariants?.map(variant => (
+                                        <div key={variant.variantNumber} className="mb-2">
+                                            <FormCheck
+                                                type="radio"
+                                                id={`test-${question.id}-${variant.variantNumber}`}
+                                                label={variant.content}
+                                                name={`question-${question.id}`}
                                                 required
-                                                value={
-                                                    (userAnswer as OpenQuestionUserAnswerDto)?.userAnswer ||
-                                                    (userAnswer as PracticalQuestionUserAnswerDto)?.userCodeAnswer || ""
-                                                }
-                                                onChange={e => {
-                                                    if (question.questionType === 'PracticalQuestionDto') {
-                                                        handlePracticalQuestionChange(index, e.target.value);
-                                                    } else {
-                                                        handleOpenQuestionChange(index, e.target.value);
-                                                    }
-                                                }}
+                                                checked={(userAnswer as TestQuestionUserAnswerDto)?.userAnswerNumberOfVariant === variant.variantNumber}
+                                                onChange={() => handleTestQuestionChange(question.id, variant.variantNumber)}
+                                                className="text-white"
+                                                disabled={isSubmitted}
                                             />
-                                        )}
-                                    </div>
-                                );
-                            })}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <>
+                                    {question.questionType === 'PracticalQuestionDto' ? (
+                                        <FormControl
+                                            as="textarea"
+                                            className="bg-light text-dark p-2 rounded"
+                                            placeholder="Введите ваш SQL-запрос здесь..."
+                                            required
+                                            style={{ minHeight: '150px' }}
+                                            value={(userAnswer as PracticalQuestionUserAnswerDto)?.userCodeAnswer || ""}
+                                            onChange={e => handlePracticalQuestionChange(question.id, e.target.value)}
+                                            disabled={isSubmitted}
+                                        />
+                                    ) : (
+                                        <FormControl
+                                            type="text"
+                                            className="bg-light text-dark p-2 rounded"
+                                            placeholder="Введите ваш ответ здесь..."
+                                            required
+                                            value={(userAnswer as OpenQuestionUserAnswerDto)?.userAnswer || ""}
+                                            onChange={e => handleOpenQuestionChange(question.id, e.target.value)}
+                                            disabled={isSubmitted}
+                                        />
+                                    )}
+                                </>
+                            )}
 
-                            <div className="text-center">
+                            {isSubmitted && (
+                                <div className="mt-3">
+                                    {correctAnswer?.answerCorrectness === true ? (
+                                        <Alert variant="success" className="text-center">
+                                            <strong>Правильно!</strong> {correctAnswer?.correctAnswer && `Правильный ответ: ${correctAnswer.correctAnswer}`}
+                                        </Alert>
+                                    ) : (
+                                        <Alert variant="danger" className="text-center">
+                                            <strong>Неправильно!</strong> Правильный ответ: {correctAnswer?.correctAnswer}
+                                        </Alert>
+                                    )}
+
+                                    {practicalAnswer && correctAnswer?.answerCorrectness === false && (
+                                        <div className="mt-3">
+                                            <h5 className="text-center text-white">Анализ искусственного интеллекта:</h5>
+                                            <GraphVisualizer
+                                                data={practicalAnswer.chatGptAnalysis}
+                                            />
+
+                                            <div className="mt-4">
+                                                <Alert variant="info" className="text-center">
+                                                    Время выполнения вашего запроса {practicalAnswer.userQueryTime} секунд
+                                                </Alert>
+                                                <Alert variant="info" className="text-center">
+                                                    Время выполнения корректного запроса {practicalAnswer.correctQueryTime} секунд
+                                                </Alert>
+                                            </div>
+
+                                            {practicalAnswer.chatGptAnalysis?.UserQueryAnalys && (
+                                                <Alert variant="info" className="mt-3">
+                                                    <Alert.Heading>Анализ запроса:</Alert.Heading>
+                                                    <p>{practicalAnswer.chatGptAnalysis?.UserQueryAnalys}</p>
+                                                </Alert>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    return (
+        <Container fluid className="p-0">
+            <div className={`${lessonContainerColor} py-4`}>
+                <Container>
+                    <h1 className="text-dark text-center mb-0">
+                        {lessonPracticeDto.lessonType === LessonTypes.Exam 
+                            ? "ЭКЗАМЕН" 
+                            : "Практическая часть занятия"}
+                    </h1>
+                </Container>
+            </div>
+
+            <Container className="pb-4">
+                <Row>
+                    <Col md={2} className="d-none d-md-block" />
+                    <Col md={8} sm={12}>
+                        <Form onSubmit={handleSubmit} className="bg-dark rounded p-4">
+                            {renderQuestionSection(testQuestions, "Тестовые вопросы", "Начальный уровень")}
+                            {renderQuestionSection(openQuestions, "Открытые вопросы", "Средний уровень")}
+                            {renderQuestionSection(practicalQuestions, "Практические задания", "Высокий уровень")}
+
+                            <div className="d-flex justify-content-end mt-4">
                                 {isSubmitted ? (
                                     <Button
                                         as="a"
                                         href={lessonPracticeDto.lessonType === LessonTypes.Exam ? '/course/result' : '/user/profile'}
-                                        className="br-40 bd-green-600 mt-2 text-white fs-5 mb-4"
-                                        disabled={loading}
+                                        variant="success"
+                                        className="px-4 py-2"
                                     >
-                                        {loading ? "Отправка..." : "Выйти"}
+                                        {lessonPracticeDto.lessonType === LessonTypes.Exam ? 'Посмотреть результаты' : 'Выйти'}
                                     </Button>
                                 ) : (
                                     <Button
                                         type="submit"
-                                        className="br-40 bd-green-600 mt-2 text-white fs-5 mb-4"
+                                        variant="primary"
+                                        className="px-4 py-2"
                                         disabled={loading || isSubmitted}
                                     >
-                                        {loading ? "Отправка..." : "Завершить"}
+                                        {loading ? <Spinner animation="border" size="sm" /> : "Завершить"}
                                     </Button>
                                 )}
                             </div>
                         </Form>
                     </Col>
-                    <Col md={2} className="hidden-sm" />
+                    <Col md={2} className="d-none d-md-block" />
                 </Row>
             </Container>
 
-            <Modal 
-                show={showLoadingModal} 
-                backdrop="static" 
-                keyboard={false} 
+            <Modal
+                show={showLoadingModal}
+                backdrop="static"
+                keyboard={false}
                 centered
                 onHide={() => setShowLoadingModal(false)}
             >
                 <Modal.Body className="text-center p-4">
-                    <Spinner animation="border" variant="primary" className="mb-3" size="sm" />
-                    <h4 className="mt-2">Подождите пожалуйста, идёт анализ от ChatGPT</h4>
+                    <Spinner animation="border" variant="primary" className="mb-3" />
+                    {lessonPracticeDto.lessonType === LessonTypes.Common ?
+                     <h4 className="mt-2">Подождите пожалуйста</h4> :
+                     <h4 className="mt-2">Подождите пожалуйста, идёт анализ от ChatGPT</h4>}
                 </Modal.Body>
+            </Modal>
+
+            <Modal show={showDbSchemeModal} onHide={() => setShowDbSchemeModal(false)} size="xl">
+                <Modal.Header closeButton className="bg-dark text-white">
+                    <Modal.Title>Схема базы данных фильмов</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="p-0">
+                    <FilmDbScheme />
+                </Modal.Body>
+                <Modal.Footer className="bg-dark">
+                    <Button variant="secondary" onClick={() => setShowDbSchemeModal(false)}>
+                        Закрыть
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </Container>
     );

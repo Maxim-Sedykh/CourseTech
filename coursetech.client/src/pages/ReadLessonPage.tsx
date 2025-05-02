@@ -5,13 +5,14 @@ import { LessonService } from "../services/lesson-service";
 import { LessonLectureDto } from "../types/dto/lesson/lesson-lecture-dto";
 import { ApiPaths } from "../constants/api-paths";
 
+const lessonService = new LessonService(ApiPaths.LESSON_API_PATH);
+
 export function ReadLessonPage() {
     const { lessonId } = useParams<{ lessonId: string }>(); // Получаем параметр
     const lessonIdNumber = Number(lessonId); // Преобразуем параметр в число
 
     const [lesson, setLesson] = useState<LessonLectureDto | undefined>(undefined);
-    const [loading, setLoading] = useState(true);
-    const lessonService = new LessonService(ApiPaths.LESSON_API_PATH); // Укажите ваш базовый URL
+    const [loading, setLoading] = useState(true); // Укажите ваш базовый URL
 
     useEffect(() => {
         const fetchLesson = async () => {

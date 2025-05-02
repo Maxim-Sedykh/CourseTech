@@ -17,28 +17,22 @@ using System.Text;
 
 namespace CourseTech.Application.Services;
 
-public class TokenService : ITokenService
+public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : ITokenService
 {
-    private readonly IMediator _mediator;
-    private readonly string _jwtKey;
-    private readonly string _issuer;
-    private readonly string _audience;
-
-    public TokenService(IMediator mediator, IOptions<JwtSettings> options)
-    {
-        _jwtKey = options.Value.JwtKey;
-        _issuer = options.Value.Issuer;
-        _audience = options.Value.Audience;
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
+    private readonly string _jwtKey = options.Value.JwtKey;
+    private readonly string _issuer = options.Value.Issuer;
+    private readonly string _audience = options.Value.Audience;
 
     /// <inheritdoc/>
     public string GenerateAccessToken(IEnumerable<Claim> claims)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var securityToken = new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.AddMinutes(10), credentials);
+        var securityToken = new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.AddDays(10), credentials);
+
         var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
         return token;
     }
 
@@ -46,8 +40,10 @@ public class TokenService : ITokenService
     public string GenerateRefreshToken()
     {
         var randomNumbers = new byte[32];
+
         using var randomNumberGenerator = RandomNumberGenerator.Create();
         randomNumberGenerator.GetBytes(randomNumbers);
+
         return Convert.ToBase64String(randomNumbers);
     }
 
@@ -66,8 +62,8 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Login),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Login),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
         };
 
         claims.AddRange(user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
@@ -124,12 +120,15 @@ public class TokenService : ITokenService
             ValidIssuer = _issuer
         };
         var tokenHandler = new JwtSecurityTokenHandler();
+
         var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+
         if (securityToken is not JwtSecurityToken jwtSecurityToken ||
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
         {
             throw new SecurityTokenException(ErrorMessage.InvalidToken);
         }
+
         return claimsPrincipal;
     }
 }

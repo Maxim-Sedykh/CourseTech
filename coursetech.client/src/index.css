@@ -679,9 +679,6 @@ body {
 .main-page-pic2 {
     background-image: url(./assets/images/MainPagePic2.jpg);
     background-size: cover; /* Чтобы картинка заполнила контейнер */
-    background-repeat: no-repeat;
-    display: block;
-    background-position: center;
 }
 
 .main-page-pic3 {

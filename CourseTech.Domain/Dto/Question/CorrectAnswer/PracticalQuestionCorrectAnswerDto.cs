@@ -1,7 +1,7 @@
 ﻿using CourseTech.Domain.Dto.Analyzer;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 
-namespace CourseTech.Domain.Dto.Question.Pass;
+namespace CourseTech.Domain.Dto.Question.CorrectAnswer;
 
 /// <summary>
 /// Модель данных для отображения правильного ответа на вопрос практического типа.
@@ -14,9 +14,9 @@ public class PracticalQuestionCorrectAnswerDto : ICorrectAnswerDto
 
     public float QuestionUserGrade { get; set; }
 
-    public List<dynamic> UserQueryResult { get; set; }
+    public double CorrectQueryTime { get; set; }
 
-    public List<dynamic> CorrectQueryResult { get; set; }
+    public double UserQueryTime { get; set; }
 
     public bool AnswerCorrectness { get; set; }
 

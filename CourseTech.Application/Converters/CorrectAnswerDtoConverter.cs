@@ -1,7 +1,7 @@
 ﻿using CourseTech.Domain.Interfaces.Dtos.Question;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using CourseTech.Domain.Dto.Question.Pass;
+using CourseTech.Domain.Dto.Question.CorrectAnswer;
 
 namespace CourseTech.Application.Converters;
 
@@ -42,24 +42,10 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
         writer.WritePropertyName("chatGptAnalysis");
         JsonSerializer.Serialize(writer, correctAnswer.ChatGptAnalysis, options);
 
-        writer.WritePropertyName("userQueryResult");
-        SerializeQueryResult(writer, correctAnswer.UserQueryResult, options);
+        writer.WritePropertyName("correctQueryTime");
+        JsonSerializer.Serialize(writer, correctAnswer.CorrectQueryTime, options);
 
-        writer.WritePropertyName("correctQueryResult");
-        SerializeQueryResult(writer, correctAnswer.CorrectQueryResult, options);
-    }
-
-    private static void SerializeQueryResult(Utf8JsonWriter writer, List<dynamic> dynamicLists, JsonSerializerOptions options)
-    {
-        if (dynamicLists != null)
-        {
-            var dynamicListJsonFormat = JsonSerializer.Serialize(dynamicLists, options);
-
-            JsonSerializer.Serialize(writer, dynamicListJsonFormat, options);
-        }
-        else
-        {
-            JsonSerializer.Serialize(writer, new List<Dictionary<string, object>>(), options);
-        }
+        writer.WritePropertyName("userQueryTime");
+        JsonSerializer.Serialize(writer, correctAnswer.UserQueryTime, options);
     }
 }

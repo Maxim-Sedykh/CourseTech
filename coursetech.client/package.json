@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/react-bootstrap": "^0.32.37",
     "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "esbuild": "^0.25.1",
@@ -20,7 +21,8 @@
     "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.3",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.1.5",
+    "react-syntax-highlighter": "^15.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
