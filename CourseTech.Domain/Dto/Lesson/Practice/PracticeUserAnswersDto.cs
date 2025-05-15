@@ -9,5 +9,7 @@ public class PracticeUserAnswersDto
 {
     public int LessonId { get; set; }
 
+    public bool IsDemoMode { get; set; }
+
     public List<IUserAnswerDto> UserAnswerDtos { get; set; }
 }

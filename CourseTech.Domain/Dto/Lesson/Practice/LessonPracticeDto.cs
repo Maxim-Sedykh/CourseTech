@@ -12,5 +12,7 @@ public class LessonPracticeDto
 
     public LessonTypes LessonType { get; set; }
 
+    public bool IsDemoMode { get; set; }
+
     public List<IQuestionDto> Questions { get; set; }
 }

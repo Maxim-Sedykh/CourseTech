@@ -10,4 +10,10 @@ public class PracticalQuestion : BaseQuestion
     /// Один из вариантов ответа, который даёт правильный результат.
     /// </summary>
     public string CorrectQueryCode { get; set; }
+
+    ///// <summary>
+    ///// Служебное слово, которое пользователь обязательно должен использовать,
+    ///// чтобы пройти практический вопрос
+    ///// </summary>
+    //public string StopKeyword { get; set; }
 }

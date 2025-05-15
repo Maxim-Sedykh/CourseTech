@@ -14,7 +14,7 @@ public interface IQuestionService
     /// </summary>
     /// <param name="lessonId"></param>
     /// <returns></returns>
-    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
+    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId, bool isDemoMode);
 
     /// <summary>
     /// Завершение прохождения тестирования.

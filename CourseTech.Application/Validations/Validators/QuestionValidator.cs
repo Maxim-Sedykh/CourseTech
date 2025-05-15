@@ -52,7 +52,7 @@ public class QuestionValidator : IQuestionValidator
                                         int userAnswersCount,
                                         LessonTypes currentLessonType)
     {
-        if (!lessonQuestions.Any() || lessonQuestions.Count != userAnswersCount
+        if (lessonQuestions.Count != userAnswersCount
             || !lessonQuestions.OfType<TestQuestionCheckingDto>().Any() || !lessonQuestions.OfType<OpenQuestionCheckingDto>().Any())
         {
             return BaseResult.Failure((int)ErrorCodes.LessonQuestionsNotFound,
@@ -74,11 +74,6 @@ public class QuestionValidator : IQuestionValidator
         if (lesson is null)
         {
             return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
-        }
-
-        if (!questions.Any())
-        {
-            return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.QuestionsNotFound, ErrorMessage.QuestionsNotFound);
         }
 
         return BaseResult.Success();

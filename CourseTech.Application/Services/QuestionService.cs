@@ -31,7 +31,7 @@ public class QuestionService(
     ILogger logger) : IQuestionService
 {
     /// <inheritdoc/>
-    public async Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
+    public async Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId, bool isDemoMode)
     {
         var lesson = await mediator.Send(new GetLessonByIdQuery(lessonId));
         var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lessonId));
@@ -46,6 +46,7 @@ public class QuestionService(
         {
             LessonId = lesson.Id,
             LessonType = lesson.LessonType,
+            IsDemoMode = isDemoMode,
             Questions = questions
         });
     }
@@ -63,7 +64,7 @@ public class QuestionService(
             return DataResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
         }
 
-        var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id));
+        var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id, dto.IsDemoMode));
 
         var questionValidationResult = questionValidator.ValidateQuestions(questions, dto.UserAnswerDtos.Count, lesson.LessonType);
         if (!questionValidationResult.IsSuccess)
@@ -80,7 +81,7 @@ public class QuestionService(
 
         var correctAnswers = await questionAnswerChecker.CheckUserAnswers(questions, dto.UserAnswerDtos, userGrade, questionTypeGrades);
 
-        if (!correctAnswers.Any())
+        if (correctAnswers.Count == 0 && lesson.Name != "Экзамен")
         {
             return DataResult<PracticeCorrectAnswersDto>.Failure((int)ErrorCodes.AnswerCheckError, ErrorMessage.AnswerCheckError);
         }

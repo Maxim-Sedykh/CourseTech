@@ -18,22 +18,24 @@ public class QuestionController(IQuestionService questionService) : BaseApiContr
     [HttpGet(RouteConstants.GetLessonQuestions)]
     public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
     {
-        var response = await questionService.GetLessonQuestionsAsync(lessonId);
+        var response = await questionService.GetLessonQuestionsAsync(lessonId, false);
         if (response.IsSuccess)
         {
             return Ok(response);
         }
+
         return BadRequest(response);
     }
 
     [HttpPost(RouteConstants.PassLessonQuestions)]
-    public async Task<ActionResult<DataResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync([FromBody] PracticeUserAnswersDto dto)
+    public async Task<ActionResult<DataResult<PracticeCorrectAnswersDto>>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto)
     {
         var response = await questionService.PassLessonQuestionsAsync(dto, AuthorizedUserId);
         if (response.IsSuccess)
         {
             return Ok(response);
         }
+
         return BadRequest(response);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
+using CourseTech.Domain.Dto.Question.CheckQuestions;
+using CourseTech.Domain.Dto.Question.Get;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Extensions;
@@ -14,12 +16,19 @@ public class GetLessonCheckQuestionDtosHandler(IBaseRepository<BaseQuestion> que
 {
     public async Task<List<ICheckQuestionDto>> Handle(GetLessonCheckQuestionDtosQuery request, CancellationToken cancellationToken)
     {
-        return await questionRepository.GetAll()
+        var res = await questionRepository.GetAll()
             .Where(q => q.LessonId == request.LessonId)
             .Include(q => (q as TestQuestion).TestVariants)
             .Include(q => (q as OpenQuestion).AnswerVariants)
-            .OrderBy(x => x.Id) //  TO DO костыль, завести поле number в questions сущности
+            .OrderBy(x => x.Number)
             .Select(x => mapper.MapQuestionCheckings(x))
             .ToListAsync(cancellationToken);
+
+        if (request.IsDemoMode)
+        {
+            res = [.. res.Except(res.OfType<PracticalQuestionCheckingDto>())];
+        }
+
+        return res;
     }
 }

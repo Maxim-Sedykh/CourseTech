@@ -14,7 +14,7 @@ public class GetLessonRecordDtosByUserIdHandler(IBaseRepository<LessonRecord> le
     public async Task<LessonRecordDto[]> Handle(GetLessonRecordDtosByUserIdQuery request, CancellationToken cancellationToken)
     {
         return await lessonRecordRepository.GetAll()
-                    .Where(x => x.UserId == request.UserId)
+                    .Where(x => x.UserId == request.UserId && !x.IsDemo)
                     .Include(x => x.Lesson)
                     .AsProjected<LessonRecord, LessonRecordDto>(mapper)
                     .ToArrayAsync(cancellationToken);
