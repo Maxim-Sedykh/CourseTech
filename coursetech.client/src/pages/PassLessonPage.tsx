@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ApiPaths } from "../constants/api-paths";
@@ -22,18 +23,21 @@ const questionService = new QuestionService(ApiPaths.QUESTION_API_PATH);
 
 export function PassLessonPage() {
     const navigate = useNavigate();
-    const { lessonId } = useParams<{ lessonId: string }>();
+    const { lessonId, isDemoMode } = useParams<{ lessonId: string, isDemoMode: string }>();
     const lessonIdNumber = Number(lessonId);
+    const isDemoModeConvert = isDemoMode === "false" ? false : true;
 
     const [formData, setFormData] = useState<PracticeUserAnswersDto>({
         lessonId: lessonIdNumber,
-        userAnswerDtos: []
+        userAnswerDtos: [],
+        isDemoMode: isDemoModeConvert
     });
 
     const [lessonPracticeDto, setLessonPracticeDto] = useState<LessonPracticeDto>({
         lessonId: lessonIdNumber,
         lessonType: LessonTypes.Common,
-        questions: []
+        questions: [],
+        isDemoMode: isDemoModeConvert
     });
 
     const [practiceCorrectAnswersDto, setPracticeCorrectAnswersDto] = useState<PracticeCorrectAnswersDto | null>(null);
@@ -120,6 +124,10 @@ export function PassLessonPage() {
             setPracticeCorrectAnswersDto(correctAnswers);
             setIsSubmitted(true);
 
+            if (lessonPracticeDto.isDemoMode) {
+                navigate(`/lesson/read/${lessonPracticeDto.lessonId}`);
+            }
+
             if (lessonPracticeDto?.lessonType === LessonTypes.Exam) {
                 setTimeout(() => {
                     navigate('/course/result');
@@ -135,7 +143,7 @@ export function PassLessonPage() {
     useEffect(() => {
         const fetchLesson = async () => {
             try {
-                const response = await questionService.getLessonQuestions(lessonIdNumber);
+                const response = await questionService.getLessonQuestions(lessonIdNumber, isDemoModeConvert);
                 setLessonPracticeDto(response.data as LessonPracticeDto);
             } catch (error) {
                 console.error("Ошибка при загрузке вопросов:", error);
@@ -289,6 +297,11 @@ export function PassLessonPage() {
                         {lessonPracticeDto.lessonType === LessonTypes.Exam 
                             ? "ЭКЗАМЕН" 
                             : "Практическая часть занятия"}
+
+                        
+                    </h1>
+                    <h1 className="text-dark text-center mb-0">
+                        {lessonPracticeDto.isDemoMode ? "Демо-режим, проверочная оценка знаний" : ""}
                     </h1>
                 </Container>
             </div>

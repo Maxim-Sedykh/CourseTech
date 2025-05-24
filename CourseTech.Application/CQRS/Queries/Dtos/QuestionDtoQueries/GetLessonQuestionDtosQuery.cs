@@ -7,4 +7,4 @@ namespace CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
 /// Получение вопросов урока в виде QuestionDto
 /// </summary>
 /// <param name="LessonId"></param>
-public record GetLessonQuestionDtosQuery(int LessonId) : IRequest<List<IQuestionDto>>;
+public record GetLessonQuestionDtosQuery(int LessonId, bool IsDemoMode) : IRequest<List<IQuestionDto>>;

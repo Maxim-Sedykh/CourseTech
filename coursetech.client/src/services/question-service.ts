@@ -12,11 +12,20 @@ export class QuestionService {
        this.apiClient = new ApiClient(baseUrl);
    }
 
-   public async getLessonQuestions(lessonId: number): Promise<DataResult<LessonPracticeDto>> {
-       return this.apiClient.get<DataResult<LessonPracticeDto>>(`${RouteConstants.GET_LESSON_QUESTIONS}${lessonId}`);
+   public async getLessonQuestions(lessonId: number, isDemoMode: boolean): Promise<DataResult<LessonPracticeDto>> {
+        const req = new GetLessonQuestionsRequest(); // Создаем экземпляр DTO
+        req.lessonId = lessonId; // Заполняем поля DTO
+        req.isDemoMode = isDemoMode;
+
+       return this.apiClient.post<DataResult<LessonPracticeDto>>(RouteConstants.GET_LESSON_QUESTIONS, req);
    }
 
    public async passLessonQuestions(dto: PracticeUserAnswersDto): Promise<DataResult<PracticeCorrectAnswersDto>> {
        return this.apiClient.post<DataResult<PracticeCorrectAnswersDto>>(RouteConstants.PASS_LESSON_QUESTIONS, dto);
    }
+}
+
+export class GetLessonQuestionsRequest {
+    lessonId!: number; // Используем definite assignment assertion (!)
+    isDemoMode!: boolean; // Используем definite assignment assertion (!)
 }

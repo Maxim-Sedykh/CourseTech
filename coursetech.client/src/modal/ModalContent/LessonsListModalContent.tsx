@@ -48,7 +48,7 @@ export function LessonsListModalContent() {
                     return (
                         <Button
                             as="a"
-                            href={`/lesson/read/${lesson.id}`}
+                            href={`/lesson/pass/${lesson.id}/${lesson.lessonType == LessonTypes.Exam ? false : true}`}
                             key={lesson.id}
                             className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40 ${isDisabled ? 'disabled' : ''}`}
                             disabled={isDisabled}

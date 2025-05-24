@@ -59,11 +59,11 @@ public class QuestionValidator : IQuestionValidator
                 ErrorMessage.LessonQuestionsNotFound);
         }
 
-        if (currentLessonType != LessonTypes.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
-        {
-            return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
-                ErrorMessage.InvalidLessonType);
-        }
+        //if (currentLessonType != LessonTypes.Common && !lessonQuestions.OfType<PracticalQuestionCheckingDto>().Any())
+        //{
+        //    return BaseResult.Failure((int)ErrorCodes.InvalidLessonType,
+        //        ErrorMessage.InvalidLessonType);
+        //}
 
         return BaseResult.Success();
     }

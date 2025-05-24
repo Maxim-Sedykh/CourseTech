@@ -21,6 +21,11 @@ public class GetLessonQuestionDtosHandler(IBaseRepository<BaseQuestion> question
             .Select(q => mapper.MapQuestion(q))
             .ToListAsync(cancellationToken);
 
+        if (request.IsDemoMode)
+        {
+            res = [.. res.Except(res.Where(x => x is PracticalQuestionDto))];
+        }
+
         return res;
     }
 }

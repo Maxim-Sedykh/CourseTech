@@ -15,10 +15,10 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class QuestionController(IQuestionService questionService) : BaseApiController
 {
-    [HttpGet(RouteConstants.GetLessonQuestions)]
-    public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
+    [HttpPost(RouteConstants.GetLessonQuestions)]
+    public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(GetLessonQuestionsRequest request)
     {
-        var response = await questionService.GetLessonQuestionsAsync(lessonId, false);
+        var response = await questionService.GetLessonQuestionsAsync(request.LessonId, request.IsDemoMode);
         if (response.IsSuccess)
         {
             return Ok(response);
@@ -37,5 +37,11 @@ public class QuestionController(IQuestionService questionService) : BaseApiContr
         }
 
         return BadRequest(response);
+    }
+
+    public class GetLessonQuestionsRequest
+    {
+        public int LessonId { get; set; }
+        public bool IsDemoMode { get; set; }
     }
 }

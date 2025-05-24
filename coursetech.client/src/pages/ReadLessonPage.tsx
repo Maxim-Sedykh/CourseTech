@@ -49,7 +49,7 @@ export function ReadLessonPage() {
                         </Button>
                     </Col>
                     <Col className={`${columnCountState} col-sm-12 text-center`}>
-                        <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}`}>
+                            <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}/${false}`}>
                             Перейти к практике
                         </Button>
                     </Col>
@@ -62,7 +62,7 @@ export function ReadLessonPage() {
                         </Button>
                     </Col>
                     <Col className="col-md-6 col-sm-12 text-center mb-2">
-                        <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}`}>
+                        <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}/${false}`}>
                             Перейти к практике
                         </Button>
                     </Col>
