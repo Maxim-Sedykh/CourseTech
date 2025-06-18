@@ -1,9 +1,7 @@
 ﻿using CourseTech.Application.Services;
-using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
@@ -19,7 +17,6 @@ public class QuestionServiceFixture : IDisposable
     public Mock<IMediator> MediatorMock { get; }
 
     public Mock<IUnitOfWork> UnitOfWorkMock { get; }
-    public Mock<IBaseRepository<LessonRecord>> LessonRecordRepositoryMock { get; }
 
     public Mock<IQuestionAnswerChecker> QuestionAnswerCheckerMock { get; }
 
@@ -43,7 +40,6 @@ public class QuestionServiceFixture : IDisposable
             UnitOfWorkMock.Object,
             QuestionAnswerCheckerMock.Object,
             QuestionValidatorMock.Object,
-            LessonRecordRepositoryMock.Object,
             LoggerMock.Object);
     }
 

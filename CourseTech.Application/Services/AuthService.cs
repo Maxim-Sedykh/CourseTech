@@ -37,6 +37,9 @@ public class AuthService(
         IOptions<JwtSettings> jwtOptions) : IAuthService
 {
 
+    public JwtSettings JwtSettings { get; } = jwtOptions.Value;
+
+
     /// <inheritdoc/>
     public async Task<DataResult<TokenDto>> Login(LoginUserDto dto)
     {
@@ -57,7 +60,7 @@ public class AuthService(
 
         if (userToken == null)
         {
-            await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken, jwtOptions.Value.RefreshTokenValidityInDays));
+            await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken, JwtSettings.RefreshTokenValidityInDays));
         }
         else
         {

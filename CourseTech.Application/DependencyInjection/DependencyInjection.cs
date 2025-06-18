@@ -1,6 +1,6 @@
-﻿using CourseTech.Application.Mapping;
+﻿using CourseTech.Application.Helpers;
+using CourseTech.Application.Mapping;
 using CourseTech.Application.Services;
-using CourseTech.Application.Strategy.QuestionChecking;
 using CourseTech.Application.Validations.FluentValidations.Auth;
 using CourseTech.Application.Validations.FluentValidations.Lesson;
 using CourseTech.Application.Validations.FluentValidations.Review;
