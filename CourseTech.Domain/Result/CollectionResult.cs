@@ -13,6 +13,9 @@ public class CollectionResult<T> : DataResult<IEnumerable<T>>
         Count = data?.Count() ?? 0;
     }
 
+    /// <summary>
+    /// Количество элементов в результате
+    /// </summary>
     public int Count { get; }
 
     public static new CollectionResult<T> Success(IEnumerable<T> data) =>
