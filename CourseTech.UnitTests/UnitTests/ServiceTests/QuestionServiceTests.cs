@@ -59,7 +59,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
             .Returns(validationResult);
 
         // Act
-        var result = await _fixture.QuestionService.GetLessonQuestionsAsync(lessonId);
+        var result = await _fixture.QuestionService.GetLessonQuestionsAsync(lessonId, false);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -91,7 +91,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
             .Returns(validationResult);
 
         // Act
-        var result = await _fixture.QuestionService.GetLessonQuestionsAsync(lessonId);
+        var result = await _fixture.QuestionService.GetLessonQuestionsAsync(lessonId, false);
 
         // Assert
         Assert.False(result.IsSuccess);

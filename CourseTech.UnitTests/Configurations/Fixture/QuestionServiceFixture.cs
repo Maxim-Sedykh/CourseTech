@@ -40,6 +40,7 @@ public class QuestionServiceFixture : IDisposable
             UnitOfWorkMock.Object,
             QuestionAnswerCheckerMock.Object,
             QuestionValidatorMock.Object,
+
             LoggerMock.Object);
     }
 

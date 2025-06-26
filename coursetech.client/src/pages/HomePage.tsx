@@ -48,9 +48,9 @@ export function HomePage() {
                         <Card className="border-0 bg-dark text-white mb-3">
                             <Card.Body className="p-2">
                                 <ul className="list-unstyled">
-                                    <li className="mb-1">Занятия: 10</li>
-                                    <li className="mb-1">Всего заданий: 91</li>
-                                    <li>Практические задания: 4</li>
+                                    <li className="mb-1">Уроков: 10</li>
+                                    <li className="mb-1">Заданий в уроках: 64</li>
+                                    <li>Практические задания: 10</li>
                                 </ul>
                             </Card.Body>
                         </Card>

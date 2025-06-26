@@ -14,12 +14,10 @@ using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services;
@@ -30,7 +28,6 @@ public class QuestionService(
     IUnitOfWork unitOfWork,
     IQuestionAnswerChecker questionAnswerChecker,
     IQuestionValidator questionValidator,
-    IBaseRepository<LessonRecord> lessonRecordRepository,
     ILogger logger) : IQuestionService
 {
     /// <inheritdoc/>
@@ -126,17 +123,10 @@ public class QuestionService(
                     Mark = userGrade,
                     IsDemo = true
                 };
-
-                await lessonRecordRepository.CreateAsync(lr);
             }
             else
             {
                 await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
-
-                var demoLessonRecord = await lessonRecordRepository.GetAll()
-                    .Where(x => x.LessonId == lessonId
-                        && x.UserId == userId
-                        && x.IsDemo).ToListAsync();
 
                 userGrade += userGrade * 0.1f;
 
