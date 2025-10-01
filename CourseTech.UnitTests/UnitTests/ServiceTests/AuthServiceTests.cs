@@ -7,6 +7,7 @@ using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
@@ -74,14 +75,14 @@ public class AuthServiceTests : IClassFixture<AuthServiceFixture>
             .ReturnsAsync(user);
 
         _fixture.AuthValidatorMock.Setup(v => v.ValidateLogin(It.IsAny<User>(), It.IsAny<string>()))
-            .Returns(BaseResult.Failure((int)ErrorCodes.PasswordIsWrong, errorMessage));
+            .Returns(BaseResult.Failure((int)ErrorCode.PasswordIsWrong, errorMessage));
 
         // Act
         var result = await _fixture.AuthService.Login(loginDto);
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.PasswordIsWrong, result.Error.Code);
+        Assert.Equal((int)ErrorCode.PasswordIsWrong, result.Error.Code);
         Assert.Equal(errorMessage, result.Error.Message);
     }
 

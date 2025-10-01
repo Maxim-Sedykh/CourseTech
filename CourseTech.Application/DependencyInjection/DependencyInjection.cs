@@ -35,8 +35,6 @@ public static class DependencyInjection
         services.InitFluentValidators();
 
         services.InitEntityValidators();
-
-        services.AddScoped<IQuestionAnswerChecker, QuestionAnswerChecker>();
     }
 
     /// <summary>
@@ -46,10 +44,6 @@ public static class DependencyInjection
     private static void InitServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<ICourseResultService, CourseResultService>();
-        services.AddScoped<ILessonRecordService, LessonRecordService>();
-        services.AddScoped<ILessonService, LessonService>();
-        services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IUserProfileService, UserProfileService>();
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<IRoleService, RoleService>();

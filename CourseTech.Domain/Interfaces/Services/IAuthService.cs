@@ -23,4 +23,6 @@ public interface IAuthService
     /// <param name="dto"></param>
     /// <returns></returns>
     Task<DataResult<TokenDto>> Login(LoginUserDto dto);
+
+    Task LogoutAsync();
 }

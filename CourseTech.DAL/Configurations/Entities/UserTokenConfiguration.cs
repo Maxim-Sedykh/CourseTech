@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Entities.UserRelated;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

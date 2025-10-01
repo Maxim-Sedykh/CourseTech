@@ -4,7 +4,7 @@
 /// Интерфейс для идентификатора сущности
 /// </summary>
 /// <typeparam name="T">Тип сущности</typeparam>
-public interface IEntityId<T> where T : struct
+public interface IEntityId<T>
 {
     /// <summary>
     /// Идентификатор сущности

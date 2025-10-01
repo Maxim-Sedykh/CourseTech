@@ -2,7 +2,7 @@
 using CourseTech.Application.CQRS.Commands.UserProfileCommands;
 using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Dto.UserProfile;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Tests.Configurations.Fixture;
 using Moq;
@@ -60,7 +60,7 @@ public class UserProfileServiceTests : IClassFixture<UserProfileServiceFixture>
         // Assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -125,6 +125,6 @@ public class UserProfileServiceTests : IClassFixture<UserProfileServiceFixture>
         // Assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
     }
 }

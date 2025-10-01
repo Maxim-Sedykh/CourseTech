@@ -2,7 +2,7 @@
 using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Token;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
@@ -85,7 +85,7 @@ public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : I
         if (user == null || user.UserToken.RefreshToken != refreshToken ||
             user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
         {
-            return DataResult<TokenDto>.Failure((int)ErrorCodes.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
+            return DataResult<TokenDto>.Failure((int)ErrorCode.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
         }
 
         var newClaims = GetClaimsFromUser(user);

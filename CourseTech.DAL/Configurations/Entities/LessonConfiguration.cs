@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseTech.DAL.Configurations.Entities;
 
-public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
+public class LessonConfiguration : IEntityTypeConfiguration<Section>
 {
     /// <summary>
     /// Конфигурация сущности "Урок" (настройка таблицы в БД)
     /// </summary>
-    public void Configure(EntityTypeBuilder<Lesson> builder)
+    public void Configure(EntityTypeBuilder<Section> builder)
     {
         builder.Property(l => l.Id).ValueGeneratedOnAdd();
 

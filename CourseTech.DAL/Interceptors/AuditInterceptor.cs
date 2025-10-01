@@ -22,6 +22,9 @@ public class AuditInterceptor : SaveChangesInterceptor
         var entries = dbContext.ChangeTracker.Entries<IAuditable>()
             .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
 
+        var createdEntries = dbContext.ChangeTracker.Entries<ICreatable>()
+            .Where(x => x.State == EntityState.Added);
+
         DateTime currentTimeUtc = DateTime.UtcNow;
 
         foreach (var entry in entries)
@@ -35,6 +38,11 @@ public class AuditInterceptor : SaveChangesInterceptor
             {
                 entry.Property(x => x.UpdatedAt).CurrentValue = currentTimeUtc;
             }
+        }
+
+        foreach (var createdEntry in createdEntries)
+        {
+
         }
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);

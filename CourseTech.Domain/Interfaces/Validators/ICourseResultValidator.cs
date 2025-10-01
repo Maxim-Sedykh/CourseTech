@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Entities;
+﻿using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Validators;

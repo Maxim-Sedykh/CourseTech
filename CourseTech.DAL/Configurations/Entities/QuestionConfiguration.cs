@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Constants.Validation;
-using CourseTech.Domain.Entities.QuestionEntities;
+using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,15 +10,15 @@ namespace CourseTech.DAL.Configurations.Entities;
 /// Используется подход TPH ( Таблица на всю иерархию ).
 /// Наследуемые классы TestQuestion, OpenQuestion, PracticalQuestion.
 /// </summary>
-public class QuestionConfiguration : IEntityTypeConfiguration<BaseQuestion>
+public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
-    public void Configure(EntityTypeBuilder<BaseQuestion> builder)
+    public void Configure(EntityTypeBuilder<Question> builder)
     {
         builder.Property(q => q.Id).ValueGeneratedOnAdd();
 
         builder.HasIndex(x => new { x.Id, x.Number }).IsUnique();
 
-        var lessonNumberPropertyName = nameof(BaseQuestion.Number);
+        var lessonNumberPropertyName = nameof(Question.Number);
 
         builder.ToTable(x => x.HasCheckConstraint($"CK_{x.Name}{lessonNumberPropertyName}",
             $"{lessonNumberPropertyName} BETWEEN {ValidationConstraints.QuestionNumberMinValue} AND {ValidationConstraints.QuestionNumberMaxValue}"));

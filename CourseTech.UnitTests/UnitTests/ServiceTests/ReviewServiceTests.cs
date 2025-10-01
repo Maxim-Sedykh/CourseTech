@@ -4,7 +4,7 @@ using CourseTech.Application.CQRS.Queries.Entities.ReviewQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Review;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -38,7 +38,7 @@ public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.CreateReviewFailed, result.Error.Code);
+        Assert.Equal((int)ErrorCode.CreateReviewFailed, result.Error.Code);
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.ReviewNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.ReviewNotFound, result.Error.Code);
         _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteReviewCommand>(), default), Times.Never);
         _fixture.CacheServiceMock.Verify(c => c.RemoveAsync(CacheKeys.Reviews), Times.Never);
     }
@@ -175,7 +175,7 @@ public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.ReviewsNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.ReviewsNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -216,6 +216,6 @@ public class ReviewServiceTests : IClassFixture<ReviewServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.ReviewsNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.ReviewsNotFound, result.Error.Code);
     }
 }

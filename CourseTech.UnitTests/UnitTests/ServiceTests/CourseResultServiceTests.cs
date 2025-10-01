@@ -3,7 +3,6 @@ using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;
 using Xunit;
-using CourseTech.Domain.Entities;
 using Moq;
 using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
@@ -12,6 +11,7 @@ using CourseTech.Application.CQRS.Commands.UserProfileCommands;
 using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
 using CourseTech.Application.CQRS.Queries.Dtos.LessonRecordDtoQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
+using CourseTech.Domain.Entities.UserRelated;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests;
 
@@ -43,7 +43,7 @@ public class CourseResultServiceTests : IClassFixture<CourseResultServiceFixture
 
         _fixture.CourseResultValidatorMock
             .Setup(v => v.ValidateUserCourseResult(It.IsAny<UserProfile>(), It.IsAny<int>()))
-            .Returns(BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, errorMessage));
+            .Returns(BaseResult.Failure((int)ErrorCode.UserProfileNotFound, errorMessage));
 
         _fixture.MediatorMock
             .Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), default))
@@ -58,7 +58,7 @@ public class CourseResultServiceTests : IClassFixture<CourseResultServiceFixture
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
         Assert.Equal(errorMessage, result.Error.Message);
     }
 
@@ -123,7 +123,7 @@ public class CourseResultServiceTests : IClassFixture<CourseResultServiceFixture
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserAnalysNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserAnalysNotFound, result.Error.Code);
     }
 
     [Fact]

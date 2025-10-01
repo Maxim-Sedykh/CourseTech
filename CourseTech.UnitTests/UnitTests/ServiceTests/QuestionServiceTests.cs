@@ -36,7 +36,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
     {
         // Arrange
         int lessonId = 1;
-        var lesson = new Lesson() { Id = lessonId, LessonType = LessonTypes.Common };
+        var lesson = new Section() { Id = lessonId, LessonType = LessonTypes.Common };
         var questions = new List<IQuestionDto>
         {
             new TestQuestionDto { Id = 1 },
@@ -73,7 +73,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
     {
         // Arrange
         int lessonId = 1;
-        var lesson = new Lesson { Id = lessonId, LessonType = LessonTypes.Common };
+        var lesson = new Section { Id = lessonId, LessonType = LessonTypes.Common };
         var questions = new List<IQuestionDto>();
         var errorMessage = "Lesson not found";
 
@@ -85,7 +85,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
             .Setup(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(questions);
         
-        var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, errorMessage);
+        var validationResult = BaseResult.Failure((int)ErrorCode.LessonNotFound, errorMessage);
         _fixture.QuestionValidatorMock
             .Setup(v => v.ValidateLessonQuestions(lesson, questions))
             .Returns(validationResult);
@@ -95,7 +95,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.LessonNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.LessonNotFound, result.Error.Code);
         Assert.Equal(errorMessage, result.Error.Message);
     }
 
@@ -111,7 +111,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         };
 
         var profile = new UserProfile { CurrentGrade = 5 };
-        var lesson = new Lesson { Id = 1, LessonType = LessonTypes.Common };
+        var lesson = new Section { Id = 1, LessonType = LessonTypes.Common };
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(profile);
@@ -142,7 +142,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.AnswerCheckError, result.Error.Code);
+        Assert.Equal((int)ErrorCode.AnswerCheckError, result.Error.Code);
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         };
 
         var profile = new UserProfile { CurrentGrade = 5 };
-        var lesson = new Lesson { Id = 1, LessonType = LessonTypes.Common };
+        var lesson = new Section { Id = 1, LessonType = LessonTypes.Common };
 
         var correctAnswers = new List<ICorrectAnswerDto>() { new TestQuestionCorrectAnswerDto() };
 

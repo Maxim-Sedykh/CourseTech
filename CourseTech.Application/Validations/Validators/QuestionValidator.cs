@@ -3,7 +3,7 @@ using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.OpenQuestionAnswer;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.TestVariant;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Validators;
@@ -18,13 +18,13 @@ public class QuestionValidator : IQuestionValidator
     {
         if (!correctTestVariants.Any())
         {
-            return BaseResult.Failure((int)ErrorCodes.TestQuestionsCorrectVariantsNotFound,
+            return BaseResult.Failure((int)ErrorCode.TestQuestionsCorrectVariantsNotFound,
                 ErrorMessage.TestQuestionsCorrectVariantsNotFound);
         }
 
         if (!openQuestionAnswers.Any())
         {
-            return BaseResult.Failure((int)ErrorCodes.OpenQuestionsAnswerVariantsNotFound,
+            return BaseResult.Failure((int)ErrorCode.OpenQuestionsAnswerVariantsNotFound,
                 ErrorMessage.OpenQuestionsAnswerVariantsNotFound);
         }
 
@@ -32,16 +32,16 @@ public class QuestionValidator : IQuestionValidator
     }
 
     /// <inheritdoc/>
-    public BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Lesson lesson)
+    public BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Section lesson)
     {
         if (userProfile == null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         if (lesson == null)
         {
-            return BaseResult.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+            return BaseResult.Failure((int)ErrorCode.LessonNotFound, ErrorMessage.LessonNotFound);
         }
 
         return BaseResult.Success();
@@ -55,7 +55,7 @@ public class QuestionValidator : IQuestionValidator
         if (lessonQuestions.Count != userAnswersCount
             || !lessonQuestions.OfType<TestQuestionCheckingDto>().Any() || !lessonQuestions.OfType<OpenQuestionCheckingDto>().Any())
         {
-            return BaseResult.Failure((int)ErrorCodes.LessonQuestionsNotFound,
+            return BaseResult.Failure((int)ErrorCode.LessonQuestionsNotFound,
                 ErrorMessage.LessonQuestionsNotFound);
         }
 
@@ -69,11 +69,11 @@ public class QuestionValidator : IQuestionValidator
     }
 
     /// <inheritdoc/>
-    public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions)
+    public BaseResult ValidateLessonQuestions(Section lesson, IEnumerable<IQuestionDto> questions)
     {
         if (lesson is null)
         {
-            return DataResult<LessonPracticeDto>.Failure((int)ErrorCodes.LessonNotFound, ErrorMessage.LessonNotFound);
+            return DataResult<LessonPracticeDto>.Failure((int)ErrorCode.LessonNotFound, ErrorMessage.LessonNotFound);
         }
 
         return BaseResult.Success();

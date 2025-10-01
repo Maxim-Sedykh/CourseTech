@@ -7,9 +7,9 @@ namespace CourseTech.DAL.Configurations.Entities;
 /// <summary>
 /// Конфигурация сущности "Запись прохождения урока пользователем" (настройка таблицы в БД)
 /// </summary>
-public class LessonRecordConfiguration : IEntityTypeConfiguration<LessonRecord>
+public class LessonRecordConfiguration : IEntityTypeConfiguration<Session>
 {
-    public void Configure(EntityTypeBuilder<LessonRecord> builder)
+    public void Configure(EntityTypeBuilder<Session> builder)
     {
         builder.Property(lr => lr.Id).ValueGeneratedOnAdd();
 

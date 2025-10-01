@@ -1,5 +1,5 @@
 ﻿using CourseTech.Application.Resources;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
@@ -13,12 +13,12 @@ public class UserValidator : IUserValidator
     {
         if (user is null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
         }
 
         if (userProfile is null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         return BaseResult.Success();

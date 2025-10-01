@@ -34,7 +34,7 @@ public static class Startup
         services.AddEndpointsApiExplorer();
         services.UseHttpClientMetrics();
 
-        services.AddControllersAndJsonConvertors();
+        services.AddControllers();
 
         services.AddAuthenticationAndAuthorization(builder);
         services.AddSwagger();

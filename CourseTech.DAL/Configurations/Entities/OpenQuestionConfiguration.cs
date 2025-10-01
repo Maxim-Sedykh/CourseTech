@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Entities.QuestionEntities;
+﻿using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +12,7 @@ public class OpenQuestionConfiguration : IEntityTypeConfiguration<OpenQuestion>
 {
     public void Configure(EntityTypeBuilder<OpenQuestion> builder)
     {
-        builder.HasBaseType<BaseQuestion>();
+        builder.HasBaseType<Question>();
 
         builder.HasMany(q => q.AnswerVariants)
             .WithOne(av => av.OpenQuestion)

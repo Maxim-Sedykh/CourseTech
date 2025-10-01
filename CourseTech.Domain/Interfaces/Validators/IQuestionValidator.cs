@@ -1,6 +1,6 @@
 ﻿using CourseTech.Domain.Dto.OpenQuestionAnswer;
 using CourseTech.Domain.Dto.TestVariant;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
@@ -18,7 +18,7 @@ public interface IQuestionValidator
     /// <param name="userProfile"></param>
     /// <param name="lesson"></param>
     /// <returns></returns>
-    BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Lesson lesson);
+    BaseResult ValidateUserLessonOnNull(UserProfile userProfile, Section lesson);
 
     /// <summary>
     /// Валидация правильных моделей тестовых вариантов, и открытых вопросов на null.
@@ -43,5 +43,5 @@ public interface IQuestionValidator
     /// <param name="lesson"></param>
     /// <param name="questions"></param>
     /// <returns></returns>
-    BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions);
+    BaseResult ValidateLessonQuestions(Section lesson, IEnumerable<IQuestionDto> questions);
 }

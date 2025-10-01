@@ -11,8 +11,6 @@ namespace CourseTech.DAL;
 /// </summary>
 public class CourseDbContext : DbContext
 {
-    public DbSet<QuestionTypeGrade> QuestionTypeGrades { get; set; }
-
     public CourseDbContext(DbContextOptions options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

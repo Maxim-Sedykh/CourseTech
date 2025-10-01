@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 
 namespace CourseTech.Application.Mapping;
 

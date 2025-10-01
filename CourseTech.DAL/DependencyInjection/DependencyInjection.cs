@@ -4,22 +4,22 @@ using CourseTech.DAL.Auth;
 using CourseTech.DAL.Cache;
 using CourseTech.DAL.DatabaseHelpers;
 using CourseTech.DAL.Interceptors;
-using CourseTech.DAL.Repositories;
 using CourseTech.DAL.UserQueryAnalyzers;
 using CourseTech.DAL.Views;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
 using CourseTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Role = CourseTech.Domain.Entities.Role;
+using Role = CourseTech.Domain.Entities.UserRelated.Role;
+using CourseTech.DAL.Repositories.Base;
+using CourseTech.Domain.Entities.UserRelated;
+using CourseTech.Domain.Interfaces.Repositories.Base;
 
 namespace CourseTech.DAL.DependencyInjection;
 
@@ -71,9 +71,9 @@ public static class DependencyInjection
             typeof(Review),
             typeof(Role),
             typeof(OpenQuestionAnswer),
-            typeof(Lesson),
-            typeof(LessonRecord),
-            typeof(BaseQuestion),
+            typeof(Section),
+            typeof(Session),
+            typeof(Question),
             typeof(OpenQuestion),
             typeof(TestQuestion),
             typeof(PracticalQuestion)

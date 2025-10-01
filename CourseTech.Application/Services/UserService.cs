@@ -65,7 +65,7 @@ public class UserService(
 
                 await transaction.RollbackAsync();
 
-                return BaseResult.Failure((int)ErrorCodes.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
+                return BaseResult.Failure((int)ErrorCode.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
             }
         }
 
@@ -79,7 +79,7 @@ public class UserService(
 
         if (user is null)
         {
-            return DataResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return DataResult<UpdateUserDto>.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
         }
 
         return DataResult<UpdateUserDto>.Success(user);
@@ -102,7 +102,7 @@ public class UserService(
 
         if (user is null)
         {
-            return DataResult<UpdateUserDto>.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return DataResult<UpdateUserDto>.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
         }
 
         await mediator.Send(new UpdateUserCommand(dto, user));

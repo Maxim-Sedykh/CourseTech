@@ -2,7 +2,7 @@
 using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.UserProfile;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 
 namespace CourseTech.Application.Mapping;
 

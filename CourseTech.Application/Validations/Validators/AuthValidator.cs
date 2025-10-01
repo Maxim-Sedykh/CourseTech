@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Validators;
@@ -15,14 +15,14 @@ public class AuthValidator(IPasswordHasher passwordHasher) : IAuthValidator
     {
         if (user == null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
         }
 
         bool verified = passwordHasher.Verify(enteredPassword, passwordHash: user.Password);
 
         if (!verified)
         {
-            return BaseResult.Failure((int)ErrorCodes.PasswordIsWrong, ErrorMessage.PasswordIsWrong);
+            return BaseResult.Failure((int)ErrorCode.PasswordIsWrong, ErrorMessage.PasswordIsWrong);
         }
 
         return BaseResult.Success();
@@ -33,12 +33,12 @@ public class AuthValidator(IPasswordHasher passwordHasher) : IAuthValidator
     {
         if (enteredPassword != enteredPasswordConfirm)
         {
-            return DataResult<UserDto>.Failure((int)ErrorCodes.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
+            return DataResult<UserDto>.Failure((int)ErrorCode.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
         }
 
         if (user != null)
         {
-            return DataResult<UserDto>.Failure((int)ErrorCodes.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
+            return DataResult<UserDto>.Failure((int)ErrorCode.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
         }
 
         return BaseResult.Success();

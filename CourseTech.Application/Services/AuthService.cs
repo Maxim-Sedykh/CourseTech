@@ -1,11 +1,4 @@
 ﻿using AutoMapper;
-using CourseTech.Application.CQRS.Commands.RoleCommands;
-using CourseTech.Application.CQRS.Commands.UserCommand;
-using CourseTech.Application.CQRS.Commands.UserProfileCommands;
-using CourseTech.Application.CQRS.Commands.UserTokenCommands;
-using CourseTech.Application.CQRS.Queries.Entities.RoleQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
@@ -97,7 +90,7 @@ public class AuthService(
 
                 if (role == null)
                 {
-                    return DataResult<UserDto>.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                    return DataResult<UserDto>.Failure((int)ErrorCode.RoleNotFound, ErrorMessage.RoleNotFound);
                 }
 
                 await mediator.Send(new CreateUserRoleCommand(role.Id, user.Id));
@@ -113,7 +106,7 @@ public class AuthService(
                 await transaction.RollbackAsync();
 
                 logger.Error(ex, ex.Message);
-                return DataResult<UserDto>.Failure((int)ErrorCodes.RegistrationFailed, ErrorMessage.RegistrationFailed);
+                return DataResult<UserDto>.Failure((int)ErrorCode.RegistrationFailed, ErrorMessage.RegistrationFailed);
             }
         }
 

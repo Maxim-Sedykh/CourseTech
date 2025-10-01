@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Entities.QuestionEntities;
+﻿using CourseTech.Domain.Entities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +12,7 @@ public class PracticalQuestionConfiguration : IEntityTypeConfiguration<Practical
 {
     public void Configure(EntityTypeBuilder<PracticalQuestion> builder)
     {
-        builder.HasBaseType<BaseQuestion>();
+        builder.HasBaseType<Question>();
 
         builder.Property(q => q.CorrectQueryCode).IsRequired();
     }

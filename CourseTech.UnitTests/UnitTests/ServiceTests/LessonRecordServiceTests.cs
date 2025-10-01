@@ -55,7 +55,7 @@ public class LessonRecordServiceTests : IClassFixture<LessonRecordServiceFixture
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.LessonRecordsNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.LessonRecordsNotFound, result.Error.Code);
     }
 
 }

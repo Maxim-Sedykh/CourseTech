@@ -5,7 +5,7 @@ using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
@@ -48,7 +48,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.LessonNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.LessonNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.True(result.Error.Code == (int)ErrorCodes.LessonsNotFound);
+        Assert.True(result.Error.Code == (int)ErrorCode.LessonsNotFound);
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonDtosQuery>(), default))
             .ReturnsAsync(lessons);
 
-        var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, "UserProfile not found");
+        var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCode.UserProfileNotFound, "UserProfile not found");
         _fixture.LessonValidatorMock.Setup(v => v.ValidateLessonsForUser(null, lessons))
             .Returns(validationResult);
 
@@ -140,7 +140,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         // Assert
         _fixture.LessonValidatorMock.Verify(x => x.ValidateLessonsForUser(null, lessons), Times.Once);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -156,7 +156,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonDtosQuery>(), default))
             .ReturnsAsync(lessons);
 
-        var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, "UserProfile not found");
+        var validationResult = DataResult<UserLessonsDto>.Failure((int)ErrorCode.LessonsNotFound, "UserProfile not found");
         _fixture.LessonValidatorMock.Setup(v => v.ValidateLessonsForUser(profile, lessons))
             .Returns(validationResult);
 
@@ -166,7 +166,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         // Assert
         _fixture.LessonValidatorMock.Verify(x => x.ValidateLessonsForUser(profile, lessons), Times.Once);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.LessonsNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.LessonsNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
     {
         // Arrange
         var dto = new LessonLectureDto { Id = 1, Name = "Updated Lesson" };
-        var currentLesson = new Lesson { Id = dto.Id, Name = "Old Lesson" };
+        var currentLesson = new Section { Id = dto.Id, Name = "Old Lesson" };
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
             .ReturnsAsync(currentLesson);
@@ -199,14 +199,14 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         var dto = new LessonLectureDto { Id = 1, Name = "Updated Lesson" };
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
-            .ReturnsAsync(null as Lesson);
+            .ReturnsAsync(null as Section);
 
         // Act
         var result = await _fixture.LessonService.UpdateLessonLectureAsync(dto);
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.LessonNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.LessonNotFound, result.Error.Code);
         _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default), Times.Once);
     }
 
@@ -219,7 +219,7 @@ public class LessonServiceTests : IClassFixture<LessonServiceFixture>
         LessonTypes lessonType = LessonTypes.Common;
 
         var dto = new LessonLectureDto { Name = lessonName, LessonType = lessonType, LectureMarkup = testMarkup };
-        var currentLesson = new Lesson { Name = lessonName, LessonType = lessonType, LectureMarkup = testMarkup };
+        var currentLesson = new Section { Name = lessonName, LessonType = lessonType, LectureMarkup = testMarkup };
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetLessonByIdQuery>(), default))
             .ReturnsAsync(currentLesson);

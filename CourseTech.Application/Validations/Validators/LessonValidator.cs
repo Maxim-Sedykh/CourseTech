@@ -1,7 +1,7 @@
 ﻿using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Lesson;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
@@ -16,14 +16,14 @@ public class LessonValidator(ILogger logger) : ILessonValidator
     {
         if (profile == null)
         {
-            return DataResult<UserLessonsDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return DataResult<UserLessonsDto>.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         if (!lessons.Any())
         {
             logger.Error(ErrorMessage.LessonsNotFound);
 
-            return DataResult<UserLessonsDto>.Failure((int)ErrorCodes.LessonsNotFound, ErrorMessage.LessonsNotFound);
+            return DataResult<UserLessonsDto>.Failure((int)ErrorCode.LessonsNotFound, ErrorMessage.LessonsNotFound);
         }
 
         return BaseResult.Success();

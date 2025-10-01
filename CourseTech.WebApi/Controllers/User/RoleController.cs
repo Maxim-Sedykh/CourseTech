@@ -4,7 +4,7 @@ using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Role;
 using CourseTech.Domain.Dto.UserRole;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using CourseTech.WebApi.Attributes;

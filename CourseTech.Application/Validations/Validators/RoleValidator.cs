@@ -1,5 +1,5 @@
 ﻿using CourseTech.Application.Resources;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
@@ -13,14 +13,14 @@ public class RoleValidator : IRoleValidator
     {
         if (user == null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserNotFound, ErrorMessage.UserNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
         }
 
         foreach (Role role in roles)
         {
             if (role == null)
             {
-                return BaseResult.Failure((int)ErrorCodes.RoleNotFound, ErrorMessage.RoleNotFound);
+                return BaseResult.Failure((int)ErrorCode.RoleNotFound, ErrorMessage.RoleNotFound);
             }
         }
 

@@ -5,7 +5,7 @@ using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Role;
 using CourseTech.Domain.Dto.UserRole;
-using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
@@ -41,7 +41,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RoleNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserAlreadyExistThisRole, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserAlreadyExistThisRole, result.Error.Code);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RolesNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RolesNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -207,7 +207,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RoleNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -306,14 +306,14 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         _fixture.RoleValidatorMock
             .Setup(v => v.ValidateRoleForUser(It.IsAny<User>(), It.IsAny<Role[]>()))
-            .Returns(BaseResult.Failure((int)ErrorCodes.RoleNotFound, errorMessage));
+            .Returns(BaseResult.Failure((int)ErrorCode.RoleNotFound, errorMessage));
 
         // Act
         var result = await _fixture.RoleService.DeleteRoleForUserAsync(dto);
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RoleNotFound, result.Error.Code);
         Assert.Equal(errorMessage, result.Error.Message);
 
         _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<DeleteUserRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -334,7 +334,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RoleNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -475,7 +475,7 @@ public class RoleServiceTests : IClassFixture<RoleServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.RoleNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.RoleNotFound, result.Error.Code);
         _fixture.MediatorMock.Verify(m => m.Send(It.IsAny<UpdateRoleCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

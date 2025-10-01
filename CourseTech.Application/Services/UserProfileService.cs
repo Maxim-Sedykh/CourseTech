@@ -25,7 +25,7 @@ public class UserProfileService(
 
         if (profileDto is null)
         {
-            return DataResult<UserProfileDto>.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return DataResult<UserProfileDto>.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         return DataResult<UserProfileDto>.Success(profileDto);
@@ -38,7 +38,7 @@ public class UserProfileService(
 
         if (profile is null)
         {
-            return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return BaseResult.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         await mediator.Send(new UpdateUserProfileCommand(dto, profile));

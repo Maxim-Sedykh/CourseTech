@@ -6,6 +6,7 @@ using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities;
+using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
@@ -40,7 +41,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -97,7 +98,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
         // Assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -141,7 +142,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .ReturnsAsync(userProfile);
 
         _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
-            .Returns(BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, "User profile not found"));
+            .Returns(BaseResult.Failure((int)ErrorCode.UserProfileNotFound, "User profile not found"));
 
         // Act
         var result = await _fixture.UserService.DeleteUserAsync(userId);
@@ -149,7 +150,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
         // Assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.UserProfileNotFound, result.Error.Code);
+        Assert.Equal((int)ErrorCode.UserProfileNotFound, result.Error.Code);
     }
 
     [Fact]
@@ -221,6 +222,6 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
         // Assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
-        Assert.Equal((int)ErrorCodes.DeleteUserFailed, result.Error.Code);
+        Assert.Equal((int)ErrorCode.DeleteUserFailed, result.Error.Code);
     }
 }
