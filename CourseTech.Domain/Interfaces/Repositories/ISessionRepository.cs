@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Entities;
+using CourseTech.Domain.Interfaces.Repositories.Base;
 
 namespace CourseTech.Domain.Interfaces.Repositories
 {
-    class ISessionRepository
-    {
-    }
+    public interface ISessionRepository : IBaseRepository<Session, long>;
 }

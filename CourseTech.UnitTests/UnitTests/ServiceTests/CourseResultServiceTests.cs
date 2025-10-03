@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;
 using Xunit;

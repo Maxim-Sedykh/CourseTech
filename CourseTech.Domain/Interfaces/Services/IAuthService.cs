@@ -24,5 +24,9 @@ public interface IAuthService
     /// <returns></returns>
     Task<DataResult<TokenDto>> Login(LoginUserDto dto);
 
-    Task LogoutAsync();
+    /// <summary>
+    /// Выйти из аккаунта.
+    /// </summary>
+    /// <returns></returns>
+    Task<BaseResult> LogoutAsync();
 }

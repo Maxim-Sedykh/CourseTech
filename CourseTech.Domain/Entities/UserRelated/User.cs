@@ -41,6 +41,8 @@ public class User : IEntityId<Guid>, IAuditable
     /// </summary>
     public UserToken UserToken { get; set; }
 
+    public List<Session> Sessions { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

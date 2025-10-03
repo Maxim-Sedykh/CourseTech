@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Dto.Lesson.Practice;
-using CourseTech.Domain.Dto.Lesson.Test;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;
@@ -9,18 +9,7 @@ namespace CourseTech.Domain.Interfaces.Services;
 /// </summary>
 public interface IQuestionService
 {
-    /// <summary>
-    /// Получение вопросов для тестирования по идентификатору урока.
-    /// </summary>
-    /// <param name="lessonId"></param>
-    /// <returns></returns>
-    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId, bool isDemoMode);
-
-    /// <summary>
-    /// Завершение прохождения тестирования.
-    /// </summary>
-    /// <param name="dto"></param>
-    /// <param name="userId"></param>
-    /// <returns></returns>
-    Task<DataResult<PracticeCorrectAnswersDto>> PassLessonQuestionsAsync(PracticeUserAnswersDto dto, Guid userId);
+    Task<Question> GetRandomQuestionAsync(Guid categoryId, string difficulty, List<Guid> excludedQuestionIds);
+    Task<Question> GetQuestionByIdAsync(Guid questionId);
+    Task<List<Question>> GetQuestionsByCategoryAsync(Guid categoryId);
 }

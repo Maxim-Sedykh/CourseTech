@@ -8,6 +8,6 @@ namespace CourseTech.Domain.Interfaces.Services
     public interface ICategoryService
     {
         Task<List<Category>> GetAllCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(int id);
+        Task<Category> GetCategoryByIdAsync(Guid categoryId);
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
-    class IStatisticService
+    public interface IStatisticService
     {
+        Task<UserStatistics> GetUserStatisticsAsync(Guid userId);
+        Task<List<CategoryProgress>> GetCategoryProgressAsync(Guid userId);
+        Task<SessionSummary> GetSessionSummaryAsync(Guid sessionId, Guid userId);
     }
 }

@@ -3,13 +3,12 @@
 /// <summary>
 /// Модель данных для регистрации пользователя.
 /// </summary>
-public class RegisterUserDto
+public record RegisterUserDto
 {
     public string Login { get; set; }
 
-    public string UserName { get; set; }
-
-    public string Surname { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
     public DateTime DateOfBirth { get; set; }
 

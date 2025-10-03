@@ -18,6 +18,10 @@ namespace CourseTech.Domain.Entities
 
         public string IconUrl { get; set; }
 
+        public List<Question> Questions { get; set; }
+
+        public List<Session> Sessions { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }

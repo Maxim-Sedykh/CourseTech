@@ -24,6 +24,8 @@ public class Session : IEntityId<long>, ICreatable
 
     public Category Category { get; set; }
 
+    public List<Answer> Answers { get; set; }
+
     public DateTime FinishedAt { get; set; }
 
     public DateTime CreatedAt { get; set; }

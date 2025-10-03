@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
+﻿using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Result;
 

@@ -1,6 +1,6 @@
 ﻿using CourseTech.Domain.Enum;
 
-namespace CourseTech.Domain.Dto.Lesson.LessonInfo;
+namespace CourseTech.Domain.Dto.Lesson.Info;
 
 /// <summary>
 /// Модель данных для передачи данных об уроке.

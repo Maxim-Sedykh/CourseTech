@@ -23,6 +23,8 @@ public class Question : IEntityId<int>, IAuditable
     /// </summary>
     public string Title { get; set; }
 
+    public List<Answer> Answers { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

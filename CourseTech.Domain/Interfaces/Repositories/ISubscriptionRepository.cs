@@ -3,5 +3,5 @@ using CourseTech.Domain.Interfaces.Repositories.Base;
 
 namespace CourseTech.Domain.Interfaces.Repositories
 {
-    public interface IQuestionRepository : IBaseRepository<Question, int>;
+    public interface ISubscriptionRepository : IBaseRepository<Subscription, int>;
 }

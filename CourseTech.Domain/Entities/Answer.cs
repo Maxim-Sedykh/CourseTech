@@ -12,6 +12,7 @@ namespace CourseTech.Domain.Entities
         public long Id { get; set; }
 
         public long SessionId { get; set; }
+
         public long QuestionId { get; set; }
 
         public string AudioFileUrl { get; set; }

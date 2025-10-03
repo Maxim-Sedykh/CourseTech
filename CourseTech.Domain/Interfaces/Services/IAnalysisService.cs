@@ -8,5 +8,7 @@ namespace CourseTech.Domain.Interfaces.Services
 {
     public interface IAnalysisService
     {
+        Task<AiAnalysis> AnalyzeAttemptAsync(Attempt attempt);
+        Task<string> GenerateFeedbackAsync(string question, string answer, List<string> keyPoints);
     }
 }

@@ -1,34 +1,49 @@
-﻿using CourseTech.Domain.Constants.Validation;
-using CourseTech.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using CourseTech.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CourseTech.DAL.Configurations.Entities;
-
-/// <summary>
-/// Конфигурация сущности "Вопрос" (настройка таблицы в БД).
-/// Используется подход TPH ( Таблица на всю иерархию ).
-/// Наследуемые классы TestQuestion, OpenQuestion, PracticalQuestion.
-/// </summary>
-public class QuestionConfiguration : IEntityTypeConfiguration<Question>
+namespace CourseTech.DAL.Configurations.Entities
 {
-    public void Configure(EntityTypeBuilder<Question> builder)
+    public class QuestionConfiguration : IEntityTypeConfiguration<Question>
     {
-        builder.Property(q => q.Id).ValueGeneratedOnAdd();
+        public void Configure(EntityTypeBuilder<Question> builder)
+        {
+            builder.ToTable("Questions");
 
-        builder.HasIndex(x => new { x.Id, x.Number }).IsUnique();
+            builder.HasKey(q => q.Id);
+            builder.Property(q => q.Id)
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
-        var lessonNumberPropertyName = nameof(Question.Number);
+            builder.Property(q => q.CategoryId)
+                .IsRequired();
 
-        builder.ToTable(x => x.HasCheckConstraint($"CK_{x.Name}{lessonNumberPropertyName}",
-            $"{lessonNumberPropertyName} BETWEEN {ValidationConstraints.QuestionNumberMinValue} AND {ValidationConstraints.QuestionNumberMaxValue}"));
+            builder.Property(q => q.Title)
+                .HasMaxLength(1000)
+                .IsRequired();
 
-        builder.Property(q => q.LessonId).IsRequired();
-        builder.Property(q => q.DisplayQuestion).IsRequired().HasMaxLength(ValidationConstraints.QuestionDisplayQuestionMaximumLength);
+            builder.Property(q => q.CreatedAt)
+                .IsRequired();
 
-        builder.HasOne(q => q.Lesson)
-            .WithMany(l => l.Questions)
-            .HasForeignKey(q => q.LessonId)
-            .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(q => q.UpdatedAt)
+                .IsRequired(false);
+
+            builder.HasIndex(q => q.CategoryId);
+
+            builder.HasOne(q => q.Category)
+                .WithMany(c => c.Questions)
+                .HasForeignKey(q => q.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany<Answer>()
+                .WithOne(a => a.Question)
+                .HasForeignKey(a => a.QuestionId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

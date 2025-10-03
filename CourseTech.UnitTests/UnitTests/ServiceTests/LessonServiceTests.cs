@@ -4,7 +4,7 @@ using CourseTech.Application.CQRS.Queries.Entities.LessonQueries;
 using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Result;
