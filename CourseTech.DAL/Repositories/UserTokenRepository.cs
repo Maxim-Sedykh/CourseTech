@@ -4,8 +4,7 @@ using CourseTech.Domain.Interfaces.Repositories;
 
 namespace CourseTech.DAL.Repositories
 {
-    public class UserTokenRepository : BaseRepository<UserToken, long>, IUserTokenRepository
+    public class UserTokenRepository(CourseDbContext dbContext) : BaseRepository<UserToken, long>(dbContext), IUserTokenRepository
     {
-        public UserTokenRepository(CourseDbContext dbContext) : base(dbContext) { }
     }
 }

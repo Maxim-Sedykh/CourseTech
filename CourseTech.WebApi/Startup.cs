@@ -74,7 +74,7 @@ public static class Startup
         app.UseMetricServer();
         app.UseHttpMetrics();
 
-        app.MapGet("/random-number", () => Results.Ok(Random.Shared.Next(0, 10)));
+        app.MapGet("/ping", () => Results.Ok());
 
         app.UseAuthentication();
         app.UseAuthorization();

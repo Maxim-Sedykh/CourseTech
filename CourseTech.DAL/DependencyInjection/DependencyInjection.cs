@@ -1,25 +1,18 @@
-﻿using CourseTech.ChatGptApi.Interfaces;
-using CourseTech.ChatGptApi;
+﻿using CourseTech.ChatGptApi;
+using CourseTech.ChatGptApi.Interfaces;
 using CourseTech.DAL.Auth;
 using CourseTech.DAL.Cache;
-using CourseTech.DAL.DatabaseHelpers;
 using CourseTech.DAL.Interceptors;
-using CourseTech.DAL.UserQueryAnalyzers;
-using CourseTech.DAL.Views;
-using CourseTech.Domain.Entities;
-using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
+using CourseTech.DAL.Repositories;
+using CourseTech.DAL.Repositories.Base;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
+using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Role = CourseTech.Domain.Entities.UserRelated.Role;
-using CourseTech.DAL.Repositories.Base;
-using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Interfaces.Repositories.Base;
 
 namespace CourseTech.DAL.DependencyInjection;
 
@@ -42,16 +35,11 @@ public static class DependencyInjection
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
-        services.AddSingleton<ISqlQueryProvider, SqlQueryProvider>();
-
-        services.AddScoped<IChatGptQueryAnalyzer, ChatGptQueryAnalyzer>();
-
         services.AddScoped<IChatGptService, ChatGptService>();
 
         services.InitCaching(configuration);
 
         services.InitEntityRepositories();
-        services.InitViewRepositories();
         services.InitUnitOfWork();
     }
 
@@ -61,39 +49,14 @@ public static class DependencyInjection
     /// <param name="services"></param>
     private static void InitEntityRepositories(this IServiceCollection services)
     {
-        var types = new List<Type>()
-        {
-            typeof(UserToken),
-            typeof(User),
-            typeof(UserRole),
-            typeof(UserProfile),
-            typeof(TestVariant),
-            typeof(Review),
-            typeof(Role),
-            typeof(OpenQuestionAnswer),
-            typeof(Section),
-            typeof(Session),
-            typeof(Question),
-            typeof(OpenQuestion),
-            typeof(TestQuestion),
-            typeof(PracticalQuestion)
-        };
-
-        foreach (var type in types)
-        {
-            var interfaceType = typeof(IBaseRepository<>).MakeGenericType(type);
-            var implementationType = typeof(BaseRepository<>).MakeGenericType(type);
-            services.AddScoped(interfaceType, implementationType);
-        }
-    }
-
-    /// <summary>
-    /// Внедрение зависимостей репозиториев для представлений
-    /// </summary>
-    /// <param name="services"></param>
-    private static void InitViewRepositories(this IServiceCollection services)
-    {
-        services.AddScoped<IViewRepository<QuestionTypeGrade>, ViewRepository<QuestionTypeGrade>>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+        services.AddScoped<IUserTokenRepository, UserTokenRepository>();
+        services.AddScoped<IAnswerRepository, AnswerRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
+        services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
     }
 
     /// <summary>
@@ -124,7 +87,7 @@ public static class DependencyInjection
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = redisSettings.Url;
-            options.InstanceName = redisSettings.InstanceName; 
+            options.InstanceName = redisSettings.InstanceName;
         });
     }
 }

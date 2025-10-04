@@ -5,7 +5,6 @@ using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 

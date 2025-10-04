@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
     public interface IAnalysisService
     {
-        Task<AiAnalysis> AnalyzeAttemptAsync(Attempt attempt);
-        Task<string> GenerateFeedbackAsync(string question, string answer, List<string> keyPoints);
+        /// <summary>
+        /// Анализ ответа пользователя.
+        /// </summary>
+        Task<DataResult<AnswerAnalysisDto>> AnalyzeAnswerAsync(AnalyzeAnswerDto dto);
+
+        /// <summary>
+        /// Генерация фидбэка на основе ответа.
+        /// </summary>
+        Task<DataResult<string>> GenerateFeedbackAsync(GenerateFeedbackDto dto);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using CourseTech.Domain.Dto.OpenQuestionAnswer;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Enum;
-using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Validators;

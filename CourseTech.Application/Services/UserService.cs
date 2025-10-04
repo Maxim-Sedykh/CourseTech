@@ -1,11 +1,4 @@
-﻿using CourseTech.Application.CQRS.Commands.UserCommand;
-using CourseTech.Application.CQRS.Commands.UserProfileCommands;
-using CourseTech.Application.CQRS.Commands.UserTokenCommands;
-using CourseTech.Application.CQRS.Queries.Dtos.UserDtoQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserTokenQueries;
-using CourseTech.Application.Resources;
+﻿using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Enum;

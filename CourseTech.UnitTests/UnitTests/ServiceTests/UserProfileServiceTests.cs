@@ -1,6 +1,4 @@
 ﻿using AutoFixture;
-using CourseTech.Application.CQRS.Commands.UserProfileCommands;
-using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;

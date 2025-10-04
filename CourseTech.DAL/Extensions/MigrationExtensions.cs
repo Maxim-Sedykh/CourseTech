@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CourseTech.DAL.Extensions;
 
 /// <summary>
-/// Расширение IApplicationBuilder для запуска миграций Entity Framework Core из точки входа в приложение ( класс Program )
+/// Расширение для запуска миграций Entity Framework Core из точки входа в приложение ( класс Program )
 /// </summary>
 public static class MigrationExtensions
 {
@@ -19,6 +19,6 @@ public static class MigrationExtensions
 
         using CourseDbContext dbContext = score.ServiceProvider.GetService<CourseDbContext>();
 
-        //dbContext.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 }

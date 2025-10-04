@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
     public interface IStatisticService
     {
-        Task<UserStatistics> GetUserStatisticsAsync(Guid userId);
-        Task<List<CategoryProgress>> GetCategoryProgressAsync(Guid userId);
-        Task<SessionSummary> GetSessionSummaryAsync(Guid sessionId, Guid userId);
+        /// <summary>
+        /// Получение статистики пользователя.
+        /// </summary>
+        Task<DataResult<UserStatisticsDto>> GetUserStatisticsAsync(Guid userId);
+
+        /// <summary>
+        /// Получение прогресса по категориям.
+        /// </summary>
+        Task<CollectionResult<CategoryProgressDto>> GetCategoryProgressAsync(Guid userId);
+
+        /// <summary>
+        /// Получение сводки по сессии.
+        /// </summary>
+        Task<DataResult<SessionSummaryDto>> GetSessionSummaryAsync(long sessionId, Guid userId);
     }
 }

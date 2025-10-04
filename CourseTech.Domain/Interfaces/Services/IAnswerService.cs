@@ -1,16 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
     public interface IAnswerService
     {
-        Task<AttemptResult> ProcessAttemptAsync(Guid sessionId, Guid userId, IFormFile audioFile, Guid questionId);
-        Task<AttemptAnalysis> GetAttemptAnalysisAsync(Guid attemptId, Guid userId);
-        Task<List<Attempt>> GetUserAttemptsAsync(Guid userId, int page, int pageSize);
+        /// <summary>
+        /// Обработка ответа пользователя.
+        /// </summary>
+        Task<DataResult<AnswerResultDto>> ProcessAnswerAsync(ProcessAnswerDto dto, Guid userId);
+
+        /// <summary>
+        /// Получение анализа ответа.
+        /// </summary>
+        Task<DataResult<AnswerAnalysisDto>> GetAnswerAnalysisAsync(long answerId, Guid userId);
+
+        /// <summary>
+        /// Получение ответов пользователя.
+        /// </summary>
+        Task<CollectionResult<AnswerDto>> GetUserAnswersAsync(Guid userId, AnswerFilterDto filter);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CourseTech.Domain.Entities;
+using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -7,7 +8,14 @@ namespace CourseTech.Domain.Interfaces.Services
     /// </summary>
     public interface ICategoryService
     {
-        Task<List<Category>> GetAllCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(Guid categoryId);
+        /// <summary>
+        /// Получение всех категорий.
+        /// </summary>
+        Task<CollectionResult<CategoryDto>> GetCategoriesAsync();
+
+        /// <summary>
+        /// Получение категории по идентификатору.
+        /// </summary>
+        Task<DataResult<CategoryDto>> GetCategoryByIdAsync(int categoryId);
     }
 }

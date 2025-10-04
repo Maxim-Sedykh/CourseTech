@@ -1,11 +1,10 @@
 ﻿using CourseTech.DAL.Repositories.Base;
-using CourseTech.Domain.Entities.UserRelated;
+using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 
 namespace CourseTech.DAL.Repositories
 {
-    public class UserTokenRepository : BaseRepository<UserToken, long>, IUserTokenRepository
+    public class AnswerRepository(CourseDbContext dbContext) : BaseRepository<Answer, long>(dbContext), IAnswerRepository
     {
-        public UserTokenRepository(CourseDbContext dbContext) : base(dbContext) { }
     }
 }

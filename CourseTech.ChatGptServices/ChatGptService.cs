@@ -62,7 +62,7 @@ public class ChatGptService : IChatGptService
         }
     }
 
-    private string ParseChatGptResponse(string responseBody)
+    private static string ParseChatGptResponse(string responseBody)
     {
         JObject jsonObject = JObject.Parse(responseBody);
 
