@@ -1,46 +1,43 @@
-﻿using CourseTech.Application.Resources;
-using CourseTech.Domain.Dto.User;
+﻿using CourseTech.Domain;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Validators;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Application.Validations.Validators;
 
 public class AuthValidator(IPasswordHasher passwordHasher) : IAuthValidator
 {
     /// <inheritdoc/>
-    public BaseResult ValidateLogin(User user, string enteredPassword)
+    public Result ValidateLogin(User user, string enteredPassword)
     {
         if (user == null)
         {
-            return BaseResult.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
+            return Result.Error(string.Empty);
         }
 
         bool verified = passwordHasher.Verify(enteredPassword, passwordHash: user.Password);
 
         if (!verified)
         {
-            return BaseResult.Failure((int)ErrorCode.PasswordIsWrong, ErrorMessage.PasswordIsWrong);
+            return Result.Error(string.Empty);
         }
 
-        return BaseResult.Success();
+        return Result.Ok();
     }
 
     /// <inheritdoc/>
-    public BaseResult ValidateRegister(User user, string enteredPassword, string enteredPasswordConfirm)
+    public Result ValidateRegister(User user, string enteredPassword, string enteredPasswordConfirm)
     {
-        if (enteredPassword != enteredPasswordConfirm)
-        {
-            return DataResult<UserDto>.Failure((int)ErrorCode.PasswordNotEqualsPasswordConfirm, ErrorMessage.PasswordNotEqualsPasswordConfirm);
-        }
-
         if (user != null)
         {
-            return DataResult<UserDto>.Failure((int)ErrorCode.UserAlreadyExists, ErrorMessage.UserAlreadyExists);
+            return Result.Error("User already exists");
         }
 
-        return BaseResult.Success();
+        if (enteredPassword != enteredPasswordConfirm)
+        {
+            return Result.Error("Password not equals password confirm");
+        }
+
+        return Result.Ok();
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.Auth;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public class AuthController(IAuthService authService,
     /// <param name="dto"></param>
     /// <returns></returns>
     [HttpPost(RouteConstants.Register)]
-    public async Task<ActionResult<BaseResult>> Register([FromBody] RegisterUserDto dto)
+    public async Task<ActionResult<Result>> Register([FromBody] RegisterUserDto dto)
     {
         var validationResult = await registerUserValidator.ValidateAsync(dto);
 
@@ -46,7 +46,7 @@ public class AuthController(IAuthService authService,
     /// <param name="dto"></param>
     /// <returns></returns>
     [HttpPost(RouteConstants.Login)]
-    public async Task<ActionResult<BaseResult>> Login([FromBody] LoginUserDto dto)
+    public async Task<ActionResult<Result>> Login([FromBody] LoginUserDto dto)
     {
         var validationResult = await loginUserValidator.ValidateAsync(dto);
 

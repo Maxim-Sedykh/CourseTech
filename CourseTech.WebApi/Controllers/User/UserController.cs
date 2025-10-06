@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.User;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using CourseTech.WebApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +29,7 @@ public class UserController(IUserService userService, UpdateUserValidator update
 
     [AllowRoles(Roles.Admin)]
     [HttpDelete(RouteConstants.DeleteUser)]
-    public async Task<ActionResult<BaseResult>> DeleteUserAsync(Guid userId)
+    public async Task<ActionResult<Result>> DeleteUserAsync(Guid userId)
     {
         var response = await userService.DeleteUserAsync(userId);
         if (response.IsSuccess)

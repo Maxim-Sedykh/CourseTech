@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Validators;
 
@@ -14,5 +13,5 @@ public interface IUserValidator
     /// <param name="userProfile"></param>
     /// <param name="user"></param>
     /// <returns></returns>
-    BaseResult ValidateDeletingUser(UserProfile userProfile, User user);
+    Result ValidateDeletingUser(UserProfile userProfile, User user);
 }

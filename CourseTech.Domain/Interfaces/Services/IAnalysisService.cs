@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Result;
+﻿using CourseTech.Domain.Dto.Analysis;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -7,11 +7,11 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Анализ ответа пользователя.
         /// </summary>
-        Task<DataResult<AnswerAnalysisDto>> AnalyzeAnswerAsync(AnalyzeAnswerDto dto);
+        Task<Result<AnswerAnalysisDto>> AnalyzeAnswerAsync(AnalyzeAnswerDto dto);
 
         /// <summary>
         /// Генерация фидбэка на основе ответа.
         /// </summary>
-        Task<DataResult<string>> GenerateFeedbackAsync(GenerateFeedbackDto dto);
+        Task<Result<string>> GenerateFeedbackAsync(GenerateFeedbackDto dto);
     }
 }

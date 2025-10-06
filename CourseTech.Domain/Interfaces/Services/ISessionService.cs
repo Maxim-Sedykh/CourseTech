@@ -1,5 +1,5 @@
-﻿using CourseTech.Domain.Entities;
-using CourseTech.Domain.Result;
+﻿using CourseTech.Domain.Dto.Question;
+using CourseTech.Domain.Dto.Session;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -8,21 +8,21 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Начало новой сессии.
         /// </summary>
-        Task<DataResult<SessionDto>> StartSessionAsync(SessionConfigDto config, Guid userId);
+        Task<Result<SessionDto>> StartSessionAsync(SessionConfigDto config, Guid userId);
 
         /// <summary>
         /// Получение следующего вопроса для сессии.
         /// </summary>
-        Task<DataResult<QuestionDto>> GetNextQuestionAsync(long sessionId, Guid userId);
+        Task<Result<QuestionDto>> GetNextQuestionAsync(long sessionId, Guid userId);
 
         /// <summary>
         /// Завершение сессии.
         /// </summary>
-        Task<DataResult<SessionDto>> FinishSessionAsync(long sessionId, Guid userId);
+        Task<Result<SessionDto>> FinishSessionAsync(long sessionId, Guid userId);
 
         /// <summary>
         /// Получение сессии по идентификатору.
         /// </summary>
-        Task<DataResult<SessionDto>> GetSessionByIdAsync(long sessionId, Guid userId);
+        Task<Result<SessionDto>> GetSessionByIdAsync(long sessionId, Guid userId);
     }
 }

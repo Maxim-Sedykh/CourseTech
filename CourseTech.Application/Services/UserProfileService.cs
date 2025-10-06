@@ -1,10 +1,10 @@
 ﻿using CourseTech.Application.Resources;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using MediatR;
 
 namespace CourseTech.Application.Services;
@@ -29,13 +29,13 @@ public class UserProfileService(
     }
 
     /// <inheritdoc/>
-    public async Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
+    public async Task<Result> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
     {
         var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
 
         if (profile is null)
         {
-            return BaseResult.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return Result.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
         await mediator.Send(new UpdateUserProfileCommand(dto, profile));
@@ -46,6 +46,6 @@ public class UserProfileService(
 
         await cacheService.SetObjectAsync(userProfileKey, profile);
 
-        return BaseResult.Success();
+        return Result.Success();
     }
 }

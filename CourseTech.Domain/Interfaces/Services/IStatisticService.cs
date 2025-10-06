@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Result;
+﻿using CourseTech.Domain.Dto.Statistic;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -7,16 +7,16 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение статистики пользователя.
         /// </summary>
-        Task<DataResult<UserStatisticsDto>> GetUserStatisticsAsync(Guid userId);
+        Task<Result<UserStatisticsDto>> GetUserStatisticsAsync(Guid userId);
 
         /// <summary>
         /// Получение прогресса по категориям.
         /// </summary>
-        Task<CollectionResult<CategoryProgressDto>> GetCategoryProgressAsync(Guid userId);
+        Task<Result<CategoryProgressDto>> GetCategoryProgressAsync(Guid userId);
 
         /// <summary>
         /// Получение сводки по сессии.
         /// </summary>
-        Task<DataResult<SessionSummaryDto>> GetSessionSummaryAsync(long sessionId, Guid userId);
+        Task<Result<SessionSummaryDto>> GetSessionSummaryAsync(long sessionId, Guid userId);
     }
 }

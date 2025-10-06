@@ -1,7 +1,6 @@
 ﻿using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;
 
@@ -15,18 +14,18 @@ public interface IAuthService
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<DataResult<UserDto>> Register(RegisterUserDto dto);
+    Task<Result<UserDto>> Register(RegisterUserDto dto);
 
     /// <summary>
     /// Авторизация пользователя.
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<DataResult<TokenDto>> Login(LoginUserDto dto);
+    Task<Result<TokenDto>> Login(LoginUserDto dto);
 
     /// <summary>
     /// Выйти из аккаунта.
     /// </summary>
     /// <returns></returns>
-    Task<BaseResult> LogoutAsync();
+    Task<Result> LogoutAsync(Guid userId);
 }

@@ -40,4 +40,7 @@ public class UserProfile : IEntityId<long>, IAuditable
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+    public bool IsExamCompleted { get; set; }
+    public int LessonsCompleted { get; set; }
 }

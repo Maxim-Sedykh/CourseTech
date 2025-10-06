@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Result;
+﻿using CourseTech.Domain;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mime;
@@ -32,8 +32,8 @@ public class ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
         var errorMessage = exception.Message;
         var response = exception switch
         {
-            UnauthorizedAccessException => BaseResult.Failure((int)HttpStatusCode.Unauthorized, errorMessage),
-            _ => BaseResult.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
+            UnauthorizedAccessException => Result.Failure((int)HttpStatusCode.Unauthorized, errorMessage),
+            _ => Result.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
         };
 
         httpContext.Response.ContentType = MediaTypeNames.Application.Json;

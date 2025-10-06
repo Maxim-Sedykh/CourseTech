@@ -28,7 +28,7 @@ public interface ITokenService
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<DataResult<TokenDto>> RefreshToken(TokenDto dto);
+    Task<Result<TokenDto>> RefreshToken(TokenDto dto);
 
     /// <summary>
     /// Получение основных клаймов из пользователя.

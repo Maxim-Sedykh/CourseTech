@@ -1,5 +1,4 @@
-﻿using CourseTech.Domain.Entities;
-using CourseTech.Domain.Result;
+﻿using CourseTech.Domain.Dto.Category;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -11,11 +10,11 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение всех категорий.
         /// </summary>
-        Task<CollectionResult<CategoryDto>> GetCategoriesAsync();
+        Task<Result<CategoryDto>> GetCategoriesAsync();
 
         /// <summary>
         /// Получение категории по идентификатору.
         /// </summary>
-        Task<DataResult<CategoryDto>> GetCategoryByIdAsync(int categoryId);
+        Task<Result<CategoryDto>> GetCategoryByIdAsync(int categoryId);
     }
 }

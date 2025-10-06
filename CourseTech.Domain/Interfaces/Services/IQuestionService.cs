@@ -1,5 +1,4 @@
-﻿using CourseTech.Domain.Entities;
-using CourseTech.Domain.Result;
+﻿using CourseTech.Domain.Dto.Question;
 
 namespace CourseTech.Domain.Interfaces.Services;
 
@@ -11,15 +10,15 @@ public interface IQuestionService
     /// <summary>
     /// Получение случайного вопроса по критериям.
     /// </summary>
-    Task<DataResult<QuestionDto>> GetRandomQuestionAsync(QuestionFilterDto filter);
+    Task<Result<QuestionDto>> GetRandomQuestionAsync(QuestionFilterDto filter);
 
     /// <summary>
     /// Получение вопроса по идентификатору.
     /// </summary>
-    Task<DataResult<QuestionDto>> GetQuestionByIdAsync(int questionId);
+    Task<Result<QuestionDto>> GetQuestionByIdAsync(int questionId);
 
     /// <summary>
     /// Получение вопросов по категории.
     /// </summary>
-    Task<CollectionResult<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId);
+    Task<Result<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId);
 }

@@ -28,4 +28,7 @@ public class Question : IEntityId<int>, IAuditable
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+    public string Difficulty { get; set; } = "Middle";
+    public string ExampleAnswer { get; set; }
+    public string KeyPoints { get; set; }
 }

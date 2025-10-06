@@ -1,12 +1,13 @@
 ﻿using CourseTech.Application.Resources;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
-using CourseTech.Domain.Result;
 using MediatR;
 using System.Data;
 using ILogger = Serilog.ILogger;
@@ -15,21 +16,22 @@ namespace CourseTech.Application.Services;
 
 public class UserService(
     ICacheService cacheService,
-    IMediator mediator,
+    IUserRepository userRepository,
+    IUserProfileRepository userProfileRepository,
     IUnitOfWork unitOfWork,
     ILogger logger,
     IUserValidator userValidator) : IUserService
 {
     /// <inheritdoc/>
-    public async Task<BaseResult> DeleteUserAsync(Guid userId)
+    public async Task<Result> DeleteUserAsync(Guid userId)
     {
-        var user = await mediator.Send(new GetUserByIdQuery(userId));
-        var userProfile = await mediator.Send(new GetProfileByUserIdQuery(userId));
+        var user = await userRepository.GetByIdAsync(userId);
+        var userProfile = await userProfileRepository.GetByIdAsync(user);
 
         var validationResult = userValidator.ValidateDeletingUser(userProfile, user);
         if (!validationResult.IsSuccess)
         {
-            return BaseResult.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
+            return Result.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
         }
 
         var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
@@ -58,11 +60,11 @@ public class UserService(
 
                 await transaction.RollbackAsync();
 
-                return BaseResult.Failure((int)ErrorCode.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
+                return Result.Failure((int)ErrorCode.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
             }
         }
 
-        return BaseResult.Success();
+        return Result.Success();
     }
 
     /// <inheritdoc/>

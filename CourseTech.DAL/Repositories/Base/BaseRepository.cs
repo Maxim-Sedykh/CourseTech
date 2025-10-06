@@ -9,7 +9,7 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId>
     where TId : struct
 {
     private readonly CourseDbContext _dbContext;
-    private readonly DbSet<TEntity> _table;
+    protected readonly DbSet<TEntity> _table;
 
     public BaseRepository(CourseDbContext dbContext)
     {
@@ -18,7 +18,7 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId>
     }
 
     /// <inheritdoc/>
-    public IQueryable<TEntity> Query()
+    public IQueryable<TEntity> GetAll()
     {
         return _table.AsQueryable();
     }

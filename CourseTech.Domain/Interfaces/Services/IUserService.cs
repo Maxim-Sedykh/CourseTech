@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;
 
@@ -13,26 +12,26 @@ public interface IUserService
     /// Получение всех пользователей.
     /// </summary>
     /// <returns></returns>
-    Task<CollectionResult<UserDto>> GetUsersAsync();
+    Task<Result<UserDto>> GetUsersAsync();
 
     /// <summary>
     /// Удаление пользователя по идентификатору.
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<BaseResult> DeleteUserAsync(Guid userId);
+    Task<Result> DeleteUserAsync(Guid userId);
 
     /// <summary>
     /// Получение данных пользователя по идентификатору.
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<DataResult<UpdateUserDto>> GetUserByIdAsync(Guid userId);
+    Task<Result<UpdateUserDto>> GetUserByIdAsync(Guid userId);
 
     /// <summary>
     /// Обновление данных пользователя.
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<DataResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto);
+    Task<Result<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto);
 }

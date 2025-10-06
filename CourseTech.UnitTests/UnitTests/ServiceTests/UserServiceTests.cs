@@ -1,8 +1,8 @@
-﻿using CourseTech.Domain.Constants.Cache;
+﻿using CourseTech.Domain;
+using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
@@ -136,7 +136,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .ReturnsAsync(userProfile);
 
         _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
-            .Returns(BaseResult.Failure((int)ErrorCode.UserProfileNotFound, "User profile not found"));
+            .Returns(Result.Failure((int)ErrorCode.UserProfileNotFound, "User profile not found"));
 
         // Act
         var result = await _fixture.UserService.DeleteUserAsync(userId);
@@ -173,7 +173,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .ReturnsAsync(Mock.Of<IDbContextTransaction>());
 
         _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
-            .Returns(BaseResult.Success());
+            .Returns(Result.Success());
 
         // Act
         var result = await _fixture.UserService.DeleteUserAsync(userId);
@@ -208,7 +208,7 @@ public class UserServiceTests : IClassFixture<UserServiceFixture>
             .ThrowsAsync(new Exception("Some error"));
 
         _fixture.UserValidatorMock.Setup(v => v.ValidateDeletingUser(It.IsAny<UserProfile>(), It.IsAny<User>()))
-            .Returns(BaseResult.Success());
+            .Returns(Result.Success());
 
         // Act
         var result = await _fixture.UserService.DeleteUserAsync(userId);

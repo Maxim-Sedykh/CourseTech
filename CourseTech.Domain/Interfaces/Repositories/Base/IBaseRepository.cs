@@ -23,7 +23,7 @@ public interface IBaseRepository<TEntity, TId> : IStateSaveChanges
     /// Возвращает все сущности как IQueryable.
     /// </summary>
     /// <returns></returns>
-    IQueryable<TEntity> Query();
+    IQueryable<TEntity> GetAll();
 
     /// <summary>
     /// Создает новую сущность.

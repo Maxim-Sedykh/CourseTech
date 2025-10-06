@@ -1,5 +1,5 @@
-﻿using CourseTech.Domain.Result;
-using Microsoft.AspNetCore.Http;
+﻿using CourseTech.Domain.Dto.Analysis;
+using CourseTech.Domain.Dto.Answer;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -8,16 +8,16 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Обработка ответа пользователя.
         /// </summary>
-        Task<DataResult<AnswerResultDto>> ProcessAnswerAsync(ProcessAnswerDto dto, Guid userId);
+        Task<Result<AnswerResultDto>> ProcessAnswerAsync(ProcessAnswerDto dto, Guid userId);
 
         /// <summary>
         /// Получение анализа ответа.
         /// </summary>
-        Task<DataResult<AnswerAnalysisDto>> GetAnswerAnalysisAsync(long answerId, Guid userId);
+        Task<Result<AnswerAnalysisDto>> GetAnswerAnalysisAsync(long answerId, Guid userId);
 
         /// <summary>
         /// Получение ответов пользователя.
         /// </summary>
-        Task<CollectionResult<AnswerDto>> GetUserAnswersAsync(Guid userId, AnswerFilterDto filter);
+        Task<Result<List<AnswerDto>>> GetUserAnswersAsync(Guid userId, AnswerFilterDto filter);
     }
 }

@@ -1,8 +1,8 @@
-﻿using CourseTech.Domain.Dto.Auth;
+﻿using CourseTech.Domain;
+using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Enum;
-using CourseTech.Domain.Result;
 using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
@@ -32,7 +32,7 @@ public class AuthServiceTests : IClassFixture<AuthServiceFixture>
             .ReturnsAsync(user);
 
         _fixture.AuthValidatorMock.Setup(v => v.ValidateLogin(It.IsAny<User>(), It.IsAny<string>()))
-            .Returns(BaseResult.Success());
+            .Returns(Result.Success());
 
         _fixture.TokenServiceMock.Setup(t => t.GetClaimsFromUser(It.IsAny<User>()))
             .Returns(new List<Claim> { new Claim(ClaimTypes.Name, "testuser") });
@@ -68,7 +68,7 @@ public class AuthServiceTests : IClassFixture<AuthServiceFixture>
             .ReturnsAsync(user);
 
         _fixture.AuthValidatorMock.Setup(v => v.ValidateLogin(It.IsAny<User>(), It.IsAny<string>()))
-            .Returns(BaseResult.Failure((int)ErrorCode.PasswordIsWrong, errorMessage));
+            .Returns(Result.Failure((int)ErrorCode.PasswordIsWrong, errorMessage));
 
         // Act
         var result = await _fixture.AuthService.Login(loginDto);
@@ -99,7 +99,7 @@ public class AuthServiceTests : IClassFixture<AuthServiceFixture>
             .ReturnsAsync((User)null);
 
         _fixture.AuthValidatorMock.Setup(v => v.ValidateRegister(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(BaseResult.Success());
+            .Returns(Result.Success());
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(newUser);

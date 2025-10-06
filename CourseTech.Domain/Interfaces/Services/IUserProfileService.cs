@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Dto.UserProfile;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;
 
@@ -13,7 +12,7 @@ public interface IUserProfileService
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId);
+    Task<Result<UserProfileDto>> GetUserProfileAsync(Guid userId);
 
     /// <summary>
     /// Обновление профиля пользовател.
@@ -21,5 +20,5 @@ public interface IUserProfileService
     /// <param name="dto"></param>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<BaseResult> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId);
+    Task<Result> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId);
 }

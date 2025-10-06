@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Validators;
 
@@ -14,7 +13,7 @@ public interface IAuthValidator
     /// <param name="user"></param>
     /// <param name="enteredPassword"></param>
     /// <returns></returns>
-    BaseResult ValidateLogin(User user, string enteredPassword);
+    Result ValidateLogin(User user, string enteredPassword);
 
     /// <summary>
     /// Валидация регистрации пользователя
@@ -23,5 +22,5 @@ public interface IAuthValidator
     /// <param name="enteredPassword"></param>
     /// <param name="enteredPasswordConfirm"></param>
     /// <returns></returns>
-    BaseResult ValidateRegister(User user, string enteredPassword, string enteredPasswordConfirm);
+    Result ValidateRegister(User user, string enteredPassword, string enteredPasswordConfirm);
 }

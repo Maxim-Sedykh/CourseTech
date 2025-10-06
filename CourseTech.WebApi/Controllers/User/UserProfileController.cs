@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User;
@@ -25,7 +25,7 @@ public class UserProfileController(IUserProfileService userProfileService) : Bas
     }
 
     [HttpPut(RouteConstants.UpdateUserProfile)]
-    public async Task<ActionResult<BaseResult>> UpdateUserProfileAsync([FromBody] UpdateUserProfileDto dto)
+    public async Task<ActionResult<Result>> UpdateUserProfileAsync([FromBody] UpdateUserProfileDto dto)
     {
         var response = await userProfileService.UpdateUserProfileAsync(dto, AuthorizedUserId);
         if (response.IsSuccess)

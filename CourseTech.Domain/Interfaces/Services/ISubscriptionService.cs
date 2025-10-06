@@ -1,9 +1,4 @@
-﻿using CourseTech.Domain.Result;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CourseTech.Domain.Dto.Subscription;
 
 namespace CourseTech.Domain.Interfaces.Services
 {
@@ -12,11 +7,11 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение всех подписок.
         /// </summary>
-        Task<CollectionResult<SubscriptionDto>> GetSubscriptionsAsync();
+        Task<Result<SubscriptionDto>> GetSubscriptionsAsync();
 
         /// <summary>
         /// Изменение подписки пользователя.
         /// </summary>
-        Task<BaseResult> ChangeUserSubscriptionAsync(ChangeSubscriptionDto dto, Guid userId);
+        Task<Result> ChangeUserSubscriptionAsync(ChangeSubscriptionDto dto, Guid userId);
     }
 }

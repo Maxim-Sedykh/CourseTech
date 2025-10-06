@@ -26,7 +26,7 @@ public class Session : IEntityId<long>, ICreatable
 
     public List<Answer> Answers { get; set; }
 
-    public DateTime FinishedAt { get; set; }
+    public DateTime? FinishedAt { get; set; }
 
     public DateTime CreatedAt { get; set; }
 }
