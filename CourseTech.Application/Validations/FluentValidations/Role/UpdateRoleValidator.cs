@@ -1,5 +1,4 @@
-﻿using CourseTech.Domain.Dto.Role;
-using CourseTech.Domain.Extensions;
+﻿using CourseTech.Domain.Extensions;
 using FluentValidation;
 
 namespace CourseTech.Application.Validations.FluentValidations.Role;

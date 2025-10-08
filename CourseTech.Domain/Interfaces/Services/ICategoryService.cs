@@ -10,7 +10,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение всех категорий.
         /// </summary>
-        Task<Result<CategoryDto>> GetCategoriesAsync();
+        Task<Result<List<CategoryDto>>> GetCategoriesAsync();
 
         /// <summary>
         /// Получение категории по идентификатору.

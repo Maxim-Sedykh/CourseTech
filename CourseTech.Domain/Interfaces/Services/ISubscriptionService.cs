@@ -7,7 +7,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение всех подписок.
         /// </summary>
-        Task<Result<SubscriptionDto>> GetSubscriptionsAsync();
+        Task<CollectionResult<SubscriptionDto>> GetSubscriptionsAsync();
 
         /// <summary>
         /// Изменение подписки пользователя.

@@ -7,12 +7,12 @@ using CourseTech.Domain.Interfaces.Services;
 
 namespace CourseTech.Application.Services
 {
-    public class AnalysisService : IAnalysisService
+    public class InterviewAnalysisService : IAnalysisService
     {
         private readonly IChatGptService _chatGptService;
         private readonly IAnalysisRepository _analysisRepository;
 
-        public AnalysisService(
+        public InterviewAnalysisService(
             IChatGptService chatGptService,
             IAnalysisRepository analysisRepository)
         {
@@ -71,7 +71,7 @@ namespace CourseTech.Application.Services
                 await _analysisRepository.CreateAsync(analysisEntity);
                 analysis.Id = analysisEntity.Id;
 
-                return Result.Ok(analysis);
+                return Result.Success(analysis);
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace CourseTech.Application.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-                return Result.Ok(fallbackAnalysis);
+                return Result.Success(fallbackAnalysis);
             }
         }
 
@@ -114,11 +114,11 @@ namespace CourseTech.Application.Services
                 """;
 
                 var feedback = await _chatGptService.SendMessageToChatGPT(prompt);
-                return Result.Ok(feedback);
+                return Result.Success(feedback);
             }
             catch (Exception ex)
             {
-                return Result.Ok($"Ошибка при генерации фидбэка: {ex.Message}");
+                return Result.Success($"Ошибка при генерации фидбэка: {ex.Message}");
             }
         }
 

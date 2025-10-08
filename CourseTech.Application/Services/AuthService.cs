@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using Azure.Core;
-using CourseTech.DAL.Repositories;
+using CourseTech.Application.Commands.UserCommands;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Commands.UserTokenCommands;
 using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Auth;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
-using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
@@ -18,7 +16,6 @@ using CourseTech.Domain.Settings;
 using MediatR;
 using Microsoft.Extensions.Options;
 using System.Data;
-using System.Threading;
 using ILogger = Serilog.ILogger;
 
 namespace CourseTech.Application.Services;
@@ -26,17 +23,16 @@ namespace CourseTech.Application.Services;
 public class AuthService(
         IUserTokenRepository userTokenRepository,
         IUserRepository userRepository,
-        IUserProfileRepository userProfileRepository,
+        IMediator mediator,
         IMapper mapper,
         ITokenService tokenService,
         IUnitOfWork unitOfWork,
         IAuthValidator authValidator,
         ICacheService cacheService,
-        IPasswordHasher passwordHasher,
         ILogger logger,
-        IOptions<JwtSettings> jwtOptions) : IAuthService
+        IOptions<JwtSettings> jwtOptions
+    ) : IAuthService
 {
-
     public JwtSettings JwtSettings { get; } = jwtOptions.Value;
 
 
@@ -46,9 +42,9 @@ public class AuthService(
         var user = await userRepository.GetByLoginAsync(dto.Login);
 
         var validateLoginResult = authValidator.ValidateLogin(user, enteredPassword: dto.Password);
-        if (!validateLoginResult.Success)
+        if (!validateLoginResult.IsSuccess)
         {
-            return Result.Error<TokenDto>(validateLoginResult.Errors);
+            return Result.Failure<TokenDto>(validateLoginResult.Errors);
         }
 
         var claims = tokenService.GetClaimsFromUser(user);
@@ -60,28 +56,14 @@ public class AuthService(
 
         if (userToken == null)
         {
-            var createdUserToken = new UserToken()
-            {
-                UserId = user.Id,
-                RefreshToken = refreshToken,
-                RefreshTokenExpireTime = DateTime.UtcNow.AddDays(JwtSettings.RefreshTokenValidityInDays)
-            };
-
-            await userTokenRepository.CreateAsync(createdUserToken);
-
-            await userTokenRepository.SaveChangesAsync();
+            await mediator.Send(new CreateUserTokenCommand(user.Id, refreshToken, JwtSettings.RefreshTokenValidityInDays));
         }
         else
         {
-            userToken.RefreshToken = refreshToken;
-            userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
-
-            userTokenRepository.Update(userToken);
-
-            await userTokenRepository.SaveChangesAsync();
+            await mediator.Send(new UpdateUserTokenCommand(userToken, refreshToken));
         }
 
-        return DataResult<TokenDto>.Success(new TokenDto()
+        return Result.Success(new TokenDto()
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
@@ -97,7 +79,7 @@ public class AuthService(
 
             await userTokenRepository.SaveChangesAsync();
         }
-        return Result.Ok();
+        return Result.Success();
     }
 
     /// <inheritdoc/>
@@ -106,44 +88,18 @@ public class AuthService(
         var user = await userRepository.GetByLoginAsync(dto.Login);
 
         var validateRegisterResult = authValidator.ValidateRegister(user, enteredPassword: dto.Password, enteredPasswordConfirm: dto.PasswordConfirm);
-        if (!validateRegisterResult.Success)
+        if (!validateRegisterResult.IsSuccess)
         {
-            return Result.Error<UserDto>(validateRegisterResult.Errors);
+            return Result.Failure<UserDto>(validateRegisterResult.Errors);
         }
 
         using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
         {
             try
             {
-                var createdUser = new User()
-                {
-                    Login = dto.Login,
-                    Password = passwordHasher.Hash(dto.Password),
-                };
+                user = await mediator.Send(new CreateUserCommand(dto.Login, dto.Password));
 
-                await userRepository.CreateAsync(user);
-
-                await userRepository.SaveChangesAsync();
-
-                var userProfile = new UserProfile()
-                {
-                    UserId = createdUser.Id,
-                    Age = dto.DateOfBirth.GetYearsByDateToNow(),
-                    DateOfBirth = dto.DateOfBirth,
-                    IsExamCompleted = false,
-                    LessonsCompleted = 0
-                };
-
-                await userProfileRepository.CreateAsync(userProfile);
-
-                var role = await mediator.Send(new GetRoleByNameQuery(nameof(Roles.User)));
-
-                if (role == null)
-                {
-                    return DataResult<UserDto>.Failure((int)ErrorCode.RoleNotFound, ErrorMessage.RoleNotFound);
-                }
-
-                await mediator.Send(new CreateUserRoleCommand(role.Id, user.Id));
+                await mediator.Send(new CreateUserProfileCommand(user.Id, dto.DateOfBirth));
 
                 await unitOfWork.SaveChangesAsync();
 
@@ -156,10 +112,10 @@ public class AuthService(
                 await transaction.RollbackAsync();
 
                 logger.Error(ex, ex.Message);
-                return DataResult<UserDto>.Failure($"Error while registrating user with message {ex.Message}");
+                return Result<UserDto>.Failure($"Error while registrating user with message {ex.Message}");
             }
         }
 
-        return DataResult<UserDto>.Success(mapper.Map<UserDto>(user));
+        return Result.Success(mapper.Map<UserDto>(user));
     }
 }

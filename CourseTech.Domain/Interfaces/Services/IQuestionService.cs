@@ -20,5 +20,5 @@ public interface IQuestionService
     /// <summary>
     /// Получение вопросов по категории.
     /// </summary>
-    Task<Result<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId);
+    Task<CollectionResult<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId);
 }

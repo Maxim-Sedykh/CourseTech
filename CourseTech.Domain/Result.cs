@@ -8,7 +8,7 @@
         /// <summary>
         /// Успешна ли операция
         /// </summary>
-        public bool Success { get; protected set; }
+        public bool IsSuccess { get; protected set; }
 
         /// <summary>
         /// Список ошибок
@@ -17,20 +17,20 @@
 
         protected Result()
         {
-            Success = true;
+            IsSuccess = true;
         }
 
         protected Result(IReadOnlyCollection<string> errors)
         {
-            Success = false;
+            IsSuccess = false;
             Errors = errors;
         }
 
         /// <summary>
-        /// Создание успехного результата
+        /// Создание успешного результата
         /// </summary>
         /// <returns>Успешный результат операции</returns>
-        public static Result Ok()
+        public static Result Success()
         {
             return new Result();
         }
@@ -41,7 +41,7 @@
         /// <typeparam name="T">Тип данных результата</typeparam>
         /// <param name="data">Данные результата</param>
         /// <returns>Успешный результат операции</returns>
-        public static Result<T> Ok<T>(T data)
+        public static Result<T> Success<T>(T data)
         {
             return new Result<T>(data);
         }
@@ -51,7 +51,7 @@
         /// </summary>
         /// <param name="error">Ошибка</param>
         /// <returns>Результат с ошибкой</returns>
-        public static Result Error(string error)
+        public static Result Failure(string error)
         {
             return new Result([error]);
         }
@@ -59,36 +59,9 @@
         /// <summary>
         /// Создание результата с ошибкой
         /// </summary>
-        /// <typeparam name="T">Тип данных результата</typeparam>
-        /// <param name="error">Ошибка</param>
-        /// <returns>Результат с ошибкой</returns>
-        public static Result<T> Error<T>(string error)
-        {
-            return new Result<T>([error]);
-        }
-
-        /// <summary>
-        /// Создание результата с ошибкой из другого ошибочного результата
-        /// </summary>
-        /// <typeparam name="T">Тип данных результата</typeparam>
-        /// <param name="error">Ошибка</param>
-        /// <returns>Результат с ошибкой</returns>
-        public static Result<T> Error<T>(Result result)
-        {
-            if (result.Success)
-            {
-                throw new ArgumentException("Нельзя обернуть в ошибку успешный результат");
-            }
-
-            return new Result<T>(result.Errors);
-        }
-
-        /// <summary>
-        /// Создание результата с ошибкой
-        /// </summary>
         /// <param name="errors">Список ошибок</param>
         /// <returns>Результат с ошибкой</returns>
-        public static Result Error(IReadOnlyCollection<string> errors)
+        public static Result Failure(IReadOnlyCollection<string> errors)
         {
             return new Result(errors);
         }
@@ -99,7 +72,7 @@
         /// <typeparam name="T">Тип данных результата</typeparam>
         /// <param name="errors">Список ошибок</param>
         /// <returns>Результат с ошибкой</returns>
-        public static Result<T> Error<T>(IReadOnlyCollection<string> errors)
+        public static Result<T> Failure<T>(IReadOnlyCollection<string> errors)
         {
             return new Result<T>(errors);
         }

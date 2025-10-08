@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities.UserRelated;
 

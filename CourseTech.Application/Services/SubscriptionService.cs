@@ -1,7 +1,9 @@
 ﻿using CourseTech.Domain;
+using CourseTech.Domain.Dto.Subscription;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
 {
@@ -20,47 +22,32 @@ namespace CourseTech.Application.Services
 
         public async Task<CollectionResult<SubscriptionDto>> GetSubscriptionsAsync()
         {
-            try
-            {
-                var subscriptions = await _subscriptionRepository.GetAllAsync();
-                var subscriptionDtos = subscriptions.Select(MapToSubscriptionDto).ToList();
+            var subscriptions = await _subscriptionRepository.GetAll().ToListAsync();
+            var subscriptionDtos = subscriptions.Select(MapToSubscriptionDto).ToList();
 
-                return CollectionResult<SubscriptionDto>.Success(subscriptionDtos);
-            }
-            catch (Exception ex)
-            {
-                return CollectionResult<SubscriptionDto>.Failure($"Ошибка при получении подписок: {ex.Message}");
-            }
+            return CollectionResult<SubscriptionDto>.Success(subscriptionDtos);
         }
 
         public async Task<Result> ChangeUserSubscriptionAsync(ChangeSubscriptionDto dto, Guid userId)
         {
-            try
-            {
-                var user = await _userRepository.GetByIdAsync(userId);
-                if (user == null)
-                    return Result.Failure("Пользователь не найден");
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                return Result.Failure("Пользователь не найден");
 
-                var newSubscription = await _subscriptionRepository.GetByIdAsync(dto.SubscriptionId);
-                if (newSubscription == null)
-                    return Result.Failure("Подписка не найдена");
+            var newSubscription = await _subscriptionRepository.GetByIdAsync(dto.SubscriptionId);
+            if (newSubscription == null)
+                return Result.Failure("Подписка не найдена");
 
-                // Проверяем, не пытается ли пользователь перейти на ту же подписку
-                if (user.SubscriptionId == dto.SubscriptionId)
-                    return Result.Failure("У вас уже активна эта подписка");
+            if (user.SubscriptionId == dto.SubscriptionId)
+                return Result.Failure("У вас уже активна эта подписка");
 
-                // Здесь можно добавить логику проверки платежей и т.д.
-                user.SubscriptionId = dto.SubscriptionId;
-                user.UpdatedAt = DateTime.UtcNow;
+            user.SubscriptionId = dto.SubscriptionId;
+            user.UpdatedAt = DateTime.UtcNow;
 
-                await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
 
-                return Result.Success();
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure($"Ошибка при изменении подписки: {ex.Message}");
-            }
+            return Result.Success();
         }
 
         private SubscriptionDto MapToSubscriptionDto(Subscription subscription)

@@ -1,8 +1,6 @@
 ﻿using Asp.Versioning;
 using CourseTech.Domain.Constants.Route;
-using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

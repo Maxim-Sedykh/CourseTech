@@ -1,6 +1,5 @@
 ﻿using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Result;
 using System.Security.Claims;
 
 namespace CourseTech.Domain.Interfaces.Services;

@@ -1,9 +1,9 @@
-﻿using CourseTech.Domain.Dto.Category;
+﻿using CourseTech.Domain;
+using CourseTech.Domain.Dto.Category;
 using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 
 namespace CourseTech.Application.Services
 {
@@ -20,67 +20,46 @@ namespace CourseTech.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<DataResult<QuestionDto>> GetRandomQuestionAsync(QuestionFilterDto filter)
+        public async Task<Result<QuestionDto>> GetRandomQuestionAsync(QuestionFilterDto filter)
         {
-            try
-            {
-                var category = await _categoryRepository.GetByIdAsync(filter.CategoryId);
-                if (category == null)
-                    return DataResult<QuestionDto>.Failure("Категория не найдена");
+            var category = await _categoryRepository.GetByIdAsync(filter.CategoryId);
+            if (category == null)
+                return Result<QuestionDto>.Failure("Категория не найдена");
 
-                var question = await _questionRepository.GetRandomAsync(
-                    filter.CategoryId,
-                    filter.Difficulty,
-                    filter.ExcludedQuestionIds);
+            var question = await _questionRepository.GetRandomAsync(
+                filter.CategoryId,
+                filter.Difficulty,
+                filter.ExcludedQuestionIds);
 
-                if (question == null)
-                    return DataResult<QuestionDto>.Failure("Вопросы по заданным критериям не найдены");
+            if (question == null)
+                return Result<QuestionDto>.Failure("Вопросы по заданным критериям не найдены");
 
-                var questionDto = MapToQuestionDto(question, category);
-                return DataResult<QuestionDto>.Success(questionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<QuestionDto>.Failure($"Ошибка при получении вопроса: {ex.Message}");
-            }
+            var questionDto = MapToQuestionDto(question, category);
+            return Result.Success(questionDto);
         }
 
-        public async Task<DataResult<QuestionDto>> GetQuestionByIdAsync(int questionId)
+        public async Task<Result<QuestionDto>> GetQuestionByIdAsync(int questionId)
         {
-            try
-            {
-                var question = await _questionRepository.GetByIdAsync(questionId);
-                if (question == null)
-                    return DataResult<QuestionDto>.Failure("Вопрос не найден");
+            var question = await _questionRepository.GetByIdAsync(questionId);
+            if (question == null)
+                return Result<QuestionDto>.Failure("Вопрос не найден");
 
-                var category = await _categoryRepository.GetByIdAsync(question.CategoryId);
-                var questionDto = MapToQuestionDto(question, category);
+            var category = await _categoryRepository.GetByIdAsync(question.CategoryId);
+            var questionDto = MapToQuestionDto(question, category);
 
-                return DataResult<QuestionDto>.Success(questionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<QuestionDto>.Failure($"Ошибка при получении вопроса: {ex.Message}");
-            }
+            return Result.Success(questionDto);
         }
 
         public async Task<CollectionResult<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId)
         {
-            try
-            {
-                var category = await _categoryRepository.GetByIdAsync(categoryId);
-                if (category == null)
-                    return CollectionResult<QuestionDto>.Failure("Категория не найдена");
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+                return CollectionResult<QuestionDto>.Failure("Категория не найдена");
 
-                var questions = await _questionRepository.GetByCategoryIdAsync(categoryId);
-                var questionDtos = questions.Select(q => MapToQuestionDto(q, category)).ToList();
+            var questions = await _questionRepository.GetByCategoryIdAsync(categoryId);
+            var questionDtos = questions.Select(q => MapToQuestionDto(q, category)).ToList();
 
-                return CollectionResult<QuestionDto>.Success(questionDtos);
-            }
-            catch (Exception ex)
-            {
-                return CollectionResult<QuestionDto>.Failure($"Ошибка при получении вопросов: {ex.Message}");
-            }
+            return CollectionResult<QuestionDto>.Success(questionDtos);
         }
 
         private QuestionDto MapToQuestionDto(Question question, Category category)

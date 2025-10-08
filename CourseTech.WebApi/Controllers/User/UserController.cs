@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.User;
 using CourseTech.Domain;
-using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Interfaces.Services;

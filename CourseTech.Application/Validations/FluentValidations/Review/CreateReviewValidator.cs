@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Constants.Validation;
-using CourseTech.Domain.Dto.Review;
 using FluentValidation;
 
 namespace CourseTech.Application.Validations.FluentValidations.Review;

@@ -1,8 +1,6 @@
-﻿using CourseTech.Application.Resources;
-using CourseTech.Domain;
+﻿using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.UserProfile;
-using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Services;
 using MediatR;

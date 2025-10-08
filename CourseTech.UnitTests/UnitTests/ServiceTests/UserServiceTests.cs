@@ -2,7 +2,6 @@
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Enum;
 using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;

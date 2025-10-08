@@ -1,6 +1,4 @@
-﻿using CourseTech.Domain.Constants.Validation;
-
-namespace CourseTech.Domain.Constants
+﻿namespace CourseTech.Domain.Constants
 {
     public class ErrorMessages
     {

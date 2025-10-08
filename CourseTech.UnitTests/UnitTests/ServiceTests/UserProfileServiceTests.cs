@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Enum;
 using CourseTech.Tests.Configurations.Fixture;
 using Moq;
 using StackExchange.Redis;

@@ -11,14 +11,14 @@ public class UserValidator : IUserValidator
     {
         if (user is null)
         {
-            return Result.Error(string.Empty);
+            return Result.Failure(string.Empty);
         }
 
         if (userProfile is null)
         {
-            return Result.Error(string.Empty);
+            return Result.Failure(string.Empty);
         }
 
-        return Result.Ok();
+        return Result.Success();
     }
 }

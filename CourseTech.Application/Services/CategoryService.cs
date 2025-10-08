@@ -1,8 +1,8 @@
-﻿using CourseTech.Domain.Dto.Category;
+﻿using CourseTech.Domain;
+using CourseTech.Domain.Dto.Category;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.Services
@@ -20,44 +20,30 @@ namespace CourseTech.Application.Services
             _questionRepository = questionRepository;
         }
 
-        public async Task<CollectionResult<CategoryDto>> GetCategoriesAsync()
+        public async Task<Result<List<CategoryDto>>> GetCategoriesAsync()
         {
-            try
-            {
-                var categories = await _categoryRepository.GetAll().ToArrayAsync();
-                var categoryDtos = new List<CategoryDto>();
+            var categories = await _categoryRepository.GetAll().ToArrayAsync();
+            var categoryDtos = new List<CategoryDto>();
 
-                foreach (var category in categories)
-                {
-                    var questionsCount = await _questionRepository.GetCountByCategoryIdAsync(category.Id);
-                    categoryDtos.Add(MapToCategoryDto(category, questionsCount));
-                }
-
-                return CollectionResult<CategoryDto>.Success(categoryDtos);
-            }
-            catch (Exception ex)
+            foreach (var category in categories)
             {
-                return CollectionResult<CategoryDto>.Failure($"Ошибка при получении категорий: {ex.Message}");
+                var questionsCount = await _questionRepository.GetCountByCategoryIdAsync(category.Id);
+                categoryDtos.Add(MapToCategoryDto(category, questionsCount));
             }
+
+            return Result.Success(categoryDtos);
         }
 
-        public async Task<DataResult<CategoryDto>> GetCategoryByIdAsync(int categoryId)
+        public async Task<Result<CategoryDto>> GetCategoryByIdAsync(int categoryId)
         {
-            try
-            {
-                var category = await _categoryRepository.GetByIdAsync(categoryId);
-                if (category == null)
-                    return DataResult<CategoryDto>.Failure("Category is not found");
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+                return Result<CategoryDto>.Failure("Category is not found");
 
-                var questionsCount = await _questionRepository.GetCountByCategoryIdAsync(categoryId);
-                var categoryDto = MapToCategoryDto(category, questionsCount);
+            var questionsCount = await _questionRepository.GetCountByCategoryIdAsync(categoryId);
+            var categoryDto = MapToCategoryDto(category, questionsCount);
 
-                return DataResult<CategoryDto>.Success(categoryDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<CategoryDto>.Failure($"Ошибка при получении категории: {ex.Message}");
-            }
+            return Result.Success(categoryDto);
         }
 
         private CategoryDto MapToCategoryDto(Category category, int questionsCount)

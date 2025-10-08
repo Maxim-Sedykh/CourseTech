@@ -12,7 +12,7 @@ namespace CourseTech.Domain.Interfaces.Services
         /// <summary>
         /// Получение прогресса по категориям.
         /// </summary>
-        Task<Result<CategoryProgressDto>> GetCategoryProgressAsync(Guid userId);
+        Task<CollectionResult<CategoryProgressDto>> GetCategoryProgressAsync(Guid userId);
 
         /// <summary>
         /// Получение сводки по сессии.

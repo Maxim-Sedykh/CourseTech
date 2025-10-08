@@ -19,8 +19,19 @@
         /// </summary>
         public T Data
         {
-            get => Success ? _data : throw new InvalidOperationException($"{nameof(Success)} : {Success}");
+            get => IsSuccess ? _data : throw new InvalidOperationException($"{nameof(Success)} : {Success}");
             private set => _data = value;
+        }
+
+        /// <summary>
+        /// Создание результата с ошибкой
+        /// </summary>
+        /// <typeparam name="T">Тип данных результата</typeparam>
+        /// <param name="error">Ошибка</param>
+        /// <returns>Результат с ошибкой</returns>
+        public static new Result<T> Failure(string error)
+        {
+            return new Result<T>([error]);
         }
     }
 }

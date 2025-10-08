@@ -12,17 +12,17 @@ public class AuthValidator(IPasswordHasher passwordHasher) : IAuthValidator
     {
         if (user == null)
         {
-            return Result.Error(string.Empty);
+            return Result.Failure(string.Empty);
         }
 
         bool verified = passwordHasher.Verify(enteredPassword, passwordHash: user.Password);
 
         if (!verified)
         {
-            return Result.Error(string.Empty);
+            return Result.Failure(string.Empty);
         }
 
-        return Result.Ok();
+        return Result.Success();
     }
 
     /// <inheritdoc/>
@@ -30,14 +30,14 @@ public class AuthValidator(IPasswordHasher passwordHasher) : IAuthValidator
     {
         if (user != null)
         {
-            return Result.Error("User already exists");
+            return Result.Failure("User already exists");
         }
 
         if (enteredPassword != enteredPasswordConfirm)
         {
-            return Result.Error("Password not equals password confirm");
+            return Result.Failure("Password not equals password confirm");
         }
 
-        return Result.Ok();
+        return Result.Success();
     }
 }

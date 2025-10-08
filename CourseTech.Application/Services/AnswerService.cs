@@ -38,14 +38,14 @@ namespace CourseTech.Application.Services
         {
             var session = await _sessionRepository.GetByIdAsync(dto.SessionId);
             if (session == null || session.UserId != userId)
-                return Result.Error<AnswerResultDto>("Session is not found");
+                return Result<AnswerResultDto>.Failure("Session is not found");
 
             if (session.FinishedAt.HasValue)
-                return Result.Error<AnswerResultDto>("Session is already completed");
+                return Result<AnswerResultDto>.Failure("Session is already completed");
 
             var question = await _questionRepository.GetByIdAsync(dto.QuestionId);
             if (question == null)
-                return Result.Error<AnswerResultDto>("Question is not found");
+                return Result<AnswerResultDto>.Failure("Question is not found");
 
 
             var audioFileUrl = await _fileStorageService.SaveAudioFileAsync(dto.AudioFile);
@@ -80,18 +80,18 @@ namespace CourseTech.Application.Services
                 Analysis = analysisResult.IsSuccess ? analysisResult.Data : null
             };
 
-            return Result.Ok(resultDto);
+            return Result.Success(resultDto);
         }
 
         public async Task<Result<AnswerAnalysisDto>> GetAnswerAnalysisAsync(long answerId, Guid userId)
         {
             var answer = await _answerRepository.GetByIdAsync(answerId);
             if (answer == null)
-                return Result.Error<AnswerAnalysisDto>(string.Empty); // TODO заменить все стринг эмпти на нормальные сообщения на английском.
+                return Result<AnswerAnalysisDto>.Failure(string.Empty); // TODO заменить все стринг эмпти на нормальные сообщения на английском.
 
             var session = await _sessionRepository.GetByIdAsync(answer.SessionId);
             if (session == null || session.UserId != userId)
-                return Result.Error<AnswerAnalysisDto>(string.Empty);
+                return Result<AnswerAnalysisDto>.Failure(string.Empty);
 
             // Здесь можно получить анализ из базы, если он сохраняется
             // Пока возвращаем заглушку
@@ -110,7 +110,7 @@ namespace CourseTech.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            return Result.Ok(analysis);
+            return Result.Success(analysis);
         }
 
         public async Task<Result<List<AnswerDto>>> GetUserAnswersAsync(Guid userId, AnswerFilterDto filter)
@@ -126,7 +126,7 @@ namespace CourseTech.Application.Services
                 answerDtos.Add(MapToAnswerDto(answer, question, session));
             }
 
-            return Result.Ok(answerDtos);
+            return Result.Success(answerDtos);
         }
 
         private AnswerDto MapToAnswerDto(Answer answer, Question question, Session session)

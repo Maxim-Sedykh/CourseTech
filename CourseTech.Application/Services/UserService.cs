@@ -1,14 +1,11 @@
-﻿using CourseTech.Application.Resources;
-using CourseTech.Domain;
+﻿using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
-using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
-using MediatR;
 using System.Data;
 using ILogger = Serilog.ILogger;
 

@@ -15,7 +15,7 @@ public class Session : IEntityId<long>, ICreatable
     /// </summary>
     public Guid UserId { get; set; }
 
-    public long CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
     /// <summary>
     /// Пользователь.

@@ -1,10 +1,6 @@
 ﻿using Asp.Versioning;
 using CourseTech.Application.Validations.FluentValidations.Role;
-using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
-using CourseTech.Domain.Dto.Role;
-using CourseTech.Domain.Dto.UserRole;
-using CourseTech.Domain.Result;
 using CourseTech.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

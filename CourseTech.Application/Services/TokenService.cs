@@ -1,9 +1,9 @@
-﻿using CourseTech.Application.Resources;
+﻿using CourseTech.Application.Commands.UserTokenCommands;
+using CourseTech.Domain;
 using CourseTech.Domain.Dto.Token;
 using CourseTech.Domain.Entities.UserRelated;
-using CourseTech.Domain.Enum;
+using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
 using CourseTech.Domain.Settings;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -15,7 +15,7 @@ using System.Text;
 
 namespace CourseTech.Application.Services;
 
-public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : ITokenService
+public class TokenService(IMediator mediator, IOptions<JwtSettings> options, IUserRepository userRepository) : ITokenService
 {
     private readonly IMediator _mediator = mediator;
     private readonly string _jwtKey = options.Value.JwtKey;
@@ -48,29 +48,23 @@ public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : I
     /// <inheritdoc/>
     public List<Claim> GetClaimsFromUser(User user)
     {
-        if (user == null)
+        if (user != null)
         {
-            throw new ArgumentNullException(nameof(user), ErrorMessage.UserNotFound);
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.Login),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Role, user.Role.ToString()),
+            };
+
+            return claims;
         }
 
-        if (user.Roles == null)
-        {
-            throw new ArgumentNullException(nameof(user.Roles), ErrorMessage.UserRolesNotFound);
-        }
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, user.Login),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        };
-
-        claims.AddRange(user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
-
-        return claims;
+        throw new ArgumentNullException(nameof(user));
     }
 
     /// <inheritdoc/>
-    public async Task<DataResult<TokenDto>> RefreshToken(TokenDto dto)
+    public async Task<Result<TokenDto>> RefreshToken(TokenDto dto)
     {
         string accessToken = dto.AccessToken;
         string refreshToken = dto.RefreshToken;
@@ -78,12 +72,12 @@ public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : I
         var claimsPrincipal = GetPrincipalFromExpiredToken(accessToken);
         var login = claimsPrincipal.Identity?.Name;
 
-        var user = await _mediator.Send(new GetUserWithTokenAndRolesByLoginQuery(login));
+        var user = await userRepository.GetByLoginAsync(login);
 
         if (user == null || user.UserToken.RefreshToken != refreshToken ||
             user.UserToken.RefreshTokenExpireTime <= DateTime.UtcNow)
         {
-            return DataResult<TokenDto>.Failure((int)ErrorCode.InvalidClientRequest, ErrorMessage.InvalidClientRequest);
+            return Result<TokenDto>.Failure("Invalid client request");
         }
 
         var newClaims = GetClaimsFromUser(user);
@@ -93,7 +87,7 @@ public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : I
 
         await _mediator.Send(new UpdateUserTokenCommand(user.UserToken, newRefreshToken));
 
-        return DataResult<TokenDto>.Success(new TokenDto()
+        return Result.Success(new TokenDto()
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
@@ -124,7 +118,7 @@ public class TokenService(IMediator mediator, IOptions<JwtSettings> options) : I
         if (securityToken is not JwtSecurityToken jwtSecurityToken ||
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
         {
-            throw new SecurityTokenException(ErrorMessage.InvalidToken);
+            throw new SecurityTokenException("Invalid token");
         }
 
         return claimsPrincipal;

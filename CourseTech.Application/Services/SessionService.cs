@@ -7,7 +7,7 @@ using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
-using CourseTech.Domain.Result;
+using CourseTech.Domain;
 
 namespace CourseTech.Application.Services
 {
@@ -33,113 +33,88 @@ namespace CourseTech.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<DataResult<SessionDto>> StartSessionAsync(SessionConfigDto config, Guid userId)
+        public async Task<Result<SessionDto>> StartSessionAsync(SessionConfigDto config, Guid userId)
         {
-            try
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                return Result<SessionDto>.Failure("Пользователь не найден");
+
+            var category = await _categoryRepository.GetByIdAsync(config.CategoryId);
+            if (category == null)
+                return Result<SessionDto>.Failure("Категория не найдена");
+
+            var session = new Session
             {
-                var user = await _userRepository.GetByIdAsync(userId);
-                if (user == null)
-                    return DataResult<SessionDto>.Failure("Пользователь не найден");
+                UserId = userId,
+                CategoryId = config.CategoryId,
+                CreatedAt = DateTime.UtcNow
+            };
 
-                var category = await _categoryRepository.GetByIdAsync(config.CategoryId);
-                if (category == null)
-                    return DataResult<SessionDto>.Failure("Категория не найдена");
+            await _sessionRepository.CreateAsync(session);
 
-                var session = new Session
-                {
-                    UserId = userId,
-                    CategoryId = config.CategoryId,
-                    CreatedAt = DateTime.UtcNow
-                };
+            var sessionDto = await MapToSessionDto(session, user, category);
 
-                await _sessionRepository.AddAsync(session);
-
-                var sessionDto = await MapToSessionDto(session, user, category);
-                return DataResult<SessionDto>.Success(sessionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<SessionDto>.Failure($"Ошибка при создании сессии: {ex.Message}");
-            }
+            return Result.Success(sessionDto);
         }
 
-        public async Task<DataResult<QuestionDto>> GetNextQuestionAsync(long sessionId, Guid userId)
+        public async Task<Result<QuestionDto>> GetNextQuestionAsync(long sessionId, Guid userId)
         {
-            try
-            {
-                var session = await _sessionRepository.GetByIdAsync(sessionId);
-                if (session == null || session.UserId != userId)
-                    return DataResult<QuestionDto>.Failure("Сессия не найдена");
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null || session.UserId != userId)
+                return Result<QuestionDto>.Failure("Сессия не найдена");
 
-                if (session.FinishedAt.HasValue)
-                    return DataResult<QuestionDto>.Failure("Сессия уже завершена");
+            if (session.FinishedAt.HasValue)
+                return Result<QuestionDto>.Failure("Сессия уже завершена");
 
-                // Получаем ID уже отвеченных вопросов в этой сессии
-                var answeredQuestionIds = await _answerRepository.GetQuestionIdsBySessionIdAsync(sessionId);
+            // Получаем ID уже отвеченных вопросов в этой сессии
+            var answeredQuestionIds = await _answerRepository.GetQuestionIdsBySessionIdAsync(sessionId);
 
-                var question = await _questionRepository.GetRandomAsync(
-                    session.CategoryId,
-                    null, // difficulty можно брать из сессии, если добавить это поле
-                    answeredQuestionIds.Select(id => (int)id).ToList());
+            var question = await _questionRepository.GetRandomAsync(
+                session.CategoryId,
+                null, // difficulty можно брать из сессии, если добавить это поле
+                [.. answeredQuestionIds.Select(id => (int)id)]);
 
-                if (question == null)
-                    return DataResult<QuestionDto>.Failure("Нет доступных вопросов для этой сессии");
+            if (question == null)
+                return Result<QuestionDto>.Failure("Нет доступных вопросов для этой сессии");
 
-                var category = await _categoryRepository.GetByIdAsync(question.CategoryId);
-                var questionDto = MapToQuestionDto(question, category);
+            var category = await _categoryRepository.GetByIdAsync(question.CategoryId);
 
-                return DataResult<QuestionDto>.Success(questionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<QuestionDto>.Failure($"Ошибка при получении вопроса: {ex.Message}");
-            }
+            var questionDto = MapToQuestionDto(question, category);
+
+            return Result.Success(questionDto);
         }
 
-        public async Task<DataResult<SessionDto>> FinishSessionAsync(long sessionId, Guid userId)
+        public async Task<Result<SessionDto>> FinishSessionAsync(long sessionId, Guid userId)
         {
-            try
-            {
-                var session = await _sessionRepository.GetByIdAsync(sessionId);
-                if (session == null || session.UserId != userId)
-                    return DataResult<SessionDto>.Failure("Сессия не найдена");
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null || session.UserId != userId)
+                return Result<SessionDto>.Failure("Сессия не найдена");
 
-                if (session.FinishedAt.HasValue)
-                    return DataResult<SessionDto>.Failure("Сессия уже завершена");
+            if (session.FinishedAt.HasValue)
+                return Result<SessionDto>.Failure("Сессия уже завершена");
 
-                session.FinishedAt = DateTime.UtcNow;
-                await _sessionRepository.UpdateAsync(session);
+            session.FinishedAt = DateTime.UtcNow;
+            _sessionRepository.Update(session);
+            await _sessionRepository.SaveChangesAsync();
 
-                var user = await _userRepository.GetByIdAsync(userId);
-                var category = await _categoryRepository.GetByIdAsync(session.CategoryId);
-                var sessionDto = await MapToSessionDto(session, user, category);
+            var user = await _userRepository.GetByIdAsync(userId);
+            var category = await _categoryRepository.GetByIdAsync(session.CategoryId);
+            var sessionDto = await MapToSessionDto(session, user, category);
 
-                return DataResult<SessionDto>.Success(sessionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<SessionDto>.Failure($"Ошибка при завершении сессии: {ex.Message}");
-            }
+            return Result.Success(sessionDto);
         }
 
-        public async Task<DataResult<SessionDto>> GetSessionByIdAsync(long sessionId, Guid userId)
+        public async Task<Result<SessionDto>> GetSessionByIdAsync(long sessionId, Guid userId)
         {
-            try
-            {
-                var session = await _sessionRepository.GetByIdAsync(sessionId);
-                if (session == null || session.UserId != userId)
-                    return DataResult<SessionDto>.Failure("Сессия не найдена");
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null || session.UserId != userId)
+                return Result<SessionDto>.Failure("Сессия не найдена");
 
-                var user = await _userRepository.GetByIdAsync(userId);
-                var category = await _categoryRepository.GetByIdAsync(session.CategoryId);
-                var sessionDto = await MapToSessionDto(session, user, category);
+            var user = await _userRepository.GetByIdAsync(userId);
+            var category = await _categoryRepository.GetByIdAsync(session.CategoryId);
+            var sessionDto = await MapToSessionDto(session, user, category);
 
-                return DataResult<SessionDto>.Success(sessionDto);
-            }
-            catch (Exception ex)
-            {
-                return DataResult<SessionDto>.Failure($"Ошибка при получении сессии: {ex.Message}");
-            }
+            return Result.Success(sessionDto);
         }
 
         private async Task<SessionDto> MapToSessionDto(Session session, User user, Category category)
