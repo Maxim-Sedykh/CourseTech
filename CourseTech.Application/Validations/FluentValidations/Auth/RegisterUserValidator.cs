@@ -14,10 +14,6 @@ public class RegisterUserValidator : AbstractValidator<RegisterUserDto>
     {
         RuleFor(x => x.Login).ValidateLogin();
 
-        RuleFor(x => x.UserName).ValidateUserName();
-
-        RuleFor(x => x.Surname).ValidateUserSurname();
-
         RuleFor(x => x.DateOfBirth)
             .NotEmpty().WithMessage(ValidationErrorMessages.DateOfBirthNotEmptyMessage)
             .Must(x => BeValidDateOfBirth(x)).WithMessage(ValidationErrorMessages.ValidDateOfBirthMessage);

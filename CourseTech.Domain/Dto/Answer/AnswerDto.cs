@@ -13,6 +13,6 @@ namespace CourseTech.Domain.Dto.Answer
         public DateTime CreatedAt { get; set; }
         public QuestionDto Question { get; set; }
         public SessionDto Session { get; set; }
-        public AnswerAnalysisDto Analysis { get; set; }
+        //public AnswerAnalysisDto Analysis { get; set; }
     }
 }

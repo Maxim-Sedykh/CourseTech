@@ -13,5 +13,5 @@ public interface IUserValidator
     /// <param name="userProfile"></param>
     /// <param name="user"></param>
     /// <returns></returns>
-    Result ValidateDeletingUser(UserProfile userProfile, User user);
+    Result ValidateDeletingUser(User user);
 }

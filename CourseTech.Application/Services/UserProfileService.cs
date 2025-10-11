@@ -1,7 +1,9 @@
-﻿using CourseTech.Domain;
+﻿using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Interfaces.Cache;
+using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using MediatR;
 
@@ -9,31 +11,31 @@ namespace CourseTech.Application.Services;
 
 public class UserProfileService(
     ICacheService cacheService,
+    IUserProfileRepository userProfileRepository,
     IMediator mediator) : IUserProfileService
 {
     /// <inheritdoc/>
-    public async Task<DataResult<UserProfileDto>> GetUserProfileAsync(Guid userId)
+    public async Task<Result<UserProfileDto>> GetUserProfileAsync(Guid userId)
     {
         var profileDto = await cacheService.GetOrAddToCache(
             $"{CacheKeys.UserProfile}{userId}",
-            async () => await mediator.Send(new GetUserProfileDtoByUserIdQuery(userId)));
+            async () => await userProfileRepository.GetByUserIdAsync(userId));
 
         if (profileDto is null)
         {
-            return DataResult<UserProfileDto>.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return Result<UserProfileDto>.Failure("User profile not found");
         }
 
-        return DataResult<UserProfileDto>.Success(profileDto);
+        return Result.Success(new UserProfileDto()); //TODO заглушечка впадлу мапить пока
     }
 
     /// <inheritdoc/>
     public async Task<Result> UpdateUserProfileAsync(UpdateUserProfileDto dto, Guid userId)
     {
-        var profile = await mediator.Send(new GetProfileByUserIdQuery(userId));
-
+        var profile = await userProfileRepository.GetByUserIdAsync(userId);
         if (profile is null)
         {
-            return Result.Failure((int)ErrorCode.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
+            return Result.Failure("User profile not found");
         }
 
         await mediator.Send(new UpdateUserProfileCommand(dto, profile));

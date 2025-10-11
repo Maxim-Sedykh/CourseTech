@@ -12,7 +12,7 @@ public interface IUserService
     /// Получение всех пользователей.
     /// </summary>
     /// <returns></returns>
-    Task<Result<UserDto>> GetUsersAsync();
+    Task<CollectionResult<UserDto>> GetUsersAsync();
 
     /// <summary>
     /// Удаление пользователя по идентификатору.

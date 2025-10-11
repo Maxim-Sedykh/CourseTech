@@ -20,5 +20,12 @@ namespace CourseTech.DAL.Repositories
         {
             return await _table.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<User> GetUserWithProfileById(Guid userId)
+        {
+            return await _table
+                .Include(x => x.UserProfile)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+        }
     }
 }

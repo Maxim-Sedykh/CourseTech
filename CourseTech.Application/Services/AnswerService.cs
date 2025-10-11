@@ -15,23 +15,23 @@ namespace CourseTech.Application.Services
         private readonly ISessionRepository _sessionRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnalysisService _analysisService;
-        private readonly IFileStorageService _fileStorageService;
-        private readonly ISpeechToTextService _speechToTextService;
+        //private readonly IFileStorageService _fileStorageService;
+        //private readonly ISpeechToTextService _speechToTextService;
 
         public AnswerService(
             IAnswerRepository answerRepository,
             ISessionRepository sessionRepository,
             IQuestionRepository questionRepository,
-            IAnalysisService analysisService,
-            IFileStorageService fileStorageService,
-            ISpeechToTextService speechToTextService)
+            IAnalysisService analysisService)/*,*/
+            //IFileStorageService fileStorageService,
+            //ISpeechToTextService speechToTextService)
         {
             _answerRepository = answerRepository;
             _sessionRepository = sessionRepository;
             _questionRepository = questionRepository;
             _analysisService = analysisService;
-            _fileStorageService = fileStorageService;
-            _speechToTextService = speechToTextService;
+            //_fileStorageService = fileStorageService;
+            //_speechToTextService = speechToTextService;
         }
 
         public async Task<Result<AnswerResultDto>> ProcessAnswerAsync(ProcessAnswerDto dto, Guid userId)
@@ -48,16 +48,16 @@ namespace CourseTech.Application.Services
                 return Result<AnswerResultDto>.Failure("Question is not found");
 
 
-            var audioFileUrl = await _fileStorageService.SaveAudioFileAsync(dto.AudioFile);
+            //var audioFileUrl = await _fileStorageService.SaveAudioFileAsync(dto.AudioFile);
 
-            var transcribedText = await _speechToTextService.TranscribeAsync(dto.AudioFile);
+            //var transcribedText = await _speechToTextService.TranscribeAsync(dto.AudioFile);
 
             var answer = new Answer
             {
                 SessionId = dto.SessionId,
                 QuestionId = dto.QuestionId,
-                AudioFileUrl = audioFileUrl,
-                TranscribedText = transcribedText,
+                AudioFileUrl = string.Empty,
+                TranscribedText = string.Empty,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -68,7 +68,7 @@ namespace CourseTech.Application.Services
             {
                 AnswerId = answer.Id,
                 Question = question.Title,
-                Answer = transcribedText,
+                Answer = string.Empty,
                 KeyPoints = question.KeyPoints?.Split(',').ToList() ?? new List<string>(),
                 ExampleAnswer = question.ExampleAnswer
             });

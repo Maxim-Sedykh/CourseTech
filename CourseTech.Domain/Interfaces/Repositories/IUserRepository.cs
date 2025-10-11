@@ -7,5 +7,6 @@ namespace CourseTech.Domain.Interfaces.Repositories
     {
         Task<User> GetByLoginAsync(string login);
         Task<User> GetByEmailAsync(string email);
+        Task<User> GetUserWithProfileById(Guid userId);
     }
 }

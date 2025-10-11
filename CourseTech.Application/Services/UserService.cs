@@ -1,4 +1,7 @@
-﻿using CourseTech.Domain;
+﻿using CourseTech.Application.Commands.UserCommands;
+using CourseTech.Application.Commands.UserProfileCommands;
+using CourseTech.Application.Commands.UserTokenCommands;
+using CourseTech.Domain;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.User;
 using CourseTech.Domain.Interfaces.Cache;
@@ -6,6 +9,8 @@ using CourseTech.Domain.Interfaces.Databases;
 using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Interfaces.Validators;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using ILogger = Serilog.ILogger;
 
@@ -14,7 +19,8 @@ namespace CourseTech.Application.Services;
 public class UserService(
     ICacheService cacheService,
     IUserRepository userRepository,
-    IUserProfileRepository userProfileRepository,
+    IUserTokenRepository userTokenRepository,
+    IMediator mediator,
     IUnitOfWork unitOfWork,
     ILogger logger,
     IUserValidator userValidator) : IUserService
@@ -22,23 +28,22 @@ public class UserService(
     /// <inheritdoc/>
     public async Task<Result> DeleteUserAsync(Guid userId)
     {
-        var user = await userRepository.GetByIdAsync(userId);
-        var userProfile = await userProfileRepository.GetByIdAsync(user);
+        var user = await userRepository.GetUserWithProfileById(userId);
 
-        var validationResult = userValidator.ValidateDeletingUser(userProfile, user);
+        var validationResult = userValidator.ValidateDeletingUser(user);
         if (!validationResult.IsSuccess)
         {
-            return Result.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
+            return Result.Failure(validationResult.Errors);
         }
 
-        var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
+        var userToken = await userTokenRepository.GetByUserIdAsync(userId);
 
         using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
         {
             try
             {
                 await mediator.Send(new DeleteUserCommand(user));
-                await mediator.Send(new DeleteUserProfileCommand(userProfile));
+                await mediator.Send(new DeleteUserProfileCommand(user.UserProfile));
 
                 if (userToken != null)
                 {
@@ -57,7 +62,7 @@ public class UserService(
 
                 await transaction.RollbackAsync();
 
-                return Result.Failure((int)ErrorCode.DeleteUserFailed, ErrorMessage.DeleteUserFailed);
+                return Result.Failure("Transaction of deleting user is failed");
             }
         }
 
@@ -65,16 +70,16 @@ public class UserService(
     }
 
     /// <inheritdoc/>
-    public async Task<DataResult<UpdateUserDto>> GetUserByIdAsync(Guid userId)
+    public async Task<Result<UpdateUserDto>> GetUserByIdAsync(Guid userId)
     {
-        var user = await mediator.Send(new GetUpdateUserDtoByUserIdQuery(userId));
+        var user = new UpdateUserDto(); //TODO заглушечка
 
         if (user is null)
         {
-            return DataResult<UpdateUserDto>.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
+            return Result<UpdateUserDto>.Failure("User not found");
         }
 
-        return DataResult<UpdateUserDto>.Success(user);
+        return Result.Success(user);
     }
 
     /// <inheritdoc/>
@@ -82,25 +87,25 @@ public class UserService(
     {
         var users = await cacheService.GetOrAddToCache(
             CacheKeys.Users,
-            async () => await mediator.Send(new GetUserDtosQuery()));
+            async () => await userRepository.GetAll().ToListAsync());
 
-        return CollectionResult<UserDto>.Success(users);
+        return CollectionResult<UserDto>.Success(users.Select(x => new UserDto())); //TODO заглушечка
     }
 
     /// <inheritdoc/>
-    public async Task<DataResult<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
+    public async Task<Result<UpdateUserDto>> UpdateUserDataAsync(UpdateUserDto dto)
     {
-        var user = await mediator.Send(new GetUserWithProfileByUserIdQuery(dto.Id));
+        var user = await userRepository.GetUserWithProfileById(dto.Id);
 
         if (user is null)
         {
-            return DataResult<UpdateUserDto>.Failure((int)ErrorCode.UserNotFound, ErrorMessage.UserNotFound);
+            return Result<UpdateUserDto>.Failure("User not found");
         }
 
         await mediator.Send(new UpdateUserCommand(dto, user));
 
         await cacheService.RemoveAsync(CacheKeys.Users);
 
-        return DataResult<UpdateUserDto>.Success(dto);
+        return Result.Success(dto);
     }
 }

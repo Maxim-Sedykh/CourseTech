@@ -30,4 +30,8 @@
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Interview\" />
+  </ItemGroup>
+
 </Project>
