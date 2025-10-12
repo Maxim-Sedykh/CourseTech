@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="GraphX" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
@@ -26,10 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CourseTech.ChatGptServices\CourseTech.ChatGptApi.csproj" />
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

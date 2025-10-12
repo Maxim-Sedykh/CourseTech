@@ -1,4 +1,5 @@
 ﻿using CourseTech.DAL.Cache;
+using CourseTech.Domain.Dto.Category;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using System.Text.Json;
@@ -22,7 +23,7 @@ public class CacheServiceTests
     {
         // Arrange
         var key = "testKey";
-        var obj = new UserAnalysDto { Analys = "Test" };
+        var obj = new CategoryDto { Name = "Test" };
         var options = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
@@ -46,16 +47,16 @@ public class CacheServiceTests
     {
         // Arrange
         var key = "testKey";
-        var obj = new UserAnalysDto() { Analys = "Test" };
+        var obj = new CategoryDto() { Name = "Test" };
         var serializedObj = JsonSerializer.SerializeToUtf8Bytes(obj);
         _mockCache.Setup(cache => cache.GetAsync(key, It.IsAny<CancellationToken>())).ReturnsAsync(serializedObj);
 
         // Act
-        var result = await _cacheService.GetObjectAsync<UserAnalysDto>(key);
+        var result = await _cacheService.GetObjectAsync<CategoryDto>(key);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Test", result.Analys);
+        Assert.Equal("Test", result.Name);
     }
 
     [Fact]

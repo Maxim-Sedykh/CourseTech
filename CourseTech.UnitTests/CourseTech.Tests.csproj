@@ -31,4 +31,10 @@
     <ProjectReference Include="..\CourseTech.Domain\CourseTech.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\Fixture\" />
+    <Folder Include="UnitTests\ServiceTests\" />
+    <Folder Include="IntegrationTests\" />
+  </ItemGroup>
+
 </Project>

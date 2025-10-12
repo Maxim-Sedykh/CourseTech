@@ -1,10 +1,9 @@
-﻿namespace CourseTech.Domain.Interfaces.Entities
+﻿namespace CourseTech.Domain.Interfaces.Entities;
+
+public interface ICreatable
 {
-    public interface ICreatable
-    {
-        /// <summary>
-        /// Получает или задает дату и время создания сущности.
-        /// </summary>
-        DateTime CreatedAt { get; set; }
-    }
+    /// <summary>
+    /// Получает или задает дату и время создания сущности.
+    /// </summary>
+    DateTime CreatedAt { get; set; }
 }

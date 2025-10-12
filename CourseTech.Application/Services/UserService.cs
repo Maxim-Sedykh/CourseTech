@@ -83,13 +83,13 @@ public class UserService(
     }
 
     /// <inheritdoc/>
-    public async Task<CollectionResult<UserDto>> GetUsersAsync()
+    public async Task<Result<UserDto[]>> GetUsersAsync()
     {
         var users = await cacheService.GetOrAddToCache(
             CacheKeys.Users,
             async () => await userRepository.GetAll().ToListAsync());
 
-        return CollectionResult<UserDto>.Success(users.Select(x => new UserDto())); //TODO заглушечка
+        return Result<UserDto>.Success(users.Select(x => new UserDto()).ToArray()); //TODO заглушечка
     }
 
     /// <inheritdoc/>

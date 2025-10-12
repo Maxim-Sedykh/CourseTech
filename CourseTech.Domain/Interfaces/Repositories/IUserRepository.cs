@@ -1,12 +1,11 @@
 ﻿using CourseTech.Domain.Entities.UserRelated;
 using CourseTech.Domain.Interfaces.Repositories.Base;
 
-namespace CourseTech.Domain.Interfaces.Repositories
+namespace CourseTech.Domain.Interfaces.Repositories;
+
+public interface IUserRepository : IBaseRepository<User, Guid>
 {
-    public interface IUserRepository : IBaseRepository<User, Guid>
-    {
-        Task<User> GetByLoginAsync(string login);
-        Task<User> GetByEmailAsync(string email);
-        Task<User> GetUserWithProfileById(Guid userId);
-    }
+    Task<User> GetByLoginAsync(string login);
+    Task<User> GetByEmailAsync(string email);
+    Task<User> GetUserWithProfileById(Guid userId);
 }

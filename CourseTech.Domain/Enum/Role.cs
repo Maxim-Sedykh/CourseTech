@@ -1,9 +1,8 @@
-﻿namespace CourseTech.Domain.Enum
+﻿namespace CourseTech.Domain.Enum;
+
+public enum Role
 {
-    public enum Role
-    {
-        User = 0,
-        Moderator = 1,
-        Admin = 2
-    }
+    User = 0,
+    Moderator = 1,
+    Admin = 2
 }

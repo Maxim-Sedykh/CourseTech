@@ -32,12 +32,12 @@ public class ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
         var errorMessage = exception.Message;
         var response = exception switch
         {
-            UnauthorizedAccessException => Result.Failure((int)HttpStatusCode.Unauthorized, errorMessage),
-            _ => Result.Failure((int)HttpStatusCode.InternalServerError, errorMessage),
+            UnauthorizedAccessException => Result.Failure($"{(int)HttpStatusCode.Unauthorized} - {errorMessage}"),
+            _ => Result.Failure($"{(int)HttpStatusCode.InternalServerError} - {errorMessage}"),
         };
 
         httpContext.Response.ContentType = MediaTypeNames.Application.Json;
-        httpContext.Response.StatusCode = (int)response.Error.Code;
+        httpContext.Response.StatusCode = 500;
         await httpContext.Response.WriteAsJsonAsync(response);
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace CourseTech.Domain.Dto.Subscription
+﻿namespace CourseTech.Domain.Dto.Subscription;
+
+public class ChangeSubscriptionDto
 {
-    public class ChangeSubscriptionDto
-    {
-        public int SubscriptionId { get; set; }
-    }
+    public int SubscriptionId { get; set; }
 }
