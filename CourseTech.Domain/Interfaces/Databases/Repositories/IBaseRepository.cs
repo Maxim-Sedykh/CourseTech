@@ -1,6 +1,4 @@
-﻿using CourseTech.Domain.Interfaces.Databases;
-
-namespace CourseTech.Domain.Interfaces.Repositories;
+﻿namespace CourseTech.Domain.Interfaces.Databases.Repositories;
 
 /// <summary>
 /// Абстракция для взаимодействия с базой данных, через DbContext.

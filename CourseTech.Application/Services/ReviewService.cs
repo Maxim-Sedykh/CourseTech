@@ -19,7 +19,7 @@ namespace CourseTech.Application.Services;
 public class ReviewService(
     ICacheService cacheService,
     IMediator mediator,
-    IUnitOfWork unitOfWork,
+    ITransactionManager unitOfWork,
     ILogger logger) : IReviewService
 {
     /// <inheritdoc/>

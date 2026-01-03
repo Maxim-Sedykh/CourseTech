@@ -3,7 +3,7 @@ using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
 using CourseTech.Domain.Dto.Lesson.LessonInfo;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Extensions;
-using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

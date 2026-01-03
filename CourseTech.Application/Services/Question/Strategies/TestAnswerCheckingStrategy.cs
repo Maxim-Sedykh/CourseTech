@@ -3,13 +3,15 @@ using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.Pass;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Interfaces.Dtos.Question;
-using CourseTech.Domain.Interfaces.Strategy;
+using CourseTech.Domain.Interfaces.Services.Question;
 
-namespace CourseTech.Application.Strategy.QuestionChecking
+namespace CourseTech.Application.Services.Question.Strategies
 {
     public class TestAnswerCheckingStrategy : IAnswerCheckingStrategy
     {
-        public Task<ICorrectAnswerDto> CheckAnswerAsync(IUserAnswerDto userAnswer, ICheckQuestionDto checkQuestion, UserGradeDto userGrade, float questionGrade)
+        public Type UserAnswerType { get; } = typeof(TestQuestionUserAnswerDto);
+
+        public Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, UserGradeDto userGrade, float questionGrade)
         {
             var testUserAnswer = (TestQuestionUserAnswerDto)userAnswer;
             var correctTestVariant = ((TestQuestionCheckingDto)checkQuestion).CorrectVariant;
@@ -28,7 +30,7 @@ namespace CourseTech.Application.Strategy.QuestionChecking
                 AnswerCorrectness = isCorrect
             };
 
-            return Task.FromResult((ICorrectAnswerDto)result);
+            return Task.FromResult((CorrectAnswerDtoBase)result);
         }
     }
 }

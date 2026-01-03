@@ -5,7 +5,7 @@ namespace CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 /// <summary>
 /// Модель данных для ответа пользователя на вопрос практического типа.
 /// </summary>
-public class PracticalQuestionUserAnswerDto : IUserAnswerDto
+public class PracticalQuestionUserAnswerDto : UserAnswerDtoBase
 {
     public int QuestionId { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.CQRS.Queries.Entities.UserQueries;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

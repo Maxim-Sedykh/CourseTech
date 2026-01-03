@@ -23,7 +23,7 @@ namespace CourseTech.Application.Services;
 public class UserService(
     ICacheService cacheService,
     IMediator mediator,
-    IUnitOfWork unitOfWork,
+    ITransactionManager unitOfWork,
     ILogger logger,
     IUserValidator userValidator) : IUserService
 {

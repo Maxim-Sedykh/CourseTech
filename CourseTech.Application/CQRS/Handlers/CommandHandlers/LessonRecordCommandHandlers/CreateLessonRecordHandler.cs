@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.CQRS.Commands.LessonRecordCommands;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.LessonRecordCommandHandlers;

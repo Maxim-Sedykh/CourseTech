@@ -16,7 +16,7 @@ public class RoleServiceFixture : IDisposable
 
     public Mock<IMediator> MediatorMock { get; }
 
-    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+    public Mock<ITransactionManager> UnitOfWorkMock { get; }
 
     public Mock<IMapper> MapperMock { get; }
 
@@ -30,7 +30,7 @@ public class RoleServiceFixture : IDisposable
     {
         CacheServiceMock = new Mock<ICacheService>();
         MediatorMock = new Mock<IMediator>();
-        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UnitOfWorkMock = new Mock<ITransactionManager>();
         MapperMock = new Mock<IMapper>();
         RoleValidatorMock = new Mock<IRoleValidator>();
         LoggerMock = new Mock<ILogger>();

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
-namespace CourseTech.DAL.Repositories;
+namespace CourseTech.DAL.Repositories.Base;
 
-public class UnitOfWork(CourseDbContext dbContext) : IUnitOfWork
+public class TransactionManager(CourseDbContext dbContext) : ITransactionManager
 {
     /// <inheritdoc/>
     public async Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)

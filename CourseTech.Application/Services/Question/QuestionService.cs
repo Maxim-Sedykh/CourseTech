@@ -13,31 +13,31 @@ using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
-using CourseTech.Domain.Interfaces.Services;
+using CourseTech.Domain.Interfaces.Services.Question;
 using CourseTech.Domain.Interfaces.Validators;
 using CourseTech.Domain.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ILogger = Serilog.ILogger;
 
-namespace CourseTech.Application.Services;
+namespace CourseTech.Application.Services.Question;
 
 public class QuestionService(
     ICacheService cacheService,
     IMediator mediator,
-    IUnitOfWork unitOfWork,
+    ITransactionManager unitOfWork,
     IQuestionAnswerChecker questionAnswerChecker,
     IQuestionValidator questionValidator,
     IBaseRepository<LessonRecord> lessonRecordRepository,
     ILogger logger) : IQuestionService
 {
     /// <inheritdoc/>
-    public async Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId, bool isDemoMode)
+    public async Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId)
     {
         var lesson = await mediator.Send(new GetLessonByIdQuery(lessonId));
-        var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lessonId, isDemoMode));
+        var questions = await mediator.Send(new GetLessonQuestionDtosQuery(lessonId));
 
         var lessonQuestionsValidationResult = questionValidator.ValidateLessonQuestions(lesson, questions);
         if (!lessonQuestionsValidationResult.IsSuccess)
@@ -50,7 +50,6 @@ public class QuestionService(
         {
             LessonId = lesson.Id,
             LessonType = lesson.LessonType,
-            IsDemoMode = isDemoMode,
             Questions = questions
         });
     }
@@ -68,7 +67,7 @@ public class QuestionService(
             return DataResult<PracticeCorrectAnswersDto>.Failure((int)validationResult.Error.Code, validationResult.Error.Message);
         }
 
-        var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id, dto.IsDemoMode));
+        var questions = await mediator.Send(new GetLessonCheckQuestionDtosQuery(lesson.Id));
 
         var questionValidationResult = questionValidator.ValidateQuestions(questions, dto.UserAnswerDtos.Count, lesson.LessonType);
         if (!questionValidationResult.IsSuccess)
@@ -92,7 +91,7 @@ public class QuestionService(
 
         if (profile.LessonsCompleted < lesson.Number)
         {
-            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade, dto.IsDemoMode);
+            await UpdateProfileAndCreateLessonRecord(profile, lesson.Id, userGrade.Grade);
         }
 
         return DataResult<PracticeCorrectAnswersDto>.Success(new PracticeCorrectAnswersDto()
@@ -109,7 +108,7 @@ public class QuestionService(
     /// <param name="lessonId"></param>
     /// <param name="userGrade"></param>
     /// <returns></returns>
-    private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, int lessonId, float userGrade, bool isDemoMode)
+    private async Task UpdateProfileAndCreateLessonRecord(UserProfile profile, int lessonId, float userGrade)
     {
         using var transaction = await unitOfWork.BeginTransactionAsync();
 
@@ -117,31 +116,16 @@ public class QuestionService(
         {
             var userId = profile.UserId;
 
-            if (isDemoMode)
-            {
-                var lr = new LessonRecord()
-                {
-                    UserId = userId,
-                    LessonId = lessonId,
-                    Mark = userGrade,
-                    IsDemo = true
-                };
+            await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
 
-                await lessonRecordRepository.CreateAsync(lr);
-            }
-            else
-            {
-                await mediator.Send(new UpdateProfileCompletingLessonCommand(profile, userGrade));
+            var demoLessonRecord = await lessonRecordRepository.GetAll()
+                .Where(x => x.LessonId == lessonId
+                    && x.UserId == userId
+                    && x.IsDemo).ToListAsync();
 
-                var demoLessonRecord = await lessonRecordRepository.GetAll()
-                    .Where(x => x.LessonId == lessonId
-                        && x.UserId == userId
-                        && x.IsDemo).ToListAsync();
+            userGrade += userGrade * 0.1f;
 
-                userGrade += userGrade * 0.1f;
-
-                await mediator.Send(new CreateLessonRecordCommand(userId, lessonId, userGrade));
-            }
+            await mediator.Send(new CreateLessonRecordCommand(userId, lessonId, userGrade));
 
             await unitOfWork.SaveChangesAsync();
 

@@ -22,7 +22,7 @@ namespace CourseTech.Application.Services;
 public class RoleService(
     ICacheService cacheService,
     IMediator mediator,
-    IUnitOfWork unitOfWork,
+    ITransactionManager unitOfWork,
     IMapper mapper,
     IRoleValidator roleValidator,
     ILogger logger) : IRoleService

@@ -8,9 +8,9 @@ namespace CourseTech.Application.Converters;
 /// <summary>
 /// Конветор JSON для реализации полиморфизма для моделей данных для отображения ответов пользователей.
 /// </summary>
-public class UserAnswerDtoConverter : JsonConverter<IUserAnswerDto>
+public class UserAnswerDtoConverter : JsonConverter<UserAnswerDtoBase>
 {
-    public override IUserAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override UserAnswerDtoBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var document = JsonDocument.ParseValue(ref reader);
         var rootElement = document.RootElement;
@@ -26,7 +26,7 @@ public class UserAnswerDtoConverter : JsonConverter<IUserAnswerDto>
         };
     }
 
-    public override void Write(Utf8JsonWriter writer, IUserAnswerDto value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, UserAnswerDtoBase value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         JsonSerializer.Serialize(writer, value, options);

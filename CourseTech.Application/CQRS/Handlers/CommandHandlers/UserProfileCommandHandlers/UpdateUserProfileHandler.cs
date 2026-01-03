@@ -1,7 +1,7 @@
 ﻿using CourseTech.Application.CQRS.Commands.UserProfileCommands;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Extensions;
-using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.UserProfileCommandHandlers;

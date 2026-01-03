@@ -2,7 +2,7 @@
 using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Result;
 
-namespace CourseTech.Domain.Interfaces.Services;
+namespace CourseTech.Domain.Interfaces.Services.Question;
 
 /// <summary>
 /// Сервис для работы с вопросами после урока, практической частью.
@@ -14,7 +14,7 @@ public interface IQuestionService
     /// </summary>
     /// <param name="lessonId"></param>
     /// <returns></returns>
-    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId, bool isDemoMode);
+    Task<DataResult<LessonPracticeDto>> GetLessonQuestionsAsync(int lessonId);
 
     /// <summary>
     /// Завершение прохождения тестирования.

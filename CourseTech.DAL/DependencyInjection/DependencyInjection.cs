@@ -1,10 +1,9 @@
-﻿using CourseTech.ChatGptApi.Interfaces;
-using CourseTech.ChatGptApi;
+﻿using CourseTech.ChatGptApi;
+using CourseTech.ChatGptApi.Interfaces;
 using CourseTech.DAL.Auth;
 using CourseTech.DAL.Cache;
-using CourseTech.DAL.DatabaseHelpers;
 using CourseTech.DAL.Interceptors;
-using CourseTech.DAL.Repositories;
+using CourseTech.DAL.Repositories.Base;
 using CourseTech.DAL.UserQueryAnalyzers;
 using CourseTech.DAL.Views;
 using CourseTech.Domain.Entities;
@@ -12,8 +11,8 @@ using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
 using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
 using CourseTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -42,8 +41,6 @@ public static class DependencyInjection
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
-        services.AddSingleton<ISqlQueryProvider, SqlQueryProvider>();
-
         services.AddScoped<IChatGptQueryAnalyzer, ChatGptQueryAnalyzer>();
 
         services.AddScoped<IChatGptService, ChatGptService>();
@@ -52,7 +49,7 @@ public static class DependencyInjection
 
         services.InitEntityRepositories();
         services.InitViewRepositories();
-        services.InitUnitOfWork();
+        services.InitTransactionManager();
     }
 
     /// <summary>
@@ -100,9 +97,9 @@ public static class DependencyInjection
     /// Внедрение зависимости для UoW
     /// </summary>
     /// <param name="services"></param>
-    private static void InitUnitOfWork(this IServiceCollection services)
+    private static void InitTransactionManager(this IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITransactionManager, TransactionManager>();
     }
 
     /// <summary>
@@ -124,7 +121,7 @@ public static class DependencyInjection
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = redisSettings.Url;
-            options.InstanceName = redisSettings.InstanceName; 
+            options.InstanceName = redisSettings.InstanceName;
         });
     }
 }

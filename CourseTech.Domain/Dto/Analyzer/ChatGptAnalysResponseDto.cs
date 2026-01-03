@@ -4,6 +4,9 @@ namespace CourseTech.Domain.Dto.Analyzer;
 
 public class ChatGptAnalysResponseDto
 {
+    [JsonPropertyName("UserGrade")]
+    public float UserGrade { get; set; }
+
     [JsonPropertyName("UserQueryAnalys")]
     public string UserQueryAnalys { get; set; }
 

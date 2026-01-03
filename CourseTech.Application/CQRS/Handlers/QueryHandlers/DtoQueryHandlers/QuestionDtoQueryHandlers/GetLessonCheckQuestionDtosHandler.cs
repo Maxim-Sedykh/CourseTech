@@ -1,20 +1,18 @@
 ﻿using AutoMapper;
 using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
-using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Get;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Extensions;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using CourseTech.Domain.Interfaces.Dtos.Question;
-using CourseTech.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.DtoQueryHandlers.QuestionDtoQueryHandlers;
 
-public class GetLessonCheckQuestionDtosHandler(IBaseRepository<BaseQuestion> questionRepository, IMapper mapper) : IRequestHandler<GetLessonCheckQuestionDtosQuery, List<ICheckQuestionDto>>
+public class GetLessonCheckQuestionDtosHandler(IBaseRepository<BaseQuestion> questionRepository, IMapper mapper) : IRequestHandler<GetLessonCheckQuestionDtosQuery, List<CheckQuestionDtoBase>>
 {
-    public async Task<List<ICheckQuestionDto>> Handle(GetLessonCheckQuestionDtosQuery request, CancellationToken cancellationToken)
+    public async Task<List<CheckQuestionDtoBase>> Handle(GetLessonCheckQuestionDtosQuery request, CancellationToken cancellationToken)
     {
         var res = await questionRepository.GetAll()
             .Where(q => q.LessonId == request.LessonId)
@@ -23,11 +21,6 @@ public class GetLessonCheckQuestionDtosHandler(IBaseRepository<BaseQuestion> que
             .OrderBy(x => x.Number)
             .Select(x => mapper.MapQuestionCheckings(x))
             .ToListAsync(cancellationToken);
-
-        if (request.IsDemoMode)
-        {
-            res = [.. res.Except(res.OfType<PracticalQuestionCheckingDto>())];
-        }
 
         return res;
     }

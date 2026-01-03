@@ -20,7 +20,7 @@ public class AuthServiceFixture : IDisposable
 
     public Mock<ITokenService> TokenServiceMock { get; }
 
-    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+    public Mock<ITransactionManager> UnitOfWorkMock { get; }
 
     public Mock<IAuthValidator> AuthValidatorMock { get; }
 
@@ -38,7 +38,7 @@ public class AuthServiceFixture : IDisposable
         MediatorMock = new Mock<IMediator>();
         MapperMock = new Mock<IMapper>();
         TokenServiceMock = new Mock<ITokenService>();
-        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UnitOfWorkMock = new Mock<ITransactionManager>();
         AuthValidatorMock = new Mock<IAuthValidator>();
         CacheServiceMock = new Mock<ICacheService>();
         LoggerMock = new Mock<ILogger>();

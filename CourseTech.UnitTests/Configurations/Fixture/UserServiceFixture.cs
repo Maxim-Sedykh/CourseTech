@@ -15,7 +15,7 @@ public class UserServiceFixture : IDisposable
 
     public Mock<IMediator> MediatorMock { get; }
 
-    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+    public Mock<ITransactionManager> UnitOfWorkMock { get; }
 
     public Mock<ILogger> LoggerMock { get; }
 
@@ -27,7 +27,7 @@ public class UserServiceFixture : IDisposable
     {
         CacheServiceMock = new Mock<ICacheService>();
         MediatorMock = new Mock<IMediator>();
-        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UnitOfWorkMock = new Mock<ITransactionManager>();
         UserValidatorMock = new Mock<IUserValidator>();
         LoggerMock = new Mock<ILogger>();
 

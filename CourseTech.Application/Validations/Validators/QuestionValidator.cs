@@ -48,7 +48,7 @@ public class QuestionValidator : IQuestionValidator
     }
 
     /// <inheritdoc/>
-    public BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions,
+    public BaseResult ValidateQuestions(List<CheckQuestionDtoBase> lessonQuestions,
                                         int userAnswersCount,
                                         LessonTypes currentLessonType)
     {
@@ -69,7 +69,7 @@ public class QuestionValidator : IQuestionValidator
     }
 
     /// <inheritdoc/>
-    public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions)
+    public BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<QuestionDtoBase> questions)
     {
         if (lesson is null)
         {

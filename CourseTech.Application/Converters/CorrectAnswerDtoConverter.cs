@@ -1,21 +1,22 @@
-﻿using CourseTech.Domain.Interfaces.Dtos.Question;
-using System.Text.Json.Serialization;
+﻿using CourseTech.Domain.Dto.Question.CorrectAnswer;
+using CourseTech.Domain.Dto.Question.Pass;
+using CourseTech.Domain.Interfaces.Dtos.Question;
 using System.Text.Json;
-using CourseTech.Domain.Dto.Question.CorrectAnswer;
+using System.Text.Json.Serialization;
 
 namespace CourseTech.Application.Converters;
 
 /// <summary>
 /// Конветор JSON для реализации полиморфизма для моделей правильных ответов.
 /// </summary>
-public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
+public class CorrectAnswerDtoConverter : JsonConverter<CorrectAnswerDtoBase>
 {
-    public override ICorrectAnswerDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CorrectAnswerDtoBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, ICorrectAnswerDto value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, CorrectAnswerDtoBase value, JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(value);
 
@@ -23,7 +24,14 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
 
         writer.WriteNumber("id", value.Id);
         writer.WriteString("correctAnswer", value.CorrectAnswer);
-        writer.WriteBoolean("answerCorrectness", value.AnswerCorrectness);
+        if (value is OpenQuestionCorrectAnswerDto openQuestionCorrectAnswerDto)
+        {
+            writer.WriteBoolean("answerCorrectness", openQuestionCorrectAnswerDto.AnswerCorrectness);
+        }
+        if (value is TestQuestionCorrectAnswerDto testQuestionCorrectAnswerDto)
+        {
+            writer.WriteBoolean("answerCorrectness", testQuestionCorrectAnswerDto.AnswerCorrectness);
+        }
         writer.WriteString("questionType", value.QuestionType);
 
         if (value is PracticalQuestionCorrectAnswerDto correctAnswer)
@@ -41,11 +49,5 @@ public class CorrectAnswerDtoConverter : JsonConverter<ICorrectAnswerDto>
 
         writer.WritePropertyName("chatGptAnalysis");
         JsonSerializer.Serialize(writer, correctAnswer.ChatGptAnalysis, options);
-
-        writer.WritePropertyName("correctQueryTime");
-        JsonSerializer.Serialize(writer, correctAnswer.CorrectQueryTime, options);
-
-        writer.WritePropertyName("userQueryTime");
-        JsonSerializer.Serialize(writer, correctAnswer.UserQueryTime, options);
     }
 }

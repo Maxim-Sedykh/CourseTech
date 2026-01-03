@@ -35,7 +35,7 @@ public interface IQuestionValidator
     /// <param name="userAnswersCount"></param>
     /// <param name="lessonType"></param>
     /// <returns></returns>
-    BaseResult ValidateQuestions(List<ICheckQuestionDto> lessonQuestions, int userAnswersCount, LessonTypes lessonType);
+    BaseResult ValidateQuestions(List<CheckQuestionDtoBase> lessonQuestions, int userAnswersCount, LessonTypes lessonType);
 
     /// <summary>
     /// Валидация получения вопросов определённого урока
@@ -43,5 +43,5 @@ public interface IQuestionValidator
     /// <param name="lesson"></param>
     /// <param name="questions"></param>
     /// <returns></returns>
-    BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<IQuestionDto> questions);
+    BaseResult ValidateLessonQuestions(Lesson lesson, IEnumerable<QuestionDtoBase> questions);
 }

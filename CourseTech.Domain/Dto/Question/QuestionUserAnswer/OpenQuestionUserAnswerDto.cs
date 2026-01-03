@@ -5,7 +5,7 @@ namespace CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 /// <summary>
 /// Модель данных для ответа пользователя на вопрос открытого типа.
 /// </summary>
-public class OpenQuestionUserAnswerDto : IUserAnswerDto
+public class OpenQuestionUserAnswerDto : UserAnswerDtoBase
 {
     public int QuestionId { get; set; }
 

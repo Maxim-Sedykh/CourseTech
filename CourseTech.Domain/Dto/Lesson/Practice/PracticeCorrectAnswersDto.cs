@@ -9,6 +9,6 @@ public class PracticeCorrectAnswersDto
 {
     public int LessonId { get; set; }
 
-    public List<ICorrectAnswerDto> QuestionCorrectAnswers { get; set; }
+    public List<CorrectAnswerDtoBase> QuestionCorrectAnswers { get; set; }
 }
 

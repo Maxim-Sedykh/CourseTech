@@ -37,7 +37,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         // Arrange
         int lessonId = 1;
         var lesson = new Lesson() { Id = lessonId, LessonType = LessonTypes.Common };
-        var questions = new List<IQuestionDto>
+        var questions = new List<QuestionDtoBase>
         {
             new TestQuestionDto { Id = 1 },
             new OpenQuestionDto { Id = 2 }
@@ -74,7 +74,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         // Arrange
         int lessonId = 1;
         var lesson = new Lesson { Id = lessonId, LessonType = LessonTypes.Common };
-        var questions = new List<IQuestionDto>();
+        var questions = new List<QuestionDtoBase>();
         var errorMessage = "Lesson not found";
 
         _fixture.MediatorMock
@@ -123,15 +123,15 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         _fixture.QuestionValidatorMock.Setup(v => v.ValidateUserLessonOnNull(profile, lesson))
             .Returns(BaseResult.Success());
 
-        _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
+        _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<CheckQuestionDtoBase>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
             .Returns(BaseResult.Success());
 
         var questionTypeGrades = new List<QuestionTypeGrade>(); // Пустой список для проверки
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetQuestionTypeGradeQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(questionTypeGrades);
 
-        _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<List<IUserAnswerDto>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
-            .ReturnsAsync(new List<ICorrectAnswerDto>()); // Пустые правильные ответы
+        _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<CheckQuestionDtoBase>>(), It.IsAny<List<UserAnswerDtoBase>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
+            .ReturnsAsync(new List<CorrectAnswerDtoBase>()); // Пустые правильные ответы
 
         _fixture.UnitOfWorkMock
             .Setup(u => u.BeginTransactionAsync(It.IsAny<IsolationLevel>()))
@@ -159,7 +159,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         var profile = new UserProfile { CurrentGrade = 5 };
         var lesson = new Lesson { Id = 1, LessonType = LessonTypes.Common };
 
-        var correctAnswers = new List<ICorrectAnswerDto>() { new TestQuestionCorrectAnswerDto() };
+        var correctAnswers = new List<CorrectAnswerDtoBase>() { new TestQuestionCorrectAnswerDto() };
 
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetProfileByUserIdQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(profile);
@@ -171,14 +171,14 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         _fixture.QuestionValidatorMock.Setup(v => v.ValidateUserLessonOnNull(profile, lesson))
             .Returns(BaseResult.Success());
 
-        _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
+        _fixture.QuestionValidatorMock.Setup(v => v.ValidateQuestions(It.IsAny<List<CheckQuestionDtoBase>>(), It.IsAny<int>(), It.IsAny<LessonTypes>()))
             .Returns(BaseResult.Success());
 
         var questionTypeGrades = new List<QuestionTypeGrade>(); // Пустой список для проверки
         _fixture.MediatorMock.Setup(m => m.Send(It.IsAny<GetQuestionTypeGradeQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(questionTypeGrades);
 
-        _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<ICheckQuestionDto>>(), It.IsAny<List<IUserAnswerDto>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
+        _fixture.QuestionAnswerCheckerMock.Setup(c => c.CheckUserAnswers(It.IsAny<List<CheckQuestionDtoBase>>(), It.IsAny<List<UserAnswerDtoBase>>(), It.IsAny<UserGradeDto>(), It.IsAny<List<QuestionTypeGrade>>()))
             .ReturnsAsync(correctAnswers); // Пустые правильные ответы
 
         _fixture.UnitOfWorkMock

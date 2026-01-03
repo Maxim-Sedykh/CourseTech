@@ -1,10 +1,10 @@
-﻿using CourseTech.Application.Services;
+﻿using CourseTech.Application.Services.Question;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Interfaces.Cache;
 using CourseTech.Domain.Interfaces.Databases;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using CourseTech.Domain.Interfaces.Helpers;
-using CourseTech.Domain.Interfaces.Repositories;
-using CourseTech.Domain.Interfaces.Services;
+using CourseTech.Domain.Interfaces.Services.Question;
 using CourseTech.Domain.Interfaces.Validators;
 using MediatR;
 using Moq;
@@ -18,7 +18,7 @@ public class QuestionServiceFixture : IDisposable
 
     public Mock<IMediator> MediatorMock { get; }
 
-    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+    public Mock<ITransactionManager> UnitOfWorkMock { get; }
     public Mock<IBaseRepository<LessonRecord>> LessonRecordRepositoryMock { get; }
 
     public Mock<IQuestionAnswerChecker> QuestionAnswerCheckerMock { get; }
@@ -33,7 +33,7 @@ public class QuestionServiceFixture : IDisposable
     {
         CacheServiceMock = new Mock<ICacheService>();
         MediatorMock = new Mock<IMediator>();
-        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UnitOfWorkMock = new Mock<ITransactionManager>();
         QuestionAnswerCheckerMock = new Mock<IQuestionAnswerChecker>();
         QuestionValidatorMock = new Mock<IQuestionValidator>();
         LoggerMock = new Mock<ILogger>();

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CourseTech.Application.CQRS.Commands.LessonCommands;
 using CourseTech.Domain.Entities;
-using CourseTech.Domain.Interfaces.Repositories;
+using CourseTech.Domain.Interfaces.Databases.Repositories;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Handlers.CommandHandlers.LessonCommandHandlers;

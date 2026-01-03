@@ -1,4 +1,4 @@
-﻿namespace CourseTech.Domain.Interfaces.Repositories;
+﻿namespace CourseTech.Domain.Interfaces.Databases.Repositories;
 
 /// <summary>
 /// Репозиторий для работы с представлениями (Views)

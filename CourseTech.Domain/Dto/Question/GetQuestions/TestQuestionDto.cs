@@ -6,7 +6,7 @@ namespace CourseTech.Domain.Dto.Question.Get;
 /// <summary>
 /// Модель данных для отображения вопроса тестового типа.
 /// </summary>
-public class TestQuestionDto : IQuestionDto
+public class TestQuestionDto : QuestionDtoBase
 {
     public int Id { get; set; }
 

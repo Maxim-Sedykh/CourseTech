@@ -16,5 +16,5 @@ public interface IQuestionAnswerChecker
     /// <param name="userAnswers">Ответы пользователя.</param>
     /// <param name="userGrade">Итоговая оценка пользователя за пройденные вопросы.</param>
     /// <returns></returns>
-    Task<List<ICorrectAnswerDto>> CheckUserAnswers(List<ICheckQuestionDto> checkQuestions, List<IUserAnswerDto> userAnswers, UserGradeDto userGrade, List<QuestionTypeGrade> questionTypeGrades);
+    Task<List<CorrectAnswerDtoBase>> CheckUserAnswers(List<CheckQuestionDtoBase> checkQuestions, List<UserAnswerDtoBase> userAnswers, UserGradeDto userGrade, List<QuestionTypeGrade> questionTypeGrades);
 }

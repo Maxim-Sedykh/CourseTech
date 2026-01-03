@@ -11,7 +11,7 @@ public class ReviewServiceFixture : IDisposable
 {
     public Mock<ICacheService> CacheServiceMock { get; }
     public Mock<IMediator> MediatorMock { get; }
-    public Mock<IUnitOfWork> UnitOfWorkMock { get; }
+    public Mock<ITransactionManager> UnitOfWorkMock { get; }
     public Mock<ILogger> LoggerMock { get; }
 
     public ReviewService ReviewService { get; }
@@ -20,7 +20,7 @@ public class ReviewServiceFixture : IDisposable
     {
         CacheServiceMock = new Mock<ICacheService>();
         MediatorMock = new Mock<IMediator>();
-        UnitOfWorkMock = new Mock<IUnitOfWork>();
+        UnitOfWorkMock = new Mock<ITransactionManager>();
         LoggerMock = new Mock<ILogger>();
 
         ReviewService = new ReviewService(CacheServiceMock.Object, MediatorMock.Object, UnitOfWorkMock.Object, LoggerMock.Object);

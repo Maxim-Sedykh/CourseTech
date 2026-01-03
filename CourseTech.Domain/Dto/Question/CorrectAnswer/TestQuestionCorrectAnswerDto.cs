@@ -5,7 +5,7 @@ namespace CourseTech.Domain.Dto.Question.Pass;
 /// <summary>
 /// Модель данных для отображения правильного ответа на вопрос тестового типа.
 /// </summary>
-public class TestQuestionCorrectAnswerDto : ICorrectAnswerDto
+public class TestQuestionCorrectAnswerDto : CorrectAnswerDtoBase
 {
     public int Id { get; set; }
 

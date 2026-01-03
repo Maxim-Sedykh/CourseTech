@@ -14,5 +14,5 @@ public class LessonPracticeDto
 
     public bool IsDemoMode { get; set; }
 
-    public List<IQuestionDto> Questions { get; set; }
+    public List<QuestionDtoBase> Questions { get; set; }
 }

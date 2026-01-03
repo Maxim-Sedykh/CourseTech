@@ -8,14 +8,14 @@ namespace CourseTech.Application.Converters;
 /// <summary>
 /// Конветор JSON для реализации полиморфизма для моделей данных для отображения вопросов.
 /// </summary>
-public class QuestionDtoConverter : JsonConverter<IQuestionDto>
+public class QuestionDtoConverter : JsonConverter<QuestionDtoBase>
 {
-    public override IQuestionDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override QuestionDtoBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, IQuestionDto value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, QuestionDtoBase value, JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(value);
 

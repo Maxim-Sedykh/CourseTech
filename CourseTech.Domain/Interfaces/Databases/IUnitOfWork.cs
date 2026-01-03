@@ -6,7 +6,7 @@ namespace CourseTech.Domain.Interfaces.Databases;
 /// <summary>
 /// Позволяет реализовать транзакцию EF Core.
 /// </summary>
-public interface IUnitOfWork : IStateSaveChanges
+public interface ITransactionManager : IStateSaveChanges
 {
     /// <summary>
     /// Создание транзакции.

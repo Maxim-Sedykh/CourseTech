@@ -30,7 +30,7 @@ public class AuthService(
         IMediator mediator,
         IMapper mapper,
         ITokenService tokenService,
-        IUnitOfWork unitOfWork,
+        ITransactionManager unitOfWork,
         IAuthValidator authValidator,
         ICacheService cacheService,
         ILogger logger,
