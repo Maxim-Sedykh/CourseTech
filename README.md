@@ -23,8 +23,13 @@ SQL Server и T-SQL очень мощные инструменты, которы
 9. Проект реализован с использованием чистой архитектуры (clean architecture)
 10. Аутентификацию и авторизацию
 
-База данных имеет следующую диаграмму:
+## База данных имеет следующую диаграмму:
 ![image](https://github.com/user-attachments/assets/6cb98404-a1cc-4d11-988d-75307423338d)
+
+## В дальнейшем планируется 
+1. Улучшать архитектуру и инфраструктуру проекта. 
+2. Планируется внедрить сущность Course - и сделать курс посвящённому не только MS SQL Server, но и другим технологиям (В данный момент все Lessons содержат материалы только по SQL Server).
+3. Так же сделать фичу с конструированием вопросов и уроков по определённым курсам.
 
 ## Технологии
 1. ASP.NET Web API для создания RESTful API.
@@ -43,5 +48,13 @@ SQL Server и T-SQL очень мощные инструменты, которы
 18. Bootstrap5
 
 ## Интерфейс проекта 
+<img width="1280" height="641" alt="image" src="https://github.com/user-attachments/assets/372ab00e-5265-40b7-9c97-83d9f77a8217" /><img width="1280" height="629" alt="image" src="https://github.com/user-attachments/assets/93332754-2d06-4040-9966-669b3085af45" /><img width="515" height="385" alt="image" src="https://github.com/user-attachments/assets/b3c04560-efa8-41ce-818c-8312393eb704" /><img width="1280" height="633" alt="image" src="https://github.com/user-attachments/assets/63d99b0d-416b-469a-a81b-d932b58e61b9" /><img width="1280" height="815" alt="image" src="https://github.com/user-attachments/assets/50a57962-f350-4633-8b93-3e2cebe0b4be" /><img width="1280" height="638" alt="image" src="https://github.com/user-attachments/assets/51d8d133-6f85-498b-85b7-4465e260dd45" /><img width="1280" height="644" alt="image" src="https://github.com/user-attachments/assets/68d6cc4c-c71b-4105-bb41-750df7ba19dc" />
 
-(Пока не готов)
+<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/88640d68-5b62-4f9c-9503-85e477044662" />
+
+
+
+
+
+
+
