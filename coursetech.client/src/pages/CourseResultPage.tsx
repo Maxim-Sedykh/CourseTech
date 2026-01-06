@@ -30,11 +30,9 @@ export function CourseResultPage() {
                     setCourseResult(result.data);
                 } else {
                     console.error("Failed to fetch course result:", result.error.message);
-                    // Обработайте ошибку, например, покажите сообщение пользователю
                 }
             } catch (error) {
                 console.error("Error fetching course result:", error);
-                // Обработайте ошибку, например, покажите сообщение пользователю
             }
         };
     

@@ -24,7 +24,7 @@ export function UserAnalysModalContent() {
     }, []);
 
     if (!userAnalys) {
-        return <div>Loading...</div>; // Загрузка данных
+        return <div>Loading...</div>;
     }
 
 

@@ -31,7 +31,7 @@ export class AuthService {
 
         if (dataResult.data?.accessToken) {
             const decoded = jwtDecode(dataResult.data.accessToken);
-            console.log(decoded); // Выводит содержимое декодированного токена
+            console.log(decoded);
         }
         return dataResult;
     }
@@ -71,7 +71,7 @@ export class AuthService {
         try {
             const decoded: DecodedToken = jwtDecode(token);
 
-            return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null; // Используйте правильный ключ
+            return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null;
         } catch (error) {
             console.error("Ошибка декодирования токена:", error);
             return null;
@@ -85,7 +85,7 @@ export class AuthService {
         try {
             const decoded: DecodedToken = jwtDecode(token);
 
-            return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || null; // Используйте правильный ключ
+            return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || null;
         } catch (error) {
             console.error("Ошибка декодирования токена:", error);
             return null;

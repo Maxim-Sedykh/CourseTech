@@ -47,15 +47,15 @@ html, body {
 .main-layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* ���������, ��� ��������� �������� ��� ������ */
+    min-height: 100vh;
 }
 
 .main-layout-content {
-    flex: 1; /* ��� �������� ��������� �������� �������� ��� ��������� ������������ */
+    flex: 1;
 }
 
 footer {
-    width: 100%; /* ���������, ��� ����� ����� ������������� ������ */
+    width: 100%;
 }
 
 .no-underline {

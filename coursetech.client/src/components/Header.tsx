@@ -23,7 +23,6 @@ export function Header() {
             setUsername(authService.getUsername());
         };
 
-        // Можно добавить подписку на события или использовать другие методы для проверки состояния аутентификации
         checkAuth();
     }, [authService]);
 
@@ -37,7 +36,7 @@ export function Header() {
         authService.logout();
         setIsAuthenticated(false);
         setUsername('');
-        navigate('/'); // Добавляем редирект на главную страницу
+        navigate('/');
     };
 
     const renderDropdownItems = () => {

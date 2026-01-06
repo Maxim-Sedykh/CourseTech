@@ -47,7 +47,6 @@ export function PassLessonPage() {
         ? "bg-indigo-900" 
         : "bg-blue-800";
 
-    // Группируем вопросы по типам
     const testQuestions = lessonPracticeDto.questions.filter(q => q.type === 'TestQuestionDto');
     const openQuestions = lessonPracticeDto.questions.filter(q => q.type === 'OpenQuestionDto');
     const practicalQuestions = lessonPracticeDto.questions.filter(q => q.type === 'PracticalQuestionDto');

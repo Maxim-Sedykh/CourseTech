@@ -678,13 +678,13 @@ body {
 
 .main-page-pic2 {
     background-image: url(./assets/images/MainPagePic2.jpg);
-    background-size: cover; /* Чтобы картинка заполнила контейнер */
+    background-size: cover;
 }
 
 .main-page-pic3 {
     background-image: url(./assets/images/MainPagePic3.jpg);
     display: block;
-    background-size: cover; /* Чтобы картинка заполнила контейнер */
+    background-size: cover;
     background-repeat: no-repeat;
     object-position: center;
     background-position: left;
@@ -693,14 +693,14 @@ body {
 .main-page-pic4 {
     background-image: url(./assets/images/MainPagePic4.jpg);
     display: block;
-    background-size: cover; /* Чтобы картинка заполнила контейнер */
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .main-page-pic5 {
     background-image: url(./assets/images/MainPagePic5.jpg);
-    background-size: cover; /* Чтобы картинка заполнила контейнер */
+    background-size: cover;
     display: block;
     background-repeat: no-repeat;
     background-position: center;
@@ -712,19 +712,19 @@ body {
 }
 
 pre {
-    white-space: pre-wrap; /* Сохраняет переносы строк и пробелы */
-    font-family: monospace; /* Важно для выравнивания табуляции */
+    white-space: pre-wrap;
+    font-family: monospace;
     background-color: #f4f4f4;
     border: 1px solid #ddd;
     padding: 10px;
     overflow: auto;
-    margin-bottom: 1em; /* Добавляет отступ между блоками кода */
+    margin-bottom: 1em;
   }
   
   code {
     font-family: monospace;
   }
   
-  b pre { /* Стили для pre, находящихся внутри тега b */
+  b pre {
     margin-top: 0.5em;
   }

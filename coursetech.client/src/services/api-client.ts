@@ -11,7 +11,7 @@ export class ApiClient {
     }
 
     private handleError(error: unknown): BaseResult {
-        const apiError = { code: -1, message: 'Something went wrong' }; // Default error
+        const apiError = { code: -1, message: 'Something went wrong' };
 
         if (axios.isAxiosError(error) && error.response) {
             apiError.message = (error.response.data as any)?.message || error.message || apiError.message;
@@ -32,7 +32,7 @@ export class ApiClient {
     private async request<T>(config: AxiosRequestConfig): Promise<T | BaseResult> {
         try {
             const token = localStorage.getItem('token');
-            const requestConfig = { ...config }; // Копируем исходную конфигурацию
+            const requestConfig = { ...config };
 
             console.log(requestConfig.baseURL);
             console.log(requestConfig.url);
@@ -44,7 +44,7 @@ export class ApiClient {
                 };
             }
 
-            const response = await this.axiosInstance.request<T>(requestConfig); // Используем обновленную конфигурацию
+            const response = await this.axiosInstance.request<T>(requestConfig);
             return response.data;
         } catch (error) {
             return this.handleError(error);

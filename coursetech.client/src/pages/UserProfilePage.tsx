@@ -93,7 +93,6 @@ export function UserProfilePage() {
             </div>
 
             <Container>
-                {/* Основная информация профиля */}
                 <Row className="g-4 mb-4">
                     <Col md={6}>
                         <Card className="shadow-sm h-100">
@@ -159,7 +158,6 @@ export function UserProfilePage() {
                     </Col>
                 </Row>
 
-                {/* Кнопки действий */}
                 <Row className="mb-4 g-3">
                     {userProfile.isExamCompleted && (
                         <Col md={6}>
@@ -185,7 +183,6 @@ export function UserProfilePage() {
                     </Col>
                 </Row>
 
-                {/* История прохождения уроков */}
                 <Card className="shadow-sm mb-4">
                     <Card.Header className="bg-primary text-white">
                         <h5 className="mb-0">История прохождения уроков</h5>

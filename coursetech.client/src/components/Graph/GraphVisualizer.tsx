@@ -8,14 +8,12 @@ interface GraphVisualizerProps {
 }
 
 export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProps) {
-    // Параметры SVG
     const svgWidth = 400;
     const svgHeight = 400;
     const centerX = svgWidth / 2;
     const centerY = svgHeight / 2;
     const radius = 150;
 
-    // Рассчитываем позиции узлов
     const vertexPositions = useMemo(() => {
         if (!data?.Vertexes?.length) return {};
 
@@ -63,7 +61,6 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                 position: 'relative'
             }}>
                 <svg width="100%" height="100%" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                    {/* Определение маркера для стрелки */}
                     <defs>
                         <marker
                             id="arrowhead"
@@ -81,7 +78,6 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                         </filter>
                     </defs>
 
-                    {/* Рисуем связи */}
                     {data.Edges.map((edge, index) => {
                         if (edge?.from == null || edge?.to == null) return null;
 
@@ -89,17 +85,14 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                         const toPos = vertexPositions[edge.to];
                         if (!fromPos || !toPos) return null;
 
-                        // Рассчитываем вектор направления
                         const dx = toPos.x - fromPos.x;
                         const dy = toPos.y - fromPos.y;
                         const length = Math.sqrt(dx * dx + dy * dy);
 
-                        // Нормализуем вектор
                         const nx = dx / length;
                         const ny = dy / length;
 
-                        // Укорачиваем линию, чтобы она не заходила на вершину
-                        const fromX = fromPos.x + nx * 20; // 20 - радиус вершины
+                        const fromX = fromPos.x + nx * 20;
                         const fromY = fromPos.y + ny * 20;
                         const toX = toPos.x - nx * 20;
                         const toY = toPos.y - ny * 20;
@@ -118,7 +111,6 @@ export function GraphVisualizer({ data, isLoading = false }: GraphVisualizerProp
                         );
                     })}
 
-                    {/* Рисуем узлы */}
                     {data.Vertexes.map((vertex) => {
                         if (vertex?.number == null) return null;
                         const pos = vertexPositions[vertex.number];
