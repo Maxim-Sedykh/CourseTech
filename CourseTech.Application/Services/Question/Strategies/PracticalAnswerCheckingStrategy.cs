@@ -22,21 +22,38 @@ public class PracticalAnswerCheckingStrategy(IChatGptQueryAnalyzer chatGptAnalyz
         var practicalUserAnswer = (PracticalQuestionUserAnswerDto)userAnswer;
         var questionChecking = (PracticalQuestionCheckingDto)checkQuestion;
 
+        var userCode = practicalUserAnswer.UserCodeAnswer?.Trim();
+        var correctCode = questionChecking.CorrectQueryCode?.Trim();
+
         var correctAnswer = new PracticalQuestionCorrectAnswerDto
         {
             Id = practicalUserAnswer.QuestionId,
             CorrectAnswer = questionChecking.CorrectQueryCode
         };
 
-        var userQueryChatGptAnalysDto = await chatGptAnalyzer.AnalyzeUserQuery(
+        if (string.Equals(userCode, correctCode, StringComparison.OrdinalIgnoreCase))
+        {
+            return new PracticalQuestionCorrectAnswerDto
+            {
+                Id = practicalUserAnswer.QuestionId,
+                CorrectAnswer = questionChecking.CorrectQueryCode,
+                AnswerCorrectness = true,
+                UserGrade = questionGrade
+            };
+        }
+
+        var chatGptAnalysis = await chatGptAnalyzer.AnalyzeUserQuery(
                 questionGrade,
-                practicalUserAnswer.UserCodeAnswer,
-                questionChecking.CorrectQueryCode);
+                userCode,
+                correctCode);
 
-        correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;
-        correctAnswer.UserGrade = userQueryChatGptAnalysDto.UserGrade;
-        correctAnswer.AnswerCorrectness = userQueryChatGptAnalysDto.AnswerCorrectness;
-
-        return correctAnswer;
+        return new PracticalQuestionCorrectAnswerDto
+        {
+            Id = practicalUserAnswer.QuestionId,
+            CorrectAnswer = questionChecking.CorrectQueryCode,
+            ChatGptAnalysis = chatGptAnalysis,
+            UserGrade = chatGptAnalysis.UserGrade,
+            AnswerCorrectness = chatGptAnalysis.AnswerCorrectness
+        };
     }
 }
