@@ -3,9 +3,6 @@ import { Button, Container } from "react-bootstrap";
 import { UserLessonsDto } from "../../types/dto/lesson/user-lessons-dto";
 import { LessonService } from "../../services/lesson-service";
 import { ApiPaths } from "../../constants/api-paths";
-import { LessonTypes } from "../../enums/lesson-types";
-
-
 
 export function LessonsListModalContent() {
 
@@ -36,7 +33,7 @@ export function LessonsListModalContent() {
     }, []);
 
     if (!userLessons) {
-        return <div>Loading...</div>; // Загрузка данных
+        return <div>Loading...</div>;
     }
 
     return (
@@ -48,7 +45,7 @@ export function LessonsListModalContent() {
                     return (
                         <Button
                             as="a"
-                            href={`/lesson/pass/${lesson.id}/${lesson.lessonType == LessonTypes.Exam ? false : true}`}
+                            href={`/lesson/read/${lesson.id}`}
                             key={lesson.id}
                             className={`bd-indigo-800 w-100 d-block text-white mx-auto border border-white w-50 br-40 ${isDisabled ? 'disabled' : ''}`}
                             disabled={isDisabled}

@@ -18,6 +18,7 @@ export function CoursePlanModalContent() {
 
             const fetchLessons = async () => {
                 try {
+                    setIsFetching(true);
                     const result = await lessonService.getLessonNames();
                     setLessonNames(result.data);
                 } catch (error) {
@@ -31,7 +32,7 @@ export function CoursePlanModalContent() {
         }, []);
     
         if (!lessonNames) {
-            return <div>Loading...</div>; // Загрузка данных
+            return <div>Loading...</div>;
         }
 
     return (

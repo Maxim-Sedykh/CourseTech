@@ -21,7 +21,6 @@ export function HomePage() {
 
     return (
         <Container fluid className="px-0">
-            {/* Hero Section */}
             <Container className="bg-primary rounded-4 p-4 my-4 shadow">
                 <Row className="d-flex justify-content-between align-items-center">
                     <Col lg={8} md={7} className="text-white py-3">
@@ -54,9 +53,9 @@ export function HomePage() {
                                 </ul>
                             </Card.Body>
                         </Card>
-                        <Button 
-                            variant="info" 
-                            size="sm" 
+                        <Button
+                            variant="info"
+                            size="sm"
                             className="rounded-pill px-3"
                             onClick={modalHandlers.coursePlan}
                         >
@@ -66,7 +65,6 @@ export function HomePage() {
                 </Row>
             </Container>
 
-            {/* What You'll Learn Section */}
             <Container className="my-4">
                 <h3 className="fw-bold mb-4 text-center">Чему вы научитесь на этом курсе</h3>
                 <Row className="g-3">
@@ -91,7 +89,6 @@ export function HomePage() {
                 </Row>
             </Container>
 
-            {/* About Course Section */}
             <Container id="section-3" className="my-4">
                 <h3 className="fw-bold mb-4 text-center">О курсе</h3>
                 <Row className="align-items-center g-3">
@@ -128,7 +125,6 @@ export function HomePage() {
                 </Row>
             </Container>
 
-            {/* Target Audience Section */}
             <Container className="my-4">
                 <h3 className="fw-bold mb-3">Для кого этот курс</h3>
                 <Card className="border-0 bg-light mb-3">
@@ -150,7 +146,6 @@ export function HomePage() {
                 </Card>
             </Container>
 
-            {/* Learning Outcomes Section */}
             <Container id="section-2" className="my-4">
                 <h3 className="fw-bold mb-3">После обучения вы сможете</h3>
                 <Card className="border-0 bg-light">
@@ -167,7 +162,6 @@ export function HomePage() {
                 </Card>
             </Container>
 
-            {/* Additional Literature Section */}
             <Container className="my-4">
                 <h3 className="fw-bold mb-3">Дополнительная литература</h3>
                 <Card className="border-0 bg-light">

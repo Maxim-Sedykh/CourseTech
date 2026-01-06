@@ -5,7 +5,4 @@ namespace CourseTech.Domain.Dto.Question.CorrectAnswer;
 /// <summary>
 /// Модель данных для отображения правильного ответа на вопрос открытого типа.
 /// </summary>
-public class OpenQuestionCorrectAnswerDto : CorrectAnswerDtoBase
-{
-    public bool AnswerCorrectness { get; set; }
-}
+public class OpenQuestionCorrectAnswerDto : CorrectAnswerDtoBase { }

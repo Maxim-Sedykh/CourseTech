@@ -30,7 +30,7 @@ export class RouteConstants {
     public static readonly GET_LESSONS_RECORDS: string = "get-lesson-records";
 
     // ������
-    public static readonly GET_LESSON_QUESTIONS: string = "get-lesson-questions";
+    public static readonly GET_LESSON_QUESTIONS: string = "get-lesson-questions/";
     public static readonly PASS_LESSON_QUESTIONS: string = "pass-lesson-questions";
 
     // �����

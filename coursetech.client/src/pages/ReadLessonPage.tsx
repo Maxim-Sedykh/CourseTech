@@ -8,11 +8,11 @@ import { ApiPaths } from "../constants/api-paths";
 const lessonService = new LessonService(ApiPaths.LESSON_API_PATH);
 
 export function ReadLessonPage() {
-    const { lessonId } = useParams<{ lessonId: string }>(); // Получаем параметр
-    const lessonIdNumber = Number(lessonId); // Преобразуем параметр в число
+    const { lessonId } = useParams<{ lessonId: string }>();
+    const lessonIdNumber = Number(lessonId);
 
     const [lesson, setLesson] = useState<LessonLectureDto | undefined>(undefined);
-    const [loading, setLoading] = useState(true); // Укажите ваш базовый URL
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchLesson = async () => {
@@ -49,7 +49,7 @@ export function ReadLessonPage() {
                         </Button>
                     </Col>
                     <Col className={`${columnCountState} col-sm-12 text-center`}>
-                            <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}/${false}`}>
+                            <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}`}>
                             Перейти к практике
                         </Button>
                     </Col>
@@ -62,7 +62,7 @@ export function ReadLessonPage() {
                         </Button>
                     </Col>
                     <Col className="col-md-6 col-sm-12 text-center mb-2">
-                        <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}/${false}`}>
+                        <Button className="d-block br-40 bd-blue-700 text-white text-center fs-6 w-50 mx-auto" as="a" href={`/lesson/pass/${lesson.id}`}>
                             Перейти к практике
                         </Button>
                     </Col>

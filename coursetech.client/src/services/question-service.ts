@@ -13,17 +13,10 @@ export class QuestionService {
    }
 
    public async getLessonQuestions(lessonId: number): Promise<DataResult<LessonPracticeDto>> {
-        const req = new GetLessonQuestionsRequest();
-        req.lessonId = lessonId;
-
-       return this.apiClient.post<DataResult<LessonPracticeDto>>(RouteConstants.GET_LESSON_QUESTIONS, req);
+       return this.apiClient.get<DataResult<LessonPracticeDto>>(`${RouteConstants.GET_LESSON_QUESTIONS}${lessonId}`);
    }
 
    public async passLessonQuestions(dto: PracticeUserAnswersDto): Promise<DataResult<PracticeCorrectAnswersDto>> {
        return this.apiClient.post<DataResult<PracticeCorrectAnswersDto>>(RouteConstants.PASS_LESSON_QUESTIONS, dto);
    }
-}
-
-export class GetLessonQuestionsRequest {
-    lessonId!: number;
 }

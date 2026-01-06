@@ -48,9 +48,9 @@ export function PassLessonPage() {
         : "bg-blue-800";
 
     // Группируем вопросы по типам
-    const testQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'TestQuestionDto');
-    const openQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'OpenQuestionDto');
-    const practicalQuestions = lessonPracticeDto.questions.filter(q => q.questionType === 'PracticalQuestionDto');
+    const testQuestions = lessonPracticeDto.questions.filter(q => q.type === 'TestQuestionDto');
+    const openQuestions = lessonPracticeDto.questions.filter(q => q.type === 'OpenQuestionDto');
+    const practicalQuestions = lessonPracticeDto.questions.filter(q => q.type === 'PracticalQuestionDto');
 
     const handleTestQuestionChange = useCallback((questionId: number, variantNumber: number) => {
         setFormData(prev => {
@@ -58,7 +58,7 @@ export function PassLessonPage() {
             const newAnswer: TestQuestionUserAnswerDto = {
                 questionId,
                 userAnswerNumberOfVariant: variantNumber,
-                questionType: 'TestQuestionUserAnswerDto'
+                type: 'TestQuestionUserAnswerDto'
             };
 
             return {
@@ -76,7 +76,7 @@ export function PassLessonPage() {
             const newAnswer: OpenQuestionUserAnswerDto = {
                 questionId,
                 userAnswer: value,
-                questionType: 'OpenQuestionUserAnswerDto'
+                type: 'OpenQuestionUserAnswerDto'
             };
 
             return {
@@ -94,7 +94,7 @@ export function PassLessonPage() {
             const newAnswer: PracticalQuestionUserAnswerDto = {
                 questionId,
                 userCodeAnswer: value,
-                questionType: 'PracticalQuestionUserAnswerDto'
+                type: 'PracticalQuestionUserAnswerDto'
             };
 
             return {
@@ -111,7 +111,13 @@ export function PassLessonPage() {
         setShowLoadingModal(true);
 
         try {
-            const sortedAnswers = [...formData.userAnswerDtos].sort((x, y) => x.questionId - y.questionId);
+            const sortedAnswers = [...formData.userAnswerDtos]
+            .sort((x, y) => x.questionId - y.questionId)
+            .map(ans => {
+                const { type, ...rest } = ans;
+                
+                return { type, ...rest };
+            });
             const response = await questionService.passLessonQuestions({
                 ...formData,
                 userAnswerDtos: sortedAnswers
@@ -212,7 +218,7 @@ export function PassLessonPage() {
                                 </div>
                             ) : (
                                 <>
-                                    {question.questionType === 'PracticalQuestionDto' ? (
+                                    {question.type === 'PracticalQuestionDto' ? (
                                         <FormControl
                                             as="textarea"
                                             className="bg-light text-dark p-2 rounded"
@@ -255,15 +261,6 @@ export function PassLessonPage() {
                                             <GraphVisualizer
                                                 data={practicalAnswer.chatGptAnalysis}
                                             />
-
-                                            <div className="mt-4">
-                                                <Alert variant="info" className="text-center">
-                                                    Время выполнения вашего запроса {practicalAnswer.userQueryTime} секунд
-                                                </Alert>
-                                                <Alert variant="info" className="text-center">
-                                                    Время выполнения корректного запроса {practicalAnswer.correctQueryTime} секунд
-                                                </Alert>
-                                            </div>
 
                                             {practicalAnswer.chatGptAnalysis?.UserQueryAnalys && (
                                                 <Alert variant="info" className="mt-3">

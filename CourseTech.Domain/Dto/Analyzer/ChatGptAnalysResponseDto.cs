@@ -30,4 +30,10 @@ public class ChatGptAnalysResponseDto
     /// </summary>
     [JsonPropertyName("Edges")]
     public Edge[] Edges { get; set; }
+
+    /// <summary>
+    /// Правильно ли пользователь ответил на вопрос
+    /// </summary>
+    [JsonPropertyName("AnswerCorrectness")]
+    public bool AnswerCorrectness { get; set; }
 }

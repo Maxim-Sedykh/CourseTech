@@ -35,6 +35,7 @@ public class PracticalAnswerCheckingStrategy(IChatGptQueryAnalyzer chatGptAnalyz
 
         correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;
         correctAnswer.UserGrade = userQueryChatGptAnalysDto.UserGrade;
+        correctAnswer.AnswerCorrectness = userQueryChatGptAnalysDto.AnswerCorrectness;
 
         return correctAnswer;
     }

@@ -65,7 +65,7 @@ public static class RouteConstants
 
     #region Вопрос
 
-    public const string GetLessonQuestions = "get-lesson-questions";
+    public const string GetLessonQuestions = "get-lesson-questions/{lessonId}";
 
     public const string PassLessonQuestions = "pass-lesson-questions";
 

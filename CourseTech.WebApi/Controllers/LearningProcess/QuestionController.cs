@@ -14,7 +14,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class QuestionController(IQuestionService questionService) : PrincipalInfoController
 {
-    [HttpPost(RouteConstants.GetLessonQuestions)]
+    [HttpGet(RouteConstants.GetLessonQuestions)]
     public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)
     {
         var response = await questionService.GetLessonQuestionsAsync(lessonId);

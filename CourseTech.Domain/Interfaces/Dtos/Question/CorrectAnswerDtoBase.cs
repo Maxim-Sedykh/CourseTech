@@ -26,4 +26,9 @@ public abstract class CorrectAnswerDtoBase
     /// Оценка пользователя за вопрос
     /// </summary>
     public float UserGrade { get; set; }
+
+    /// <summary>
+    /// Правильно ли пользователь ответил на вопрос
+    /// </summary>
+    public bool AnswerCorrectness { get; set; }
 }

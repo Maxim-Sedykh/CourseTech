@@ -26,6 +26,9 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
             1. Запрос ученика: {userQuery}
             2. Правильный запрос: {rightQuery}
 
+            Если запрос пользователя вытащит те же самые данные что и в правильном запросе - в поле AnswerCorrectness поставь true, в любом другом случае false,
+            Ставь true - даже если запрос очень не оптимизированный и долгий - просто занижай балл
+
             Если запрос пользователя будет выполняться заметно дольше чем запрос правильный, то в своём анализе дай пользователю пояснения,
                 расскажи почему его запрос работает медленнее, и что нужно исправить или сделать чтобы он работал быстрее.
                 И дай некоторые советы по оптимизации запросов.
@@ -40,7 +43,8 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
                 ""Edges"": [
                     {{""From"": 1, ""To"": 2}}
                 ],
-                ""UserGrade"": 3.34
+                ""UserGrade"": 3.34,
+                ""AnswerCorrectness"": false
             }}
 
             Требования:
