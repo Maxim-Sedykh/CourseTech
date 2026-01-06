@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Dto.CourseResult;
-using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;

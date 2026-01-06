@@ -1,7 +1,7 @@
 ﻿using CourseTech.Domain.Interfaces.Databases.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.DAL.Repositories.Base;
+namespace CourseTech.DAL.Repositories;
 
 public class ViewRepository<TView> : IViewRepository<TView> where TView : class
 {

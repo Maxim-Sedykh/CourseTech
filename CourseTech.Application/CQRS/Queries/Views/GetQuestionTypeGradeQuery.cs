@@ -1,4 +1,4 @@
-﻿using CourseTech.DAL.Views;
+﻿using CourseTech.Domain.Views;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Queries.Views;

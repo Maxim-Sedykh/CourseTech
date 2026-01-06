@@ -1,15 +1,14 @@
-﻿namespace CourseTech.Domain.Interfaces.Services.Question
+﻿namespace CourseTech.Domain.Interfaces.Services.Question;
+
+/// <summary>
+/// Интерфейс для фабрики по созданию стратегии для проверки ответа пользователя
+/// </summary>
+public interface IAnswerCheckingStrategyFactory
 {
     /// <summary>
-    /// Интерфейс для фабрики по созданию стратегии для проверки ответа пользователя
+    /// Создать стратегию для проверки ответа пользователя в зависимости от типа его ответа
     /// </summary>
-    public interface IAnswerCheckingStrategyFactory
-    {
-        /// <summary>
-        /// Создать стратегию для проверки ответа пользователя в зависимости от типа его ответа
-        /// </summary>
-        /// <param name="userAnswerType">Тип ответа пользователя</param>
-        /// <returns></returns>
-        IAnswerCheckingStrategy CreateAnswerCheckingStrategy(Type userAnswerType);
-    }
+    /// <param name="userAnswerType">Тип ответа пользователя</param>
+    /// <returns></returns>
+    IAnswerCheckingStrategy CreateAnswerCheckingStrategy(Type userAnswerType);
 }

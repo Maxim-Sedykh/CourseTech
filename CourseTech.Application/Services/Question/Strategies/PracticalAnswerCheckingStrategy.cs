@@ -1,39 +1,41 @@
-﻿using CourseTech.Domain.Dto.Question;
-using CourseTech.Domain.Dto.Question.CheckQuestions;
+﻿using CourseTech.Domain.Dto.Question.CheckQuestions;
 using CourseTech.Domain.Dto.Question.CorrectAnswer;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Services.Question;
 using CourseTech.Domain.Interfaces.UserQueryAnalyzers;
-using Microsoft.Extensions.Logging;
 
-namespace CourseTech.Application.Services.Question.Strategies
+namespace CourseTech.Application.Services.Question.Strategies;
+
+/// <summary>
+/// Стратегия для проверки вопроса практического типа
+/// Тут просто отправляем все данные в ChatGptAPI
+/// </summary>
+public class PracticalAnswerCheckingStrategy(IChatGptQueryAnalyzer chatGptAnalyzer) : IAnswerCheckingStrategy
 {
-    public class PracticalAnswerCheckingStrategy(IChatGptQueryAnalyzer chatGptAnalyzer, ILogger logger) : IAnswerCheckingStrategy
+    /// <inheritdoc cref="IAnswerCheckingStrategy.UserAnswerType"/>
+    public Type UserAnswerType { get; } = typeof(PracticalQuestionUserAnswerDto);
+
+    /// <inheritdoc cref="IAnswerCheckingStrategy.CheckAnswerAsync"/>
+    public async Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, float questionGrade)
     {
-        public Type UserAnswerType { get; } = typeof(PracticalQuestionUserAnswerDto);
+        var practicalUserAnswer = (PracticalQuestionUserAnswerDto)userAnswer;
+        var questionChecking = (PracticalQuestionCheckingDto)checkQuestion;
 
-        public async Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, UserGradeDto userGrade, float questionGrade)
+        var correctAnswer = new PracticalQuestionCorrectAnswerDto
         {
-            var practicalUserAnswer = (PracticalQuestionUserAnswerDto)userAnswer;
-            var questionChecking = (PracticalQuestionCheckingDto)checkQuestion;
+            Id = practicalUserAnswer.QuestionId,
+            CorrectAnswer = questionChecking.CorrectQueryCode
+        };
 
-            var correctAnswer = new PracticalQuestionCorrectAnswerDto
-            {
-                Id = practicalUserAnswer.QuestionId,
-                CorrectAnswer = questionChecking.CorrectQueryCode
-            };
+        var userQueryChatGptAnalysDto = await chatGptAnalyzer.AnalyzeUserQuery(
+                questionGrade,
+                practicalUserAnswer.UserCodeAnswer,
+                questionChecking.CorrectQueryCode);
 
-            var userQueryChatGptAnalysDto = await chatGptAnalyzer.AnalyzeUserQuery(
-                    questionGrade,
-                    practicalUserAnswer.UserCodeAnswer,
-                    questionChecking.CorrectQueryCode);
+        correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;
+        correctAnswer.UserGrade = userQueryChatGptAnalysDto.UserGrade;
 
-            correctAnswer.ChatGptAnalysis = userQueryChatGptAnalysDto;
-
-            userGrade.Grade = userQueryChatGptAnalysDto.UserGrade;
-
-            return correctAnswer;
-        }
+        return correctAnswer;
     }
 }

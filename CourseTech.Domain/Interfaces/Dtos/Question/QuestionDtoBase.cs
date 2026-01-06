@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Dto.Question.Get;
+﻿using CourseTech.Domain.Dto.Question.GetQuestions;
 using System.Text.Json.Serialization;
 
 namespace CourseTech.Domain.Interfaces.Dtos.Question;
@@ -15,17 +15,15 @@ public abstract class QuestionDtoBase
     /// <summary>
     /// Идентификатор вопроса.
     /// </summary>
-    public abstract int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Номер вопроса.
     /// </summary>
-    public abstract int Number { get; set; }
+    public int Number { get; set; }
 
     /// <summary>
     /// Вопрос, который отображается пользователю.
     /// </summary>
-    public abstract string DisplayQuestion { get; set; }
-
-    public abstract string QuestionType { get; set; }
+    public string DisplayQuestion { get; set; }
 }

@@ -21,11 +21,6 @@ public class LessonRecordService(
             $"{CacheKeys.UserLessonRecords}{userId}",
             async () => await mediator.Send(new GetLessonRecordDtosByUserIdQuery(userId)));
 
-        if (!userLessonRecords.Any())
-        {
-            return CollectionResult<LessonRecordDto>.Failure((int)ErrorCodes.LessonRecordsNotFound, ErrorMessage.LessonRecordsNotFound);
-        }
-
         return CollectionResult<LessonRecordDto>.Success(userLessonRecords);
     }
 }

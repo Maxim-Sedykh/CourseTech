@@ -26,6 +26,17 @@ using Roles = CourseTech.Domain.Constants.Roles;
 
 namespace CourseTech.Application.Services;
 
+/// <summary>
+/// Сервис для аутентификации и авторизации
+/// </summary>
+/// <param name="mediator"></param>
+/// <param name="mapper"></param>
+/// <param name="tokenService"></param>
+/// <param name="unitOfWork"></param>
+/// <param name="authValidator"></param>
+/// <param name="cacheService"></param>
+/// <param name="logger"></param>
+/// <param name="jwtOptions"></param>
 public class AuthService(
         IMediator mediator,
         IMapper mapper,

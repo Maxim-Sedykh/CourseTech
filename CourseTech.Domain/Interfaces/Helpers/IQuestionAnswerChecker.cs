@@ -1,11 +1,11 @@
-﻿using CourseTech.DAL.Views;
-using CourseTech.Domain.Dto.Question;
+﻿using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Interfaces.Dtos.Question;
+using CourseTech.Domain.Views;
 
 namespace CourseTech.Domain.Interfaces.Helpers;
 
 /// <summary>
-/// Сервис для проверки пользовательский ответов по практической части уроков.
+/// Интерфейс сервиса для проверки пользовательский ответов по практической части уроков.
 /// </summary>
 public interface IQuestionAnswerChecker
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using CourseTech.DAL.Views;
+using CourseTech.Domain.Views;
 
 namespace CourseTech.DAL.Configurations.Views;
 

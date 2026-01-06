@@ -34,12 +34,6 @@ public class LessonRecord : IEntityId<long>, IAuditable
     /// </summary>
     public float Mark { get; set; }
 
-    /// <summary>
-    /// Запись прохождения урока пользователя во время демо-режима
-    /// Демо-режим - вопросы тестового и открытого типа до лекционного материала
-    /// </summary>
-    public bool IsDemo { get; set; }
-
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

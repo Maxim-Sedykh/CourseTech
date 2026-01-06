@@ -7,7 +7,5 @@ namespace CourseTech.Domain.Dto.Question.CheckQuestions;
 /// </summary>
 public class PracticalQuestionCheckingDto : CheckQuestionDtoBase
 {
-    public int QuestionId { get; set; }
-
     public string CorrectQueryCode { get; set; }
 }

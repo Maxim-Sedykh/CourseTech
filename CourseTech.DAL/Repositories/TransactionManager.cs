@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
-namespace CourseTech.DAL.Repositories.Base;
+namespace CourseTech.DAL.Repositories;
 
+/// <summary>
+/// Сервис для управления транзакциями EF Core
+/// </summary>
+/// <param name="dbContext"></param>
 public class TransactionManager(CourseDbContext dbContext) : ITransactionManager
 {
     /// <inheritdoc/>

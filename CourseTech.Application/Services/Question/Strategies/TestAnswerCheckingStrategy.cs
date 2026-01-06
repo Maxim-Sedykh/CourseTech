@@ -1,36 +1,39 @@
-﻿using CourseTech.Domain.Dto.Question;
-using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Pass;
+﻿using CourseTech.Domain.Dto.Question.CheckQuestions;
+using CourseTech.Domain.Dto.Question.CorrectAnswer;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Services.Question;
 
-namespace CourseTech.Application.Services.Question.Strategies
+namespace CourseTech.Application.Services.Question.Strategies;
+
+/// <summary>
+/// Стратегия для проверки вопросов тестового типа
+/// </summary>
+public class TestAnswerCheckingStrategy : IAnswerCheckingStrategy
 {
-    public class TestAnswerCheckingStrategy : IAnswerCheckingStrategy
+    /// <inheritdoc cref="IAnswerCheckingStrategy.UserAnswerType"/>
+    public Type UserAnswerType { get; } = typeof(TestQuestionUserAnswerDto);
+
+    /// <inheritdoc cref="IAnswerCheckingStrategy.CheckAnswerAsync"/>
+    public Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, float questionGrade)
     {
-        public Type UserAnswerType { get; } = typeof(TestQuestionUserAnswerDto);
+        var testUserAnswer = (TestQuestionUserAnswerDto)userAnswer;
+        var correctTestVariant = ((TestQuestionCheckingDto)checkQuestion).CorrectVariant;
 
-        public Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, UserGradeDto userGrade, float questionGrade)
+        bool isCorrect = testUserAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber;
+
+        var result = new TestQuestionCorrectAnswerDto
         {
-            var testUserAnswer = (TestQuestionUserAnswerDto)userAnswer;
-            var correctTestVariant = ((TestQuestionCheckingDto)checkQuestion).CorrectVariant;
+            Id = testUserAnswer.QuestionId,
+            CorrectAnswer = correctTestVariant.Content,
+            AnswerCorrectness = isCorrect
+        };
 
-            bool isCorrect = testUserAnswer.UserAnswerNumberOfVariant == correctTestVariant.VariantNumber;
-
-            if (isCorrect)
-            {
-                userGrade.Grade += questionGrade;
-            }
-
-            var result = new TestQuestionCorrectAnswerDto
-            {
-                Id = testUserAnswer.QuestionId,
-                CorrectAnswer = correctTestVariant.Content,
-                AnswerCorrectness = isCorrect
-            };
-
-            return Task.FromResult((CorrectAnswerDtoBase)result);
+        if (isCorrect)
+        {
+            result.UserGrade += questionGrade;
         }
+
+        return Task.FromResult((CorrectAnswerDtoBase)result);
     }
 }

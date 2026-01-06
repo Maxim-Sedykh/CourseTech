@@ -3,20 +3,21 @@ using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.UserProfile;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseTech.WebApi.Controllers.User;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class UserProfileController(IUserProfileService userProfileService) : BaseApiController
+public class UserProfileController(IUserProfileService userProfileService) : PrincipalInfoController
 {
     [HttpGet(RouteConstants.GetUserProfile)]
-    public async Task<ActionResult<DataResult<UserProfileDto>>> GetUserProfileAsync([FromQuery] string userId)
+    public async Task<ActionResult<DataResult<UserProfileDto>>> GetUserProfileAsync()
     {
-        var response = await userProfileService.GetUserProfileAsync(new Guid(userId));
+        var response = await userProfileService.GetUserProfileAsync(AuthorizedUserId);
         if (response.IsSuccess)
         {
             return Ok(response);

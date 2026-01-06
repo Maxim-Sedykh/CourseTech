@@ -1,6 +1,8 @@
 ﻿using CourseTech.Application.Mapping;
 using CourseTech.Application.Services;
 using CourseTech.Application.Services.Question;
+using CourseTech.Application.Services.Question.Factory;
+using CourseTech.Application.Services.Question.Strategies;
 using CourseTech.Application.Validations.FluentValidations.Auth;
 using CourseTech.Application.Validations.FluentValidations.Lesson;
 using CourseTech.Application.Validations.FluentValidations.Review;
@@ -56,6 +58,12 @@ public static class DependencyInjection
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<IAnswerCheckingStrategy, OpenAnswerCheckingStrategy>();
+        services.AddScoped<IAnswerCheckingStrategy, PracticalAnswerCheckingStrategy>();
+        services.AddScoped<IAnswerCheckingStrategy, TestAnswerCheckingStrategy>();
+
+        services.AddScoped<IAnswerCheckingStrategyFactory, AnswerCheckingStrategyFactory>();
     }
 
     /// <summary>

@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Dto.Lesson;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services;

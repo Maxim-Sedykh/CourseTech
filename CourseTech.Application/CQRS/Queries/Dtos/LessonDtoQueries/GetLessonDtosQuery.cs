@@ -1,4 +1,4 @@
-﻿using CourseTech.Domain.Dto.Lesson.LessonInfo;
+﻿using CourseTech.Domain.Dto.Lesson.Info;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;

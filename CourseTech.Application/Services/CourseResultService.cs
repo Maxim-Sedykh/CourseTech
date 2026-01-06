@@ -8,7 +8,6 @@ using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Constants.LearningProcess;
 using CourseTech.Domain.Dto.CourseResult;
-using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Dto.LessonRecord;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
@@ -71,7 +70,7 @@ public class CourseResultService(
     /// <param name="userLessonRecords"></param>
     /// <param name="lessonsCount"></param>
     /// <returns>Модель для анализа</returns>
-    private UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
+    private static UserAnalysDto CreateAnalys(float usersCurrentGrade, LessonRecordDto[] userLessonRecords, int lessonsCount)
     {
         var analys = new UserAnalysDto { Analys = AnalysParts.UndefinedOverall };
         var examLessonRecord = userLessonRecords.LastOrDefault();

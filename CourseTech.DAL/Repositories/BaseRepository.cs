@@ -1,8 +1,12 @@
 ﻿using CourseTech.Domain.Interfaces.Databases.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseTech.DAL.Repositories.Base;
+namespace CourseTech.DAL.Repositories;
 
+/// <summary>
+/// Generic-репозиторий. Абстракция над DbContext, основные CRUD операции
+/// </summary>
+/// <typeparam name="TEntity"></typeparam>
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
     private readonly CourseDbContext _dbContext;
@@ -53,7 +57,12 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
 
         return entity;
     }
-
+    
+    /// <summary>
+    /// Валидация сущности на NULL
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     private void ValidateEntityOnNull(TEntity entity)
     {
         if (entity is null)

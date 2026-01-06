@@ -8,7 +8,5 @@ namespace CourseTech.Domain.Dto.Question.CheckQuestions;
 /// </summary>
 public class TestQuestionCheckingDto : CheckQuestionDtoBase
 {
-    public int QuestionId { get; set; }
-
     public TestVariantDto CorrectVariant { get; set; }
 }

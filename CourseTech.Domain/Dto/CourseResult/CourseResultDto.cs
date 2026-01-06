@@ -1,4 +1,4 @@
-﻿namespace CourseTech.Domain.Dto.FinalResult;
+﻿namespace CourseTech.Domain.Dto.CourseResult;
 
 /// <summary>
 /// Модель данных для показа результата прохождения курса.

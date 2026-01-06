@@ -7,7 +7,6 @@ using CourseTech.Application.CQRS.Queries.Views;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson.Practice;
-using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
@@ -120,8 +119,7 @@ public class QuestionService(
 
             var demoLessonRecord = await lessonRecordRepository.GetAll()
                 .Where(x => x.LessonId == lessonId
-                    && x.UserId == userId
-                    && x.IsDemo).ToListAsync();
+                    && x.UserId == userId).ToListAsync();
 
             userGrade += userGrade * 0.1f;
 

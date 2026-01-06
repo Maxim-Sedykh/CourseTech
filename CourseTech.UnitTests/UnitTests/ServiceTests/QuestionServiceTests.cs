@@ -1,22 +1,22 @@
-﻿using CourseTech.DAL.Views;
+﻿using AutoFixture;
+using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
+using CourseTech.Application.CQRS.Queries.Entities.LessonQueries;
+using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
+using CourseTech.Application.CQRS.Queries.Views;
 using CourseTech.Domain.Dto.Lesson.Practice;
 using CourseTech.Domain.Dto.Question;
-using CourseTech.Domain.Dto.Question.Get;
+using CourseTech.Domain.Dto.Question.CorrectAnswer;
+using CourseTech.Domain.Dto.Question.GetQuestions;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Result;
-using Moq;
-using Xunit;
-using AutoFixture;
+using CourseTech.Domain.Views;
 using CourseTech.Tests.Configurations.Fixture;
 using Microsoft.EntityFrameworkCore.Storage;
+using Moq;
 using System.Data;
-using CourseTech.Domain.Dto.Question.Pass;
-using CourseTech.Application.CQRS.Queries.Views;
-using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
-using CourseTech.Application.CQRS.Queries.Entities.LessonQueries;
-using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
+using Xunit;
 
 namespace CourseTech.Tests.UnitTests.ServiceTests;
 
@@ -84,7 +84,7 @@ public class QuestionServiceTests : IClassFixture<QuestionServiceFixture>
         _fixture.MediatorMock
             .Setup(m => m.Send(It.IsAny<GetLessonQuestionDtosQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(questions);
-        
+
         var validationResult = BaseResult.Failure((int)ErrorCodes.LessonNotFound, errorMessage);
         _fixture.QuestionValidatorMock
             .Setup(v => v.ValidateLessonQuestions(lesson, questions))

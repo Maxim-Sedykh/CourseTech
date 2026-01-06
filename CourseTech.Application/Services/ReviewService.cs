@@ -32,7 +32,7 @@ public class ReviewService(
             return BaseResult.Failure((int)ErrorCodes.UserProfileNotFound, ErrorMessage.UserProfileNotFound);
         }
 
-        using (var transaction = await unitOfWork.BeginTransactionAsync())
+        await using(var transaction = await unitOfWork.BeginTransactionAsync())
         {
             try
             {
@@ -82,11 +82,6 @@ public class ReviewService(
             CacheKeys.Reviews,
             async () => await mediator.Send(new GetReviewDtosQuery()));
 
-        if (!reviews.Any())
-        {
-            return CollectionResult<ReviewDto>.Failure((int)ErrorCodes.ReviewsNotFound, ErrorMessage.ReviewsNotFound);
-        }
-
         return CollectionResult<ReviewDto>.Success(reviews);
     }
 
@@ -94,11 +89,6 @@ public class ReviewService(
     public async Task<CollectionResult<ReviewDto>> GetUserReviews(Guid userId)
     {
         var reviews = await mediator.Send(new GetUserReviewDtosQuery(userId));
-
-        if (!reviews.Any())
-        {
-            return CollectionResult<ReviewDto>.Failure((int)ErrorCodes.ReviewsNotFound, ErrorMessage.ReviewsNotFound);
-        }
 
         return CollectionResult<ReviewDto>.Success(reviews);
     }

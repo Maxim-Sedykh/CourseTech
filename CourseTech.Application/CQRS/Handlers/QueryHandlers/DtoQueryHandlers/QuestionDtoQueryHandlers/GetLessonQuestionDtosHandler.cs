@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CourseTech.Application.CQRS.Queries.Dtos.QuestionDtoQueries;
-using CourseTech.Domain.Dto.Question.Get;
 using CourseTech.Domain.Entities.QuestionEntities;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 using CourseTech.Domain.Extensions;

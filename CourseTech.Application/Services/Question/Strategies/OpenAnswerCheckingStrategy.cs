@@ -1,36 +1,40 @@
 ﻿using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Pass;
+using CourseTech.Domain.Dto.Question.CorrectAnswer;
 using CourseTech.Domain.Dto.Question.QuestionUserAnswer;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Services.Question;
 
-namespace CourseTech.Application.Services.Question.Strategies
+namespace CourseTech.Application.Services.Question.Strategies;
+
+/// <summary>
+/// Стратегия для проверки вопроса открытого типа
+/// </summary>
+public class OpenAnswerCheckingStrategy : IAnswerCheckingStrategy
 {
-    public class OpenAnswerCheckingStrategy : IAnswerCheckingStrategy
+    /// <inheritdoc cref="IAnswerCheckingStrategy.UserAnswerType"/>
+    public Type UserAnswerType { get; } = typeof(OpenQuestionUserAnswerDto);
+
+    /// <inheritdoc cref="IAnswerCheckingStrategy.CheckAnswerAsync"/>
+    public Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, float questionGrade)
     {
-        public Type UserAnswerType { get; } = typeof(OpenQuestionUserAnswerDto);
+        var openUserAnswer = (OpenQuestionUserAnswerDto)userAnswer;
+        var openQuestionAnswerVariants = ((OpenQuestionCheckingDto)checkQuestion).OpenQuestionsAnswers;
 
-        public Task<CorrectAnswerDtoBase> CheckAnswerAsync(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestion, UserGradeDto userGrade, float questionGrade)
+        string normalizedUserAnswer = openUserAnswer.UserAnswer.ToLower().Trim();
+
+        var result = new OpenQuestionCorrectAnswerDto
         {
-            var openUserAnswer = (OpenQuestionUserAnswerDto)userAnswer;
-            var openQuestionAnswerVariants = ((OpenQuestionCheckingDto)checkQuestion).OpenQuestionsAnswers;
+            Id = openUserAnswer.QuestionId,
+            CorrectAnswer = openQuestionAnswerVariants.FirstOrDefault(),
+            AnswerCorrectness = openQuestionAnswerVariants.Any(v => v.Equals(normalizedUserAnswer, StringComparison.OrdinalIgnoreCase)),
+        };
 
-            string normalizedUserAnswer = openUserAnswer.UserAnswer.ToLower().Trim();
-
-            var result = new OpenQuestionCorrectAnswerDto
-            {
-                Id = openUserAnswer.QuestionId,
-                CorrectAnswer = openQuestionAnswerVariants.FirstOrDefault(),
-                AnswerCorrectness = openQuestionAnswerVariants.Any(v => v.Equals(normalizedUserAnswer, StringComparison.OrdinalIgnoreCase))
-            };
-
-            if (result.AnswerCorrectness)
-            {
-                userGrade.Grade += questionGrade;
-            }
-
-            return Task.FromResult((CorrectAnswerDtoBase)result);
+        if (result.AnswerCorrectness)
+        {
+            result.UserGrade = questionGrade;
         }
+
+        return Task.FromResult((CorrectAnswerDtoBase)result);
     }
 }

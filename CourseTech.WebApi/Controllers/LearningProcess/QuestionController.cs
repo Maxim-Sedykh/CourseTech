@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Lesson.Practice;
-using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Interfaces.Services.Question;
 using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +12,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class QuestionController(IQuestionService questionService) : BaseApiController
+public class QuestionController(IQuestionService questionService) : PrincipalInfoController
 {
     [HttpPost(RouteConstants.GetLessonQuestions)]
     public async Task<ActionResult<DataResult<LessonPracticeDto>>> GetLessonQuestionsAsync(int lessonId)

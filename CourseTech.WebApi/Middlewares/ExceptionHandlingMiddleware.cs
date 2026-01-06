@@ -19,12 +19,20 @@ public class ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
         }
         catch (Exception ex)
         {
+#if DEBUG
             Debugger.Break();
+#endif
 
             await HandleExceptionAsync(httpContext, ex);
         }
     }
 
+    /// <summary>
+    /// Обработать ошибку и отдать соответствующий response
+    /// </summary>
+    /// <param name="httpContext"></param>
+    /// <param name="exception"></param>
+    /// <returns></returns>
     private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         logger.Error(exception, exception.Message);

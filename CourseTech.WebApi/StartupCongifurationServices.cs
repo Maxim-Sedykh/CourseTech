@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using CourseTech.Application.Converters;
 using CourseTech.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -120,11 +119,6 @@ public static class StartupCongifurationServices
     /// <param name="services"></param>
     public static void AddControllersAndJsonConvertors(this IServiceCollection services)
     {
-        services.AddControllers().AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.Converters.Add(new UserAnswerDtoConverter());
-            options.JsonSerializerOptions.Converters.Add(new QuestionDtoConverter());
-            options.JsonSerializerOptions.Converters.Add(new CorrectAnswerDtoConverter());
-        });
+        services.AddControllers();
     }
 }

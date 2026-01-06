@@ -7,7 +7,5 @@ namespace CourseTech.Domain.Dto.Question.CheckQuestions;
 /// </summary>
 public class OpenQuestionCheckingDto : CheckQuestionDtoBase
 {
-    public int QuestionId { get; set; }
-
     public List<string> OpenQuestionsAnswers { get; set; }
 }

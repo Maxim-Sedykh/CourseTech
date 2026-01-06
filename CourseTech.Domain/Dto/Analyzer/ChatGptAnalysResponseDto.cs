@@ -2,30 +2,32 @@
 
 namespace CourseTech.Domain.Dto.Analyzer;
 
+/// <summary>
+/// Модель с ответом от ChatGPT API по поводу анализа ответа пользователя
+/// </summary>
 public class ChatGptAnalysResponseDto
 {
+    /// <summary>
+    /// Оценка которую ИИ дал на ответ пользователя
+    /// </summary>
     [JsonPropertyName("UserGrade")]
     public float UserGrade { get; set; }
 
+    /// <summary>
+    /// Анализ запроса пользователя
+    /// </summary>
     [JsonPropertyName("UserQueryAnalys")]
     public string UserQueryAnalys { get; set; }
 
+    /// <summary>
+    /// Вершины графа
+    /// </summary>
     [JsonPropertyName("Vertexes")]
     public Vertex[] Vertexes { get; set; }
 
+    /// <summary>
+    /// Рёбра графа
+    /// </summary>
     [JsonPropertyName("Edges")]
     public Edge[] Edges { get; set; }
-}
-
-public class Vertex
-{
-    public int Number { get; set; }
-    public string Name { get; set; }
-}
-
-public class Edge
-{
-    public int From { get; set; }
-
-    public int To { get; set; }
 }

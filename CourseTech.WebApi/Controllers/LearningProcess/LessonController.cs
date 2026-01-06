@@ -3,7 +3,7 @@ using CourseTech.Application.Validations.FluentValidations.Lesson;
 using CourseTech.Domain.Constants;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.Lesson;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using CourseTech.WebApi.Attributes;
@@ -16,7 +16,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class LessonController(ILessonService lessonService, LessonLectureValidator lessonLectureValidator) : BaseApiController
+public class LessonController(ILessonService lessonService, LessonLectureValidator lessonLectureValidator) : PrincipalInfoController
 {
     [AllowRoles(Roles.Moderator, Roles.Admin)]
     [HttpPut(RouteConstants.UpdateLessonLecture)]

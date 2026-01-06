@@ -139,7 +139,7 @@ public class RoleService(
             return DataResult<UserRoleDto>.Failure((int)validateRoleForUserResult.Error.Code, validateRoleForUserResult.Error.Message);
         }
 
-        using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
+        await using(var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
         {
             try
             {

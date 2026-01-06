@@ -1,6 +1,4 @@
 ﻿using CourseTech.Domain.Dto.Question.CorrectAnswer;
-using CourseTech.Domain.Dto.Question.Get;
-using CourseTech.Domain.Dto.Question.Pass;
 using System.Text.Json.Serialization;
 
 namespace CourseTech.Domain.Interfaces.Dtos.Question;
@@ -17,12 +15,15 @@ public abstract class CorrectAnswerDtoBase
     /// <summary>
     /// Идентификатор вопроса.
     /// </summary>
-    public abstract int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Правильный ответ.
     /// </summary>
-    public abstract string CorrectAnswer { get; set; }
+    public string CorrectAnswer { get; set; }
 
-    public abstract string QuestionType { get; set; }
+    /// <summary>
+    /// Оценка пользователя за вопрос
+    /// </summary>
+    public float UserGrade { get; set; }
 }

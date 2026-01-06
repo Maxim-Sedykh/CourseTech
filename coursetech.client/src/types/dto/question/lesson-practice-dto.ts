@@ -5,5 +5,4 @@ export interface LessonPracticeDto {
     lessonId: number;
     lessonType: LessonTypes;
     questions: IQuestionDto[];
-    isDemoMode: boolean;
 }

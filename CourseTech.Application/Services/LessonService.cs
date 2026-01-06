@@ -5,7 +5,7 @@ using CourseTech.Application.CQRS.Queries.Entities.UserProfileQueries;
 using CourseTech.Application.Resources;
 using CourseTech.Domain.Constants.Cache;
 using CourseTech.Domain.Dto.Lesson;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Cache;
@@ -45,7 +45,7 @@ public class LessonService(
             CacheKeys.LessonNames,
             async () => await mediator.Send(new GetLessonNamesQuery()));
 
-        if (!lessonNames.Any())
+        if (lessonNames.Length == 0)
         {
             logger.Error(ErrorMessage.LessonsNotFound);
 
@@ -100,7 +100,7 @@ public class LessonService(
     /// <param name="lesson"></param>
     /// <param name="dto"></param>
     /// <returns>Если свойства разные - возвращает false</returns>
-    private bool HasChanges(Lesson lesson, LessonLectureDto dto)
+    private static bool HasChanges(Lesson lesson, LessonLectureDto dto)
     {
         return lesson.Name != dto.Name ||
                lesson.LessonType != dto.LessonType ||

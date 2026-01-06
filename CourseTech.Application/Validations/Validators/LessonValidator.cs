@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.Resources;
 using CourseTech.Domain.Dto.Lesson;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;

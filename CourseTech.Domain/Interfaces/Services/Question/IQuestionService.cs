@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Dto.Lesson.Practice;
-using CourseTech.Domain.Dto.Lesson.Test;
 using CourseTech.Domain.Result;
 
 namespace CourseTech.Domain.Interfaces.Services.Question;

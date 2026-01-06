@@ -15,7 +15,5 @@ public abstract class UserAnswerDtoBase
     /// <summary>
     /// Идентификатор вопроса
     /// </summary>
-    public abstract int QuestionId { get; set; }
-
-    public abstract string QuestionType { get; set; }
+    public int QuestionId { get; set; }
 }

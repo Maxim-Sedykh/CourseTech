@@ -1,5 +1,5 @@
 ﻿using CourseTech.DAL.Interceptors;
-using CourseTech.DAL.Views;
+using CourseTech.Domain.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Reflection;

@@ -1,6 +1,6 @@
 ﻿using CourseTech.Application.CQRS.Queries.Views;
-using CourseTech.DAL.Views;
 using CourseTech.Domain.Interfaces.Databases.Repositories;
+using CourseTech.Domain.Views;
 using MediatR;
 
 namespace CourseTech.Application.CQRS.Handlers.QueryHandlers.ViewQueryHandlers;

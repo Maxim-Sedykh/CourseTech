@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CourseTech.Application.CQRS.Queries.Dtos.LessonDtoQueries;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Extensions;
 using CourseTech.Domain.Interfaces.Databases.Repositories;

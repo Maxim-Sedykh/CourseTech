@@ -1,5 +1,4 @@
 ﻿using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Get;
 using System.Text.Json.Serialization;
 
 namespace CourseTech.Domain.Interfaces.Dtos.Question;
@@ -8,13 +7,13 @@ namespace CourseTech.Domain.Interfaces.Dtos.Question;
 /// Интерфейс для модели, в которой указаны данные для проверки правильности вопроса.
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(OpenQuestionCheckingDto), "TestQuestionDto")]
-[JsonDerivedType(typeof(TestQuestionCheckingDto), "OpenQuestionDto")]
-[JsonDerivedType(typeof(PracticalQuestionCheckingDto), "PracticalQuestionDto")]
+[JsonDerivedType(typeof(OpenQuestionCheckingDto), "OpenQuestionCheckingDto")]
+[JsonDerivedType(typeof(TestQuestionCheckingDto), "TestQuestionCheckingDto")]
+[JsonDerivedType(typeof(PracticalQuestionCheckingDto), "PracticalQuestionCheckingDto")]
 public abstract class CheckQuestionDtoBase
 {
     /// <summary>
     /// Идентификатор вопроса.
     /// </summary>
-    public abstract int QuestionId { get; set; }
+    public int QuestionId { get; set; }
 }

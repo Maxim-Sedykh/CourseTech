@@ -23,21 +23,18 @@ const questionService = new QuestionService(ApiPaths.QUESTION_API_PATH);
 
 export function PassLessonPage() {
     const navigate = useNavigate();
-    const { lessonId, isDemoMode } = useParams<{ lessonId: string, isDemoMode: string }>();
+    const { lessonId } = useParams<{ lessonId: string }>();
     const lessonIdNumber = Number(lessonId);
-    const isDemoModeConvert = isDemoMode === "false" ? false : true;
 
     const [formData, setFormData] = useState<PracticeUserAnswersDto>({
         lessonId: lessonIdNumber,
-        userAnswerDtos: [],
-        isDemoMode: isDemoModeConvert
+        userAnswerDtos: []
     });
 
     const [lessonPracticeDto, setLessonPracticeDto] = useState<LessonPracticeDto>({
         lessonId: lessonIdNumber,
         lessonType: LessonTypes.Common,
-        questions: [],
-        isDemoMode: isDemoModeConvert
+        questions: []
     });
 
     const [practiceCorrectAnswersDto, setPracticeCorrectAnswersDto] = useState<PracticeCorrectAnswersDto | null>(null);
@@ -124,10 +121,6 @@ export function PassLessonPage() {
             setPracticeCorrectAnswersDto(correctAnswers);
             setIsSubmitted(true);
 
-            if (lessonPracticeDto.isDemoMode) {
-                navigate(`/lesson/read/${lessonPracticeDto.lessonId}`);
-            }
-
             if (lessonPracticeDto?.lessonType === LessonTypes.Exam) {
                 setTimeout(() => {
                     navigate('/course/result');
@@ -143,7 +136,7 @@ export function PassLessonPage() {
     useEffect(() => {
         const fetchLesson = async () => {
             try {
-                const response = await questionService.getLessonQuestions(lessonIdNumber, isDemoModeConvert);
+                const response = await questionService.getLessonQuestions(lessonIdNumber);
                 setLessonPracticeDto(response.data as LessonPracticeDto);
             } catch (error) {
                 console.error("Ошибка при загрузке вопросов:", error);
@@ -299,9 +292,6 @@ export function PassLessonPage() {
                             : "Практическая часть занятия"}
 
                         
-                    </h1>
-                    <h1 className="text-dark text-center mb-0">
-                        {lessonPracticeDto.isDemoMode ? "Демо-режим, проверочная оценка знаний" : ""}
                     </h1>
                 </Container>
             </div>

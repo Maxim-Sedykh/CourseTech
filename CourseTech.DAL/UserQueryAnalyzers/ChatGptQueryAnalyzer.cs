@@ -5,8 +5,13 @@ using System.Text.Json;
 
 namespace CourseTech.DAL.UserQueryAnalyzers;
 
+/// <summary>
+/// Сервис для анализа запроса пользователя
+/// </summary>
+/// <param name="chatGptService">Сервис для работы с ChatGPT</param>
 public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQueryAnalyzer
 {
+    /// <inheritdoc/>
     public async Task<ChatGptAnalysResponseDto> AnalyzeUserQuery(
         float maxGradePerQuestion,
         string userQuery,
@@ -60,18 +65,18 @@ public class ChatGptQueryAnalyzer(IChatGptService chatGptService) : IChatGptQuer
 
             return JsonSerializer.Deserialize<ChatGptAnalysResponseDto>(chatGptResponseJson);
         }
-        catch
+        catch(Exception ex)
         {
-            return new ChatGptAnalysResponseDto
-            {
-                UserQueryAnalys = "Не удалось проанализировать запрос",
-                Vertexes = [],
-                Edges = []
-            };
+            throw;
         }
     }
 
-    private string CleanJsonResponse(string rawResponse)
+    /// <summary>
+    /// Очистить ответ ChatGPT от разных лишних символов, которые мешают парсить это в JSON
+    /// </summary>
+    /// <param name="rawResponse"></param>
+    /// <returns></returns>
+    private static string CleanJsonResponse(string rawResponse)
     {
         var jsonStart = rawResponse.IndexOf('{');
         var jsonEnd = rawResponse.LastIndexOf('}') + 1;

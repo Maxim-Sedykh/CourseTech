@@ -1,5 +1,5 @@
 ﻿using CourseTech.Application.Resources;
-using CourseTech.Domain.Dto.FinalResult;
+using CourseTech.Domain.Dto.CourseResult;
 using CourseTech.Domain.Entities;
 using CourseTech.Domain.Enum;
 using CourseTech.Domain.Interfaces.Validators;

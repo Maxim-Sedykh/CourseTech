@@ -15,7 +15,6 @@ public static class DateTimeExtension
         var today = DateTime.Today;
         int age = today.Year - dateTime.Year;
 
-        // Проверка, был ли день рождения в этом году
         if (dateTime > today.AddYears(-age)) age--;
 
         return age;

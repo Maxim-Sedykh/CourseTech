@@ -8,13 +8,7 @@ namespace CourseTech.Domain.Dto.Question.CorrectAnswer;
 /// </summary>
 public class PracticalQuestionCorrectAnswerDto : CorrectAnswerDtoBase
 {
-    public int Id { get; set; }
-
-    public string CorrectAnswer { get; set; }
-
     public float QuestionUserGrade { get; set; }
-
-    public string QuestionType { get; set; } = nameof(PracticalQuestionCorrectAnswerDto);
 
     public ChatGptAnalysResponseDto ChatGptAnalysis { get; set; }
 }

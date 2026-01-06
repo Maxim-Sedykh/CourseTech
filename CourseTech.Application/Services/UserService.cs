@@ -41,7 +41,7 @@ public class UserService(
 
         var userToken = await mediator.Send(new GetUserTokenByUserIdQuery(userId));
 
-        using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
+        await using (var transaction = await unitOfWork.BeginTransactionAsync(IsolationLevel.RepeatableRead))
         {
             try
             {

@@ -12,7 +12,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class LessonRecordController(ILessonRecordService lessonRecordService) : BaseApiController
+public class LessonRecordController(ILessonRecordService lessonRecordService) : PrincipalInfoController
 {
     [HttpGet(RouteConstants.GetLessonsRecords)]
     public async Task<ActionResult<CollectionResult<LessonRecordDto>>> GetLessonsRecords()

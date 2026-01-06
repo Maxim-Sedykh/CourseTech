@@ -1,5 +1,5 @@
 ﻿using CourseTech.Domain.Constants.Validation;
-using CourseTech.Domain.Dto.Lesson.LessonInfo;
+using CourseTech.Domain.Dto.Lesson.Info;
 using FluentValidation;
 
 namespace CourseTech.Application.Validations.FluentValidations.Lesson;

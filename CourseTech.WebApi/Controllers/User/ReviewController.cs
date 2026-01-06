@@ -15,7 +15,7 @@ namespace CourseTech.WebApi.Controllers.User;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class ReviewController(IReviewService reviewService, CreateReviewValidator createReviewValidator) : BaseApiController
+public class ReviewController(IReviewService reviewService, CreateReviewValidator createReviewValidator) : PrincipalInfoController
 {
 
     [HttpPost(RouteConstants.CreateReview)]

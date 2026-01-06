@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CourseTech.Domain.Dto.Question.CheckQuestions;
-using CourseTech.Domain.Dto.Question.Get;
+using CourseTech.Domain.Dto.Question.GetQuestions;
 using CourseTech.Domain.Dto.TestVariant;
 using CourseTech.Domain.Entities.QuestionEntities.QuestionTypesEntities;
 

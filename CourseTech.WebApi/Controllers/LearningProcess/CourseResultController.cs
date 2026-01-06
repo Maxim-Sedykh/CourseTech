@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using CourseTech.Domain.Constants.Route;
 using CourseTech.Domain.Dto.CourseResult;
-using CourseTech.Domain.Dto.FinalResult;
 using CourseTech.Domain.Interfaces.Services;
 using CourseTech.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +12,7 @@ namespace CourseTech.WebApi.Controllers.LearningProcess;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class CourseResultController(ICourseResultService courseResultService) : BaseApiController
+public class CourseResultController(ICourseResultService courseResultService) : PrincipalInfoController
 {
     [HttpGet(RouteConstants.GetCouserResult)]
     public async Task<ActionResult<DataResult<CourseResultDto>>> GetCourseResult()

@@ -31,6 +31,16 @@ public static class Startup
         services.Configure<RedisSettings>(builder.Configuration.GetSection(nameof(RedisSettings)));
         services.Configure<ChatGptSettings>(builder.Configuration.GetSection(nameof(ChatGptSettings)));
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
         services.AddEndpointsApiExplorer();
         services.UseHttpClientMetrics();
 
@@ -68,8 +78,6 @@ public static class Startup
         }
 
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-        app.UseHttpsRedirection();
 
         app.UseMetricServer();
         app.UseHttpMetrics();

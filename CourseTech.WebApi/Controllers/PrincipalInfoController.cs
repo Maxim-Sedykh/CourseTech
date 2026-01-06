@@ -3,7 +3,10 @@ using System.Security.Claims;
 
 namespace CourseTech.WebApi.Controllers;
 
-public class BaseApiController : ControllerBase
+/// <summary>
+/// Обёртка над ControllerBase для предоставления данных для аутентификации и авторизации
+/// </summary>
+public class PrincipalInfoController : ControllerBase
 {
     /// <summary>
     /// Идентификатор авторизованного пользователя

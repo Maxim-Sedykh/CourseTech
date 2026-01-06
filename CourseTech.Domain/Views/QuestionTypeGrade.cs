@@ -1,4 +1,4 @@
-﻿namespace CourseTech.DAL.Views;
+﻿namespace CourseTech.Domain.Views;
 
 public class QuestionTypeGrade
 {

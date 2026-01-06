@@ -1,33 +1,35 @@
-﻿using CourseTech.DAL.Views;
-using CourseTech.Domain.Dto.Question;
+﻿using CourseTech.Domain.Dto.Question;
 using CourseTech.Domain.Interfaces.Dtos.Question;
 using CourseTech.Domain.Interfaces.Helpers;
 using CourseTech.Domain.Interfaces.Services.Question;
+using CourseTech.Domain.Views;
+using Serilog;
 
 namespace CourseTech.Application.Services.Question;
 
+/// <summary>
+/// Cервис для проверки пользовательский ответов на вопросы в практической части урока.
+/// </summary>
 public class QuestionAnswerChecker : IQuestionAnswerChecker
 {
     private readonly IAnswerCheckingStrategyFactory _answerCheckingStrategyFactory;
-    private readonly Dictionary<string, float> _questionGrades;
+    private readonly ILogger _logger;
 
-    public QuestionAnswerChecker(IAnswerCheckingStrategyFactory answerCheckingStrategyFactory)
+    public QuestionAnswerChecker(IAnswerCheckingStrategyFactory answerCheckingStrategyFactory, ILogger logger)
     {
         _answerCheckingStrategyFactory = answerCheckingStrategyFactory;
+        _logger = logger;
     }
 
-
+    /// <inheritdoc cref="IQuestionAnswerChecker.CheckUserAnswers"/>
     public async Task<List<CorrectAnswerDtoBase>> CheckUserAnswers(
         List<CheckQuestionDtoBase> checkQuestionDtos,
         List<UserAnswerDtoBase> userAnswers,
         UserGradeDto userGrade,
         List<QuestionTypeGrade> questionTypeGrade)
     {
-        _questionGrades.Clear();
-        foreach (var grade in questionTypeGrade)
-        {
-            _questionGrades[grade.QuestionTypeName] = grade.Grade;
-        }
+        var currentGradesMapping = questionTypeGrade
+            .ToDictionary(x => x.QuestionTypeName, x => x.Grade);
 
         var correctAnswers = new List<CorrectAnswerDtoBase>();
         userGrade.Grade = 0;
@@ -44,24 +46,58 @@ public class QuestionAnswerChecker : IQuestionAnswerChecker
                 return [];
             }
 
-            tasks.Add(CheckAnswer(userAnswer, checkQuestionDto, userGrade));
+            tasks.Add(CheckAnswer(userAnswer, checkQuestionDto, currentGradesMapping));
         }
 
-        var results = await Task.WhenAll(tasks);
+        CorrectAnswerDtoBase[] results = [];
+        var allTasks = Task.WhenAll(tasks);
+
+        try
+        {
+            results = await allTasks;
+        }
+        catch (Exception ex)
+        {
+            if (allTasks.Exception != null)
+            {
+                foreach (var innerEx in allTasks.Exception.Flatten().InnerExceptions)
+                {
+                    _logger.Error(innerEx, "Error occurred while checking a question");
+                }
+            }
+            else
+            {
+                _logger.Error(ex, "An unexpected error occurred");
+            }
+
+            throw;
+        }
+
         correctAnswers.AddRange(results);
+
+        userGrade.Grade = results.Sum(r => r.UserGrade);
 
         return correctAnswers;
     }
 
-    private Task<CorrectAnswerDtoBase> CheckAnswer(UserAnswerDtoBase userAnswer, CheckQuestionDtoBase checkQuestionDto, UserGradeDto userGrade)
+    /// <summary>
+    /// Проверить вопрос
+    /// </summary>
+    /// <param name="userAnswer">Ответ пользователя</param>
+    /// <param name="checkQuestionDto">Данные для проверки вопроса</param>
+    /// <param name="gradesMapping">Маппинг типов вопросов и оценки за них</param>
+    /// <returns>Данные о проверке вопроса</returns>
+    private Task<CorrectAnswerDtoBase> CheckAnswer(UserAnswerDtoBase userAnswer,
+        CheckQuestionDtoBase checkQuestionDto,
+        Dictionary<string, float> gradesMapping)
     {
         var answerType = userAnswer.GetType();
 
         var strategy = _answerCheckingStrategyFactory.CreateAnswerCheckingStrategy(answerType);
 
         var questionTypeName = answerType.Name.Replace("UserAnswerDto", "");
-        var questionGrade = _questionGrades.GetValueOrDefault(questionTypeName, 0f);
+        var questionGrade = gradesMapping.GetValueOrDefault(questionTypeName, 0f);
 
-        return strategy.CheckAnswerAsync(userAnswer, checkQuestionDto, userGrade, questionGrade);
+        return strategy.CheckAnswerAsync(userAnswer, checkQuestionDto, questionGrade);
     }
 }
